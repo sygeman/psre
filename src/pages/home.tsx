@@ -1,4 +1,5 @@
 import { BottomMenu } from "../modules/bottom-menu";
+import { Map } from "../modules/map";
 import { PersonPanel } from "../modules/person-panel";
 import { ResourcesPanel } from "../modules/resources-panel";
 
@@ -10,7 +11,7 @@ export function HomePage() {
         <PersonPanel />
       </div>
       <div class="flex flex-1 bg-slate-500 justify-center items-center">
-        Карта базы
+        <Map />
       </div>
       <BottomMenu />
     </div>
