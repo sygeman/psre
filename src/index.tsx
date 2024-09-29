@@ -2,12 +2,15 @@ import { render } from "solid-js/web";
 import { Router, Route } from "@solidjs/router";
 import "./index.css";
 
-import { IndexPage } from "./pages/index";
+import { HomePage } from "./pages/home";
+import { Layout } from "./layout";
+import { RegionPage } from "./pages/region";
 
 render(
   () => (
-    <Router>
-      <Route path="/" component={IndexPage} />
+    <Router root={Layout}>
+      <Route path="/" component={HomePage} />
+      <Route path="/region" component={RegionPage} />
     </Router>
   ),
   document.getElementById("root")
