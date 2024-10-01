@@ -34,15 +34,10 @@ class Game extends Engine {
 }
 
 export const Map = () => {
-  let game;
-
   createEffect(() => {
-    game = new Game();
+    const game = new Game();
     game.initialize();
-  });
-
-  onCleanup(() => {
-    game.dispose();
+    onCleanup(() => game.dispose());
   });
 
   return <canvas id="game"></canvas>;
