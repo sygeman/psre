@@ -5,6 +5,9 @@ import "./index.css";
 import { HomePage } from "./pages/home";
 import { Layout } from "./layout";
 import { RegionPage } from "./pages/region";
+import { directus } from "./lib/directus";
+
+await directus.connect()
 
 render(
   () => (

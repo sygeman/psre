@@ -18,6 +18,7 @@
     "vite-plugin-solid": "2.11.6"
   },
   "dependencies": {
+    "@directus/sdk": "^19.0.1",
     "@solidjs/router": "0.15.3",
     "excalibur": "0.30.3",
     "solid-js": "1.9.5"
