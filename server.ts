@@ -19,7 +19,9 @@ setInterval(async () => {
         wood: getRandomInt(10000000),
         steel: getRandomInt(10000000),
         fuel: getRandomInt(10000000),
-        diamond: getRandomInt(100000)
+        diamond: getRandomInt(100000),
+        power: getRandomInt(1000000),
+        serum: getRandomInt(1000000),
     }))
 }, 1000)
 

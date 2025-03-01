@@ -13,7 +13,12 @@ export const BottomMenu = () => {
       >
         {home() ? "Мир" : "Домой"}
       </A>
-      <div class="flex justify-center items-center">Герои</div>
+      <A
+        href="/heroes"
+        class="flex justify-center items-center"
+      >
+        Герои
+      </A>
       <div class="flex justify-center items-center">Квесты</div>
       <div class="flex justify-center items-center">Сумка</div>
       <div class="flex justify-center items-center">Почта</div>

@@ -6,14 +6,18 @@ import { HomePage } from "./pages/home";
 import { Layout } from "./layout";
 import { RegionPage } from "./pages/region";
 import { directus } from "./lib/directus";
+import { initializeStore } from "./stores/state";
+import { HeroesPage } from "./pages/heroes";
 
 await directus.connect()
+initializeStore()
 
 render(
   () => (
     <Router root={Layout}>
       <Route path="/" component={HomePage} />
       <Route path="/region" component={RegionPage} />
+      <Route path="/heroes" component={HeroesPage} />
     </Router>
   ),
   document.getElementById("root")
