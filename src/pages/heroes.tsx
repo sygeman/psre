@@ -22,7 +22,7 @@ export function HeroesPage() {
             level={40}
             starLevel={2}
             upgradeLevel={1}
-            style="green"
+            heroStyle="green"
             type="F"
           />
           <HeroCard
@@ -30,7 +30,7 @@ export function HeroesPage() {
             level={3}
             starLevel={4}
             upgradeLevel={2}
-            style="red"
+            heroStyle="red"
             type="S"
           />
           <HeroCard
@@ -38,7 +38,7 @@ export function HeroesPage() {
             level={123}
             starLevel={5}
             upgradeLevel={7}
-            style="yellow"
+            heroStyle="yellow"
             type="R"
           />
           <HeroCard
@@ -46,7 +46,7 @@ export function HeroesPage() {
             level={230}
             starLevel={6}
             upgradeLevel={8}
-            style="blue"
+            heroStyle="blue"
             type="E"
           />
           <HeroCard
@@ -54,7 +54,7 @@ export function HeroesPage() {
             level={320}
             starLevel={6}
             upgradeLevel={5}
-            style="purple"
+            heroStyle="purple"
             type="R"
           />
         </div>

@@ -3,7 +3,7 @@ import { Component } from 'solid-js';
 type Props = {
   name: string;
   type: string;
-  style: 'red' | 'green' | 'yellow' | 'purple' | 'blue';
+  heroStyle: 'red' | 'green' | 'yellow' | 'purple' | 'blue';
   level: number;
   starLevel: number;
   upgradeLevel: number;
@@ -14,11 +14,11 @@ export const HeroCard: Component<Props> = (props) => {
     <div
       classList={{
         'aspect-2/3 relative': true,
-        'bg-red-900': props.style === 'red',
-        'bg-green-900': props.style === 'green',
-        'bg-yellow-900': props.style === 'yellow',
-        'bg-purple-900': props.style === 'purple',
-        'bg-blue-900': props.style === 'blue',
+        'bg-red-900': props.heroStyle === 'red',
+        'bg-green-900': props.heroStyle === 'green',
+        'bg-yellow-900': props.heroStyle === 'yellow',
+        'bg-purple-900': props.heroStyle === 'purple',
+        'bg-blue-900': props.heroStyle === 'blue',
       }}
     >
       <div class="bg-black/90 top-0 ml-0.5 w-[calc(100%-4px)] h-[calc(100%-28px)]" />
