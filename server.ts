@@ -23,5 +23,5 @@ setInterval(async () => {
         power: getRandomInt(1000000),
         serum: getRandomInt(1000000),
     }))
-}, 1000)
+}, 3000)
 
