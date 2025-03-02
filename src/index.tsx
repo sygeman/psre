@@ -8,6 +8,7 @@ import { RegionPage } from './pages/region';
 import { directus } from './lib/directus';
 import { initializeStore } from './stores/state';
 import { HeroesPage } from './pages/heroes';
+import { VipPage } from './pages/vip';
 
 await directus.connect();
 initializeStore();
@@ -18,6 +19,7 @@ render(
       <Route path="/" component={HomePage} />
       <Route path="/region" component={RegionPage} />
       <Route path="/heroes" component={HeroesPage} />
+      <Route path="/vip" component={VipPage} />
     </Router>
   ),
   document.getElementById('root')
