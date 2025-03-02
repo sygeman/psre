@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { For } from 'solid-js';
 
 export interface Tab {
@@ -8,7 +9,7 @@ export interface Tab {
 interface TabsProps {
   tabs: Tab[];
   activeTab: string;
-  onTabChange: (tabId: string) => void;
+  onTabChange: (id: string) => void;
 }
 
 export function Tabs(props: TabsProps) {
