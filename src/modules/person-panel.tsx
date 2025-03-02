@@ -13,11 +13,13 @@ export const PersonPanel = () => {
       <PointsProgressBar
         points={() => accountState.stamina_points}
         label="SP"
+        icon="🔋"
         color="bg-orange-500"
       />
       <PointsProgressBar
         points={() => accountState.action_points}
         label="AP"
+        icon="⚡"
         color="bg-blue-500"
       />
     </div>

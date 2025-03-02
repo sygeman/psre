@@ -1,6 +1,6 @@
 import { Accessor, Component, createMemo } from 'solid-js';
 
-type Props = { label: string; points: Accessor<number>; color: string };
+type Props = { label: string; points: Accessor<number>; color: string; icon: string };
 
 export const PointsProgressBar: Component<Props> = (props) => {
   const max = 120;
@@ -15,7 +15,7 @@ export const PointsProgressBar: Component<Props> = (props) => {
         style={{ width: `${progress()}%` }}
       />
       <div class="absolute left-1 top-1/2 -translate-y-1/2 text-white text-xs font-medium">
-        {props.label}
+        {props.icon}
       </div>
       <div class="w-full flex justify-end items-center pr-1">
         {props.points()} <span class="pl-1 text-xs text-white/50">/ {max}</span>
