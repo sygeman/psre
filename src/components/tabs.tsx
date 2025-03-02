@@ -8,8 +8,8 @@ export interface Tab {
 
 interface TabsProps {
   tabs: Tab[];
-  activeTab: string;
-  onTabChange: (id: string) => void;
+  activeTab: Tab['id'];
+  onTabChange: (id: Tab['id']) => void;
 }
 
 export function Tabs(props: TabsProps) {
