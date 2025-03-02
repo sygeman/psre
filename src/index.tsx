@@ -10,6 +10,7 @@ import { initializeStore } from './stores/state';
 import { HeroesPage } from './pages/heroes';
 import { VipPage } from './pages/vip';
 import { ShopPage } from './pages/shop';
+import { PersonPage } from './pages/person';
 
 await directus.connect();
 initializeStore();
@@ -22,6 +23,7 @@ render(
       <Route path="/heroes" component={HeroesPage} />
       <Route path="/vip" component={VipPage} />
       <Route path="/shop" component={ShopPage} />
+      <Route path="/person" component={PersonPage} />
     </Router>
   ),
   document.getElementById('root')
