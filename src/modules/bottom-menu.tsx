@@ -6,7 +6,7 @@ export const BottomMenu = () => {
   const home = createMemo(() => location.pathname === '/');
 
   return (
-    <div class="h-16 grid grid-cols-7 w-full bg-slate-800">
+    <div class="h-16 grid grid-cols-2 w-full bg-slate-800">
       <A
         href={home() ? '/region' : '/'}
         class="flex justify-center items-center"
@@ -16,11 +16,6 @@ export const BottomMenu = () => {
       <A href="/heroes" class="flex justify-center items-center">
         Герои
       </A>
-      <div class="flex justify-center items-center">Квесты</div>
-      <div class="flex justify-center items-center">Сумка</div>
-      <div class="flex justify-center items-center">Почта</div>
-      <div class="flex justify-center items-center">Альянс</div>
-      <div class="flex justify-center items-center">Ещё</div>
     </div>
   );
 };
