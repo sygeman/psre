@@ -12,8 +12,8 @@ export const PowerPanel = () => {
       >
         VIP 1
       </span>
-      <span class="px-2 bg-slate-700 h-full items-center flex">
-        P {Number(accountState.power).toLocaleString('en-US')}
+      <span class="px-2 bg-slate-700 h-full items-center flex gap-1">
+        💪 {Number(accountState.power).toLocaleString('en-US')}
       </span>
     </div>
   );
