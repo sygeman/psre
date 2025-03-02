@@ -1,9 +1,9 @@
-import { Accessor, Component, createMemo, mergeProps } from 'solid-js';
+import { Component } from 'solid-js';
 
 type Props = {
   name: string;
   type: string;
-  style: string;
+  style: 'red' | 'green' | 'yellow' | 'purple' | 'blue';
   level: number;
   starLevel: number;
   upgradeLevel: number;
@@ -21,7 +21,7 @@ export const HeroCard: Component<Props> = (props) => {
         'bg-blue-900': props.style === 'blue',
       }}
     >
-      <div class="bg-black/90 top-0 ml-0.5 w-[calc(100%-4px)] h-[calc(100%-28px)]"></div>
+      <div class="bg-black/90 top-0 ml-0.5 w-[calc(100%-4px)] h-[calc(100%-28px)]" />
       <div class="absolute bottom-12 left-1.5 font-bold">
         +{props.upgradeLevel}
       </div>

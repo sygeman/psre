@@ -1,4 +1,3 @@
-import { createEffect, onCleanup } from 'solid-js';
 import { BottomMenu } from '../modules/bottom-menu';
 import { PersonPanel } from '../modules/person-panel';
 import { ResourcesPanel } from '../modules/resources-panel';

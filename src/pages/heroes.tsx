@@ -15,7 +15,7 @@ export function HeroesPage() {
         </div>
       </div>
       <div>
-        <div class="h-12 w-full"></div>
+        <div class="h-12 w-full" />
         <div class="grid grid-cols-4 gap-2 px-2">
           <HeroCard
             name="Hero 1"

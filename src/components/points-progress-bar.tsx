@@ -1,4 +1,4 @@
-import { Accessor, Component, createMemo, mergeProps } from 'solid-js';
+import { Accessor, Component, createMemo } from 'solid-js';
 
 type Props = { label: string; points: Accessor<number>; color: string };
 
