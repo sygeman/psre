@@ -1,6 +1,11 @@
 import { Accessor, Component, createMemo } from 'solid-js';
 
-type Props = { label: string; points: Accessor<number>; color: string; icon: string };
+type Props = { 
+  label: string; 
+  points: Accessor<number>; 
+  color: string;
+  icon: string;
+};
 
 export const PointsProgressBar: Component<Props> = (props) => {
   const max = 120;
