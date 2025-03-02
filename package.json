@@ -6,21 +6,24 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\""
   },
   "type": "module",
   "license": "MIT",
   "devDependencies": {
     "@tailwindcss/vite": "4.0.9",
+    "prettier": "3.5.2",
     "solid-devtools": "0.33.0",
     "tailwindcss": "4.0.9",
     "vite": "6.2.0",
     "vite-plugin-solid": "2.11.6"
   },
   "dependencies": {
-    "@directus/sdk": "^19.0.1",
+    "@directus/sdk": "19.0.1",
     "@solidjs/router": "0.15.3",
-    "excalibur": "0.30.3",
+    "solid-heroicons": "3.2.4",
     "solid-js": "1.9.5"
   }
 }

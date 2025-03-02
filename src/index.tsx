@@ -1,16 +1,16 @@
-import { render } from "solid-js/web";
-import { Router, Route } from "@solidjs/router";
-import "./index.css";
+import { render } from 'solid-js/web';
+import { Router, Route } from '@solidjs/router';
+import './index.css';
 
-import { HomePage } from "./pages/home";
-import { Layout } from "./layout";
-import { RegionPage } from "./pages/region";
-import { directus } from "./lib/directus";
-import { initializeStore } from "./stores/state";
-import { HeroesPage } from "./pages/heroes";
+import { HomePage } from './pages/home';
+import { Layout } from './layout';
+import { RegionPage } from './pages/region';
+import { directus } from './lib/directus';
+import { initializeStore } from './stores/state';
+import { HeroesPage } from './pages/heroes';
 
-await directus.connect()
-initializeStore()
+await directus.connect();
+initializeStore();
 
 render(
   () => (
@@ -20,5 +20,5 @@ render(
       <Route path="/heroes" component={HeroesPage} />
     </Router>
   ),
-  document.getElementById("root")
+  document.getElementById('root')
 );

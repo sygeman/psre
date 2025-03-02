@@ -1,7 +1,7 @@
 import { updateItem } from "@directus/sdk";
 import { directus } from "./src/lib/directus";
 
-function getRandomInt(n) {
+function getRandomInt(n: number) {
     if (typeof n !== 'number' || !Number.isInteger(n) || n < 1) {
       throw new Error('n должно быть целым числом больше 0');
     }

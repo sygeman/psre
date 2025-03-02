@@ -1,22 +1,19 @@
-import { A, useLocation } from "@solidjs/router";
-import { createMemo } from "solid-js";
+import { A, useLocation } from '@solidjs/router';
+import { createMemo } from 'solid-js';
 
 export const BottomMenu = () => {
   const location = useLocation();
-  const home = createMemo(() => location.pathname === "/");
+  const home = createMemo(() => location.pathname === '/');
 
   return (
     <div class="h-16 grid grid-cols-7 w-full bg-slate-800">
       <A
-        href={home() ? "/region" : "/"}
+        href={home() ? '/region' : '/'}
         class="flex justify-center items-center"
       >
-        {home() ? "Мир" : "Домой"}
+        {home() ? 'Мир' : 'Домой'}
       </A>
-      <A
-        href="/heroes"
-        class="flex justify-center items-center"
-      >
+      <A href="/heroes" class="flex justify-center items-center">
         Герои
       </A>
       <div class="flex justify-center items-center">Квесты</div>

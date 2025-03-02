@@ -1,13 +1,13 @@
-import { BottomMenu } from "../modules/bottom-menu";
-import { PersonPanel } from "../modules/person-panel";
-import { PowerPanel } from "../modules/power-panel";
-import { ResourcesPanel } from "../modules/resources-panel";
+import { BottomMenu } from '../modules/bottom-menu';
+import { PersonPanel } from '../modules/person-panel';
+import { PowerPanel } from '../modules/power-panel';
+import { ResourcesPanel } from '../modules/resources-panel';
 
 export function RegionPage() {
   return (
     <div class="relative flex flex-col h-screen">
       <ResourcesPanel />
-       <div class="absolute top-8 flex shrink-0">
+      <div class="absolute top-8 flex shrink-0">
         <PersonPanel />
       </div>
       <div class="absolute top-8 left-24 flex shrink-0">
