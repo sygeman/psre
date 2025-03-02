@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { For } from 'solid-js';
 import { Tab } from './tabs';
 
