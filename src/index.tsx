@@ -15,6 +15,7 @@ import { chatStore } from './stores/chat';
 import { RankPage } from './pages/rank';
 import { QuestsPage } from './pages/quests';
 import { AlliancePage } from './pages/alliance';
+import { MailPage } from './pages/mail';
 import { connectionStore } from './stores/connection';
 import { ConnectionOverlay } from './components/connection-overlay';
 
@@ -31,6 +32,7 @@ render(
         <Route path="/" component={HomePage} />
         <Route path="/region" component={RegionPage} />
         <Route path="/heroes" component={HeroesPage} />
+        <Route path="/mail" component={MailPage} />
         <Route path="/vip" component={VipPage} />
         <Route path="/shop" component={ShopPage} />
         <Route path="/person" component={PersonPage} />
