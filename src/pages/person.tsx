@@ -1,9 +1,9 @@
 import { BackButton } from '../modules/back-button';
-import { PointsProgressBar } from '../components/points-progress-bar';
 import { accountState } from '../stores/state';
 import { createSignal, Match, Switch } from 'solid-js';
 import { Tab, Tabs } from '../components/tabs';
 import { EquipmentPage } from '../modules/equipment-page';
+import { PointsProgressBar } from '../components/points-progress-bar';
 
 const PERSON_TABS: Tab[] = [
   { id: 'equipment', label: 'Снаряжение' },
@@ -68,49 +68,56 @@ export function PersonPage() {
       {/* Фиксированная информация внизу */}
       <div class="flex-shrink-0 p-4 bg-slate-900 border-t border-slate-700">
         <div class="flex flex-col gap-4">
-          {/* Характеристики */}
-          <div class="flex flex-col gap-2">
-            <PointsProgressBar
-              points={() => accountState.stamina_points}
-              label="SP"
-              icon="🔋"
-              color="bg-orange-500"
-            />
-            <PointsProgressBar
-              points={() => accountState.action_points}
-              label="AP"
-              icon="⚡"
-              color="bg-blue-500"
-            />
+          {/* Имя и лайки */}
+          <div class="flex items-center gap-4">
+            <div class="flex items-center gap-1">
+              <span>👍</span>
+              <span>{Number(accountState.likes || 0).toLocaleString('en-US')}</span>
+            </div>
+            <div class="text-lg font-medium">
+              {accountState.name || 'Неизвестный'}
+            </div>
           </div>
 
-          {/* Мощь */}
-          <div class="flex items-center gap-2 text-lg">
-            <span>💪</span>
-            <span>{Number(accountState.power).toLocaleString('en-US')}</span>
+          {/* Аватар и прогресс бары */}
+          <div class="flex gap-4">
+            {/* Аватар */}
+            <div class="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">👤</span>
+            </div>
+
+            {/* Прогресс бары */}
+            <div class="flex flex-col gap-2 flex-grow">
+              <PointsProgressBar
+                points={() => accountState.exp}
+                label="XP"
+                icon="✨"
+                color="bg-purple-500"
+              />
+              <PointsProgressBar
+                points={() => accountState.stamina_points}
+                label="SP"
+                icon="🔋"
+                color="bg-orange-500"
+              />
+              <PointsProgressBar
+                points={() => accountState.action_points}
+                label="AP"
+                icon="⚡"
+                color="bg-blue-500"
+              />
+            </div>
           </div>
 
-          {/* Ресурсы */}
+          {/* Мощь и убийства */}
           <div class="grid grid-cols-2 gap-4">
-            <div class="flex items-center gap-2">
-              <span>🌾</span>
-              <span>{Number(accountState.food).toLocaleString('en-US')}</span>
+            <div class="flex items-center gap-1 justify-center bg-slate-800 rounded-lg py-2">
+              <span>💪</span>
+              <span>{Number(accountState.power || 0).toLocaleString('en-US')}</span>
             </div>
-            <div class="flex items-center gap-2">
-              <span>🪵</span>
-              <span>{Number(accountState.wood).toLocaleString('en-US')}</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span>🔩</span>
-              <span>{Number(accountState.steel).toLocaleString('en-US')}</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span>🛢️</span>
-              <span>{Number(accountState.fuel).toLocaleString('en-US')}</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <span>💎</span>
-              <span>{Number(accountState.diamond).toLocaleString('en-US')}</span>
+            <div class="flex items-center gap-1 justify-center bg-slate-800 rounded-lg py-2">
+              <span>💀</span>
+              <span>{Number(accountState.kills || 0).toLocaleString('en-US')}</span>
             </div>
           </div>
         </div>
