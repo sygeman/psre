@@ -71,6 +71,7 @@ export function MiniChat() {
   return (
     <div 
       class="bg-slate-800/80 backdrop-blur-sm p-2 cursor-pointer hover:bg-slate-800/90 transition-colors w-full relative h-[76px] overflow-hidden select-none"
+      onClick={handleClick}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
