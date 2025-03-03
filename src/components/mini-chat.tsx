@@ -34,7 +34,7 @@ export function MiniChat() {
   };
 
   const MessageContainer = (props: { channel: ChatChannel }) => (
-    <div class="flex">
+    <div class="flex min-w-0">
       <div class="flex-shrink-0 w-[44px] h-[44px] bg-slate-700/50 flex items-center justify-center">
         <Icon 
           path={props.channel === 'region' ? globeAlt : userGroup} 
@@ -46,7 +46,7 @@ export function MiniChat() {
           .filter(m => m.channel === props.channel)
           .slice(-2)
         }>{(message) => (
-          <div class="text-sm text-gray-100 truncate leading-[22px]">
+          <div class="text-sm text-gray-100 truncate leading-[22px] max-w-full">
             <span class="font-medium">{message.author}: </span>
             {message.text}
           </div>

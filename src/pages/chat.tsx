@@ -155,13 +155,13 @@ export default function ChatPage() {
         </div>
       </div>
       <div 
-        class="flex-1 overflow-y-auto p-3 space-y-4"
+        class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgb(51,65,85)_transparent] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded"
         ref={chatContainerRef}
       >
         <For each={chatStore.messages().filter(m => m.channel === activeChannel())}>
           {(message) => (
             <div
-              class={`flex items-start gap-3 ${
+              class={`flex items-start gap-3 max-w-full ${
                 message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
               }`}
             >
@@ -176,10 +176,10 @@ export default function ChatPage() {
                   }}
                 />
               </div>
-              <div class={`flex flex-col gap-1 ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
+              <div class={`flex flex-col gap-1 min-w-0 ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
                 <span class="text-xs font-medium text-gray-400">{message.author}</span>
                 <div
-                  class={`rounded-lg px-3 py-2 ${
+                  class={`rounded-lg px-3 py-2 max-w-full break-words ${
                     message.sender === 'user'
                       ? 'bg-blue-500 text-white'
                       : 'bg-slate-700 text-gray-100'
