@@ -123,7 +123,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div class="relative flex flex-col h-screen overflow-hidden bg-slate-900">
+    <div class="fixed inset-0 flex flex-col bg-slate-900">
       <div class="flex-shrink-0 bg-slate-800">
         <div class="h-12 flex justify-center items-center relative">
           <div class="left-0 absolute">
