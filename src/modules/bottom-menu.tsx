@@ -12,10 +12,13 @@ export const BottomMenu = () => {
     <div class="grid h-16 w-full grid-cols-6 bg-slate-800">
       <A
         href={isHome() ? '/region' : '/'}
-        class="flex flex-col items-center justify-center gap-1"
+        class="relative flex flex-col items-center justify-center gap-1"
       >
-        <Icon path={isHome() ? globeAlt : home} class="h-6 w-6 text-slate-400" />
-        <div class="text-xs">{isHome() ? 'Мир' : 'Домой'}</div>
+        <div class="absolute inset-0 bg-yellow-800/70" />
+        <div class="relative flex flex-col items-center gap-1">
+          <Icon path={isHome() ? globeAlt : home} class="h-6 w-6 text-yellow-100" />
+          <div class="text-xs text-yellow-100">{isHome() ? 'Мир' : 'Домой'}</div>
+        </div>
       </A>
       <A href="/quests" class="flex flex-col items-center justify-center gap-1">
         <Icon path={clipboardDocumentList} class="h-6 w-6 text-slate-400" />
