@@ -13,6 +13,7 @@ import { PersonPage } from './pages/person';
 import ChatPage from './pages/chat';
 import { chatStore } from './stores/chat';
 import { RankPage } from './pages/rank';
+import { QuestsPage } from './pages/quests';
 import { connectionStore } from './stores/connection';
 import { ConnectionOverlay } from './components/connection-overlay';
 
@@ -34,6 +35,7 @@ render(
         <Route path="/person" component={PersonPage} />
         <Route path="/chat" component={ChatPage} />
         <Route path="/rank" component={RankPage} />
+        <Route path="/quests" component={QuestsPage} />
       </Router>
     </>
   ),
