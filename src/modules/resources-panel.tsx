@@ -27,7 +27,7 @@ export const ResourcesPanel = () => {
         class="flex cursor-pointer items-center gap-1 transition-colors hover:text-yellow-400"
         onClick={() => navigate('/shop')}
       >
-        💎 {formatter.format(accountState.diamond)}
+        💎 {formatter.format(accountState.diamond)} <span class="inline-flex items-center text-yellow-400 font-bold">+</span>
       </div>
     </div>
   );
