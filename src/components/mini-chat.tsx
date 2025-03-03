@@ -42,7 +42,7 @@ export function MiniChat() {
 
   const MessageContainer = (props: { channel: ChatChannel }) => (
     <div class="flex min-w-0">
-      <div class="ml-3 flex h-[44px] w-[44px] flex-shrink-0 items-center justify-center">
+      <div class="ml-2 flex h-[44px] w-[44px] flex-shrink-0 items-center justify-center">
         <div class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900">
           <Icon
             path={props.channel === 'region' ? globeAlt : userGroup}
@@ -50,7 +50,7 @@ export function MiniChat() {
           />
         </div>
       </div>
-      <div class="ml-3 max-w-[calc(100%-60px)] min-w-0 flex-1 space-y-0.5">
+      <div class="ml-2 max-w-[calc(100%-60px)] min-w-0 flex-1 space-y-0.5">
         <For
           each={chatStore
             .messages()
