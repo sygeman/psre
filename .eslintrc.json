@@ -14,8 +14,9 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "solid"],
+  "plugins": ["@typescript-eslint", "solid", "filenames"],
   "rules": {
+    "filenames/match": [2, "^[a-z0-9-]+$", true],
     "@typescript-eslint/no-unused-vars": "warn"
   }
 } 
