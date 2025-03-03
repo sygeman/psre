@@ -42,6 +42,7 @@
   "dependencies": {
     "@directus/sdk": "19.0.1",
     "@solidjs/router": "0.15.3",
+    "@tanstack/solid-query": "5.67.1",
     "solid-heroicons": "3.2.4",
     "solid-js": "1.9.5"
   }
