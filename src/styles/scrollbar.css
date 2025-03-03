@@ -1,0 +1,14 @@
+/* Скрываем скроллбар для WebKit (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Скрываем скроллбар для Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Скрываем скроллбар для IE и Edge */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+} 

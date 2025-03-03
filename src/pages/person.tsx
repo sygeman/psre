@@ -34,7 +34,7 @@ export function PersonPage() {
       </div>
 
       {/* Контент вкладок */}
-      <div class="flex-grow overflow-auto">
+      <div class="flex-grow overflow-auto hide-scrollbar">
         <Switch>
           <Match when={activeTab() === 'equipment'}>
             <EquipmentPage />
