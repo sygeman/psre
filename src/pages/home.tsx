@@ -2,6 +2,7 @@ import { BottomMenu } from '../modules/bottom-menu';
 import { PersonPanel } from '../modules/person-panel';
 import { ResourcesPanel } from '../modules/resources-panel';
 import { PowerPanel } from '../modules/power-panel';
+import { MiniChat } from '../components/MiniChat';
 
 export function HomePage() {
   return (
@@ -15,6 +16,9 @@ export function HomePage() {
       </div>
       <div class="flex h-[calc(100%-96px)] bg-slate-500 justify-center items-center">
         Карта базы
+      </div>
+      <div class="absolute bottom-16 w-full">
+        <MiniChat />
       </div>
       <BottomMenu />
     </div>

@@ -11,9 +11,12 @@ import { HeroesPage } from './pages/heroes';
 import { VipPage } from './pages/vip';
 import { ShopPage } from './pages/shop';
 import { PersonPage } from './pages/person';
+import ChatPage from './pages/chat';
+import { chatStore } from './stores/chat';
 
 await directus.connect();
 initializeStore();
+chatStore.initializeMockMessages();
 
 render(
   () => (
@@ -24,6 +27,7 @@ render(
       <Route path="/vip" component={VipPage} />
       <Route path="/shop" component={ShopPage} />
       <Route path="/person" component={PersonPage} />
+      <Route path="/chat" component={ChatPage} />
     </Router>
   ),
   document.getElementById('root')
