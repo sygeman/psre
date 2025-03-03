@@ -18,7 +18,12 @@ export function MiniChat() {
     setTouchStart(e.touches[0].clientX);
   };
 
+  const handleTouchMove = (e: TouchEvent) => {
+    e.preventDefault(); // Предотвращаем скролл страницы при свайпе
+  };
+
   const handleTouchEnd = (e: TouchEvent) => {
+    e.preventDefault(); // Предотвращаем открытие страницы после свайпа
     const touchEnd = e.changedTouches[0].clientX;
     const diff = touchEnd - touchStart();
     
@@ -30,6 +35,9 @@ export function MiniChat() {
         setActiveChannel('alliance');
       }
       setTimeout(() => setIsAnimating(false), 300);
+    } else if (Math.abs(diff) <= 5) {
+      // Если это был клик (очень маленькое движение), а не свайп
+      handleClick();
     }
   };
 
@@ -47,13 +55,13 @@ export function MiniChat() {
           .slice(-2)
         }>{(message) => (
           <div class="text-sm text-gray-100 truncate leading-[22px] max-w-full min-w-0">
-            <span class="font-medium">{message.author}: </span>
-            {message.text}
+            <span class="font-medium select-none">{message.author}: </span>
+            <span class="select-none">{message.text}</span>
           </div>
         )}</For>
         {chatStore.messages().filter(m => m.channel === props.channel).length === 0 && (
           <div class="h-[44px] flex items-center justify-center">
-            <p class="text-gray-400 text-xs">Нет сообщений</p>
+            <p class="text-gray-400 text-xs select-none">Нет сообщений</p>
           </div>
         )}
       </div>
@@ -62,9 +70,9 @@ export function MiniChat() {
 
   return (
     <div 
-      class="bg-slate-800/80 backdrop-blur-sm p-2 cursor-pointer hover:bg-slate-800/90 transition-colors w-full relative h-[76px] overflow-hidden"
-      onClick={handleClick}
+      class="bg-slate-800/80 backdrop-blur-sm p-2 cursor-pointer hover:bg-slate-800/90 transition-colors w-full relative h-[76px] overflow-hidden select-none"
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* Индикаторы каналов */}
