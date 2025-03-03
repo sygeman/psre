@@ -14,6 +14,7 @@ import ChatPage from './pages/chat';
 import { chatStore } from './stores/chat';
 import { RankPage } from './pages/rank';
 import { QuestsPage } from './pages/quests';
+import { AlliancePage } from './pages/alliance';
 import { connectionStore } from './stores/connection';
 import { ConnectionOverlay } from './components/connection-overlay';
 
@@ -36,6 +37,7 @@ render(
         <Route path="/chat" component={ChatPage} />
         <Route path="/rank" component={RankPage} />
         <Route path="/quests" component={QuestsPage} />
+        <Route path="/alliance" component={AlliancePage} />
       </Router>
     </>
   ),
