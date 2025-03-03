@@ -2,6 +2,7 @@ import { BottomMenu } from '../modules/bottom-menu';
 import { PersonPanel } from '../modules/person-panel';
 import { PowerPanel } from '../modules/power-panel';
 import { ResourcesPanel } from '../modules/resources-panel';
+import { MiniChat } from '../components/mini-chat';
 
 export function RegionPage() {
   return (
@@ -15,6 +16,9 @@ export function RegionPage() {
       </div>
       <div class="flex h-[calc(100%-96px)] items-center justify-center bg-slate-500">
         Карта региона
+      </div>
+      <div class="absolute bottom-16 w-full">
+        <MiniChat />
       </div>
       <BottomMenu />
     </div>
