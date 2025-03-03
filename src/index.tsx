@@ -3,7 +3,6 @@ import { Router, Route } from '@solidjs/router';
 import './index.css';
 
 import { HomePage } from './pages/home';
-import { Layout } from './layout';
 import { RegionPage } from './pages/region';
 import { directus } from './lib/directus';
 import { initializeStore } from './stores/state';
@@ -20,7 +19,7 @@ chatStore.initializeMockMessages();
 
 render(
   () => (
-    <Router root={Layout}>
+    <Router>
       <Route path="/" component={HomePage} />
       <Route path="/region" component={RegionPage} />
       <Route path="/heroes" component={HeroesPage} />
