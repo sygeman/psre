@@ -14,7 +14,7 @@ interface TabsProps {
 
 export function Tabs(props: TabsProps) {
   return (
-    <div class="flex bg-slate-800 overflow-x-auto">
+    <div class="flex bg-slate-800 overflow-x-auto hide-scrollbar">
       <For each={props.tabs}>
         {(tab) => (
           <div
