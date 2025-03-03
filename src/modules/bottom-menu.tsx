@@ -6,14 +6,14 @@ export const BottomMenu = () => {
   const home = createMemo(() => location.pathname === '/');
 
   return (
-    <div class="h-16 grid grid-cols-2 w-full bg-slate-800">
+    <div class="grid h-16 w-full grid-cols-2 bg-slate-800">
       <A
         href={home() ? '/region' : '/'}
-        class="flex justify-center items-center"
+        class="flex items-center justify-center"
       >
         {home() ? 'Мир' : 'Домой'}
       </A>
-      <A href="/heroes" class="flex justify-center items-center">
+      <A href="/heroes" class="flex items-center justify-center">
         Герои
       </A>
     </div>

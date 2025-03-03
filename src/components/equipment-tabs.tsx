@@ -14,7 +14,7 @@ export function EquipmentTabs(props: EquipmentTabsProps) {
       <For each={props.tabs}>
         {(tab) => (
           <div
-            class={`px-3 py-1.5 cursor-pointer transition-colors whitespace-nowrap text-sm rounded-lg ${
+            class={`cursor-pointer rounded-lg px-3 py-1.5 text-sm whitespace-nowrap transition-colors ${
               tab.id === props.activeTab
                 ? 'bg-slate-700 text-white'
                 : 'text-slate-400 hover:text-slate-200'
@@ -27,4 +27,4 @@ export function EquipmentTabs(props: EquipmentTabsProps) {
       </For>
     </div>
   );
-} 
+}

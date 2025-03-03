@@ -4,13 +4,13 @@ import { accountState } from '../stores/state';
 
 export function HeroesPage() {
   return (
-    <div class="relative flex flex-col h-screen">
-      <div class="h-12 flex bg-slate-800 justify-center items-center relative">
-        <div class="left-0 absolute">
+    <div class="relative flex h-screen flex-col">
+      <div class="relative flex h-12 items-center justify-center bg-slate-800">
+        <div class="absolute left-0">
           <BackButton />
         </div>
         <div class="text-lg">Герои</div>
-        <div class="right-0 absolute px-2">
+        <div class="absolute right-0 px-2">
           S {Number(accountState.serum).toLocaleString('en-US')}
         </div>
       </div>

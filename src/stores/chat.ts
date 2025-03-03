@@ -25,20 +25,28 @@ const sendAutoMessage = () => {
     'Исследовательская станция "Альфа-9" сообщает об успешном завершении экспериментов с новым типом щитов. Приглашаются добровольцы для тестирования.',
     'Обнаружен новый тип ресурсов в астероидном поле сектора D-15. Требуется координация действий для эффективной добычи.',
     'Альянс "Северное сияние" предлагает взаимовыгодное сотрудничество в освоении новых территорий. Нужны опытные пилоты и инженеры.',
-    'Внимание! В секторе E-8 зафиксирована активность неизвестной расы. Все исследовательские корабли должны соблюдать протокол безопасности.'
+    'Внимание! В секторе E-8 зафиксирована активность неизвестной расы. Все исследовательские корабли должны соблюдать протокол безопасности.',
   ];
-  
+
   const randomMessage = messages[Math.floor(Math.random() * messages.length)];
   const channels: ChatChannel[] = ['region', 'alliance'];
   const randomChannel = channels[Math.floor(Math.random() * channels.length)];
-  
+
   const authors = {
-    region: ['Диспетчер', 'Разведка', 'Система безопасности', 'Торговая гильдия'],
-    alliance: ['Командор', 'Стратег', 'Координатор', 'Дипломат']
+    region: [
+      'Диспетчер',
+      'Разведка',
+      'Система безопасности',
+      'Торговая гильдия',
+    ],
+    alliance: ['Командор', 'Стратег', 'Координатор', 'Дипломат'],
   };
-  
-  const randomAuthor = authors[randomChannel][Math.floor(Math.random() * authors[randomChannel].length)];
-  
+
+  const randomAuthor =
+    authors[randomChannel][
+      Math.floor(Math.random() * authors[randomChannel].length)
+    ];
+
   const message: Message = {
     id: Date.now().toString(),
     text: randomMessage,
@@ -46,7 +54,7 @@ const sendAutoMessage = () => {
     timestamp: new Date(),
     author: randomAuthor,
     avatar: `/avatars/${randomAuthor.toLowerCase()}.jpg`,
-    channel: randomChannel
+    channel: randomChannel,
   };
 
   chatStore.addMessage(message);
@@ -74,7 +82,7 @@ const initializeMockMessages = () => {
       timestamp: new Date(Date.now() - 3600000),
       author: 'Алексей',
       avatar: '/avatars/alex.jpg',
-      channel: 'region'
+      channel: 'region',
     },
     {
       id: '2',
@@ -83,7 +91,7 @@ const initializeMockMessages = () => {
       timestamp: new Date(Date.now() - 3300000),
       author: 'Командир',
       avatar: '/avatars/commander.jpg',
-      channel: 'region'
+      channel: 'region',
     },
     {
       id: '3',
@@ -92,7 +100,7 @@ const initializeMockMessages = () => {
       timestamp: new Date(Date.now() - 3000000),
       author: 'Алексей',
       avatar: '/avatars/alex.jpg',
-      channel: 'region'
+      channel: 'region',
     },
     {
       id: '4',
@@ -101,7 +109,7 @@ const initializeMockMessages = () => {
       timestamp: new Date(Date.now() - 2700000),
       author: 'Командир',
       avatar: '/avatars/commander.jpg',
-      channel: 'region'
+      channel: 'region',
     },
     {
       id: '5',
@@ -110,7 +118,7 @@ const initializeMockMessages = () => {
       timestamp: new Date(Date.now() - 900000),
       author: 'Командир',
       avatar: '/avatars/commander.jpg',
-      channel: 'alliance'
+      channel: 'alliance',
     },
     {
       id: '6',
@@ -119,7 +127,7 @@ const initializeMockMessages = () => {
       timestamp: new Date(Date.now() - 600000),
       author: 'Мария',
       avatar: '/avatars/maria.jpg',
-      channel: 'alliance'
+      channel: 'alliance',
     },
     {
       id: '7',
@@ -128,8 +136,8 @@ const initializeMockMessages = () => {
       timestamp: new Date(Date.now() - 300000),
       author: 'Командир',
       avatar: '/avatars/commander.jpg',
-      channel: 'alliance'
-    }
+      channel: 'alliance',
+    },
   ];
 
   setMessages(mockMessages);
@@ -155,5 +163,5 @@ export const chatStore = {
   },
   initializeMockMessages,
   startAutoMessages,
-  stopAutoMessages
-}; 
+  stopAutoMessages,
+};

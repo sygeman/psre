@@ -18,10 +18,10 @@ export function PersonPage() {
   const [activeTab, setActiveTab] = createSignal('equipment');
 
   return (
-    <div class="relative flex flex-col h-screen">
-      <div class="flex flex-col flex-shrink-0">
-        <div class="h-12 flex bg-slate-800 justify-center items-center relative">
-          <div class="left-0 absolute">
+    <div class="relative flex h-screen flex-col">
+      <div class="flex flex-shrink-0 flex-col">
+        <div class="relative flex h-12 items-center justify-center bg-slate-800">
+          <div class="absolute left-0">
             <BackButton />
           </div>
           <div class="text-lg">Персонаж</div>
@@ -34,32 +34,32 @@ export function PersonPage() {
       </div>
 
       {/* Контент вкладок */}
-      <div class="flex-grow overflow-auto hide-scrollbar">
+      <div class="hide-scrollbar flex-grow overflow-auto">
         <Switch>
           <Match when={activeTab() === 'equipment'}>
             <EquipmentPage />
           </Match>
           <Match when={activeTab() === 'chip'}>
             <div class="p-4">
-              <div class="text-lg mb-4">Чип</div>
+              <div class="mb-4 text-lg">Чип</div>
               {/* Здесь будет контент вкладки Чип */}
             </div>
           </Match>
           <Match when={activeTab() === 'module'}>
             <div class="p-4">
-              <div class="text-lg mb-4">Модуль</div>
+              <div class="mb-4 text-lg">Модуль</div>
               {/* Здесь будет контент вкладки Модуль */}
             </div>
           </Match>
           <Match when={activeTab() === 'cube'}>
             <div class="p-4">
-              <div class="text-lg mb-4">Куб</div>
+              <div class="mb-4 text-lg">Куб</div>
               {/* Здесь будет контент вкладки Куб */}
             </div>
           </Match>
           <Match when={activeTab() === 'biomod'}>
             <div class="p-4">
-              <div class="text-lg mb-4">Биомодификатор</div>
+              <div class="mb-4 text-lg">Биомодификатор</div>
               {/* Здесь будет контент вкладки Биомодификатор */}
             </div>
           </Match>
@@ -67,28 +67,28 @@ export function PersonPage() {
       </div>
 
       {/* Фиксированная информация внизу */}
-      <div class="flex-shrink-0 p-4 bg-slate-900 border-t border-slate-700">
+      <div class="flex-shrink-0 border-t border-slate-700 bg-slate-900 p-4">
         <div class="flex flex-col gap-4">
           {/* Имя и лайки */}
           <div class="flex items-center gap-4">
             <div class="flex items-center gap-1">
               <span>👍</span>
-              <span>{Number(accountState.likes || 0).toLocaleString('en-US')}</span>
+              <span>
+                {Number(accountState.likes || 0).toLocaleString('en-US')}
+              </span>
             </div>
-            <div class="font-medium">
-              {accountState.name || 'Неизвестный'}
-            </div>
+            <div class="font-medium">{accountState.name || 'Неизвестный'}</div>
           </div>
 
           {/* Аватар и прогресс бары */}
           <div class="flex gap-4">
             {/* Аватар */}
-            <div class="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
-              <CharacterAvatar class="w-12 h-12" />
+            <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-slate-800">
+              <CharacterAvatar class="h-12 w-12" />
             </div>
 
             {/* Прогресс бары */}
-            <div class="flex flex-col gap-2 flex-grow">
+            <div class="flex flex-grow flex-col gap-2">
               <PointsProgressBar
                 points={() => accountState.exp}
                 label="XP"
@@ -112,17 +112,21 @@ export function PersonPage() {
 
           {/* Мощь и убийства */}
           <div class="grid grid-cols-2 gap-4">
-            <div class="flex items-center gap-1 justify-center bg-slate-800 rounded-lg py-2">
+            <div class="flex items-center justify-center gap-1 rounded-lg bg-slate-800 py-2">
               <span>💪</span>
-              <span>{Number(accountState.power || 0).toLocaleString('en-US')}</span>
+              <span>
+                {Number(accountState.power || 0).toLocaleString('en-US')}
+              </span>
             </div>
-            <div class="flex items-center gap-1 justify-center bg-slate-800 rounded-lg py-2">
+            <div class="flex items-center justify-center gap-1 rounded-lg bg-slate-800 py-2">
               <span>💀</span>
-              <span>{Number(accountState.kills || 0).toLocaleString('en-US')}</span>
+              <span>
+                {Number(accountState.kills || 0).toLocaleString('en-US')}
+              </span>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-} 
+}

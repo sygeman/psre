@@ -12,7 +12,7 @@ export function CharacterAvatar(props: CharacterAvatarProps) {
     >
       {/* Фоновый круг */}
       <circle cx="12" cy="12" r="11" class="fill-slate-800" />
-      
+
       {/* Внешнее кольцо */}
       <circle
         cx="12"
@@ -67,4 +67,4 @@ export function CharacterAvatar(props: CharacterAvatarProps) {
       <circle cx="15.5" cy="12" r="0.5" class="fill-cyan-500" />
     </svg>
   );
-} 
+}

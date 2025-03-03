@@ -10,7 +10,7 @@ export const ResourcesPanel = () => {
   const navigate = useNavigate();
 
   return (
-    <div class="grid px-4 w-full h-8 grid-cols-5">
+    <div class="grid h-8 w-full grid-cols-5 px-4">
       <div class="flex items-center gap-1">
         🌾 {formatter.format(accountState.food)}
       </div>
@@ -23,8 +23,8 @@ export const ResourcesPanel = () => {
       <div class="flex items-center gap-1">
         🛢️ {formatter.format(accountState.fuel)}
       </div>
-      <div 
-        class="flex items-center gap-1 cursor-pointer hover:text-yellow-400 transition-colors"
+      <div
+        class="flex cursor-pointer items-center gap-1 transition-colors hover:text-yellow-400"
         onClick={() => navigate('/shop')}
       >
         💎 {formatter.format(accountState.diamond)}

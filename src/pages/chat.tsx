@@ -3,7 +3,7 @@ import { chatStore, type Message, type ChatChannel } from '../stores/chat';
 import { BackButton } from '../modules/back-button';
 import { Icon } from 'solid-heroicons';
 import { paperAirplane, arrowDown } from 'solid-heroicons/outline';
-import { useLocation } from "@solidjs/router";
+import { useLocation } from '@solidjs/router';
 
 type LocationState = {
   activeChannel?: ChatChannel;
@@ -21,7 +21,10 @@ export default function ChatPage() {
   const isNearBottom = () => {
     if (chatContainerRef) {
       const threshold = 100; // пикселей от нижней границы
-      const position = chatContainerRef.scrollHeight - chatContainerRef.scrollTop - chatContainerRef.clientHeight;
+      const position =
+        chatContainerRef.scrollHeight -
+        chatContainerRef.scrollTop -
+        chatContainerRef.clientHeight;
       return position <= threshold;
     }
     return true;
@@ -104,7 +107,7 @@ export default function ChatPage() {
       timestamp: new Date(),
       author: 'Командир',
       avatar: '/avatars/commander.jpg',
-      channel: chatStore.activeChannel()
+      channel: chatStore.activeChannel(),
     };
 
     chatStore.addMessage(message);
@@ -125,28 +128,28 @@ export default function ChatPage() {
   return (
     <div class="fixed inset-0 flex flex-col bg-slate-900">
       <div class="flex-shrink-0 bg-slate-800">
-        <div class="h-12 flex justify-center items-center relative">
-          <div class="left-0 absolute">
+        <div class="relative flex h-12 items-center justify-center">
+          <div class="absolute left-0">
             <BackButton />
           </div>
           <div class="text-lg">Чат</div>
         </div>
         <div class="flex border-b border-slate-700">
           <button
-            class={`flex-1 px-4 py-2 text-sm font-medium transition-colors border-b-2 cursor-pointer ${
+            class={`flex-1 cursor-pointer border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
               chatStore.activeChannel() === 'region'
-                ? 'text-blue-500 border-blue-500'
-                : 'text-gray-400 border-transparent hover:text-gray-200 hover:bg-slate-700/50'
+                ? 'border-blue-500 text-blue-500'
+                : 'border-transparent text-gray-400 hover:bg-slate-700/50 hover:text-gray-200'
             }`}
             onClick={() => chatStore.setActiveChannel('region')}
           >
             Регион
           </button>
           <button
-            class={`flex-1 px-4 py-2 text-sm font-medium transition-colors border-b-2 cursor-pointer ${
+            class={`flex-1 cursor-pointer border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
               chatStore.activeChannel() === 'alliance'
-                ? 'text-blue-500 border-blue-500'
-                : 'text-gray-400 border-transparent hover:text-gray-200 hover:bg-slate-700/50'
+                ? 'border-blue-500 text-blue-500'
+                : 'border-transparent text-gray-400 hover:bg-slate-700/50 hover:text-gray-200'
             }`}
             onClick={() => chatStore.setActiveChannel('alliance')}
           >
@@ -154,32 +157,41 @@ export default function ChatPage() {
           </button>
         </div>
       </div>
-      <div 
-        class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 scrollbar"
+      <div
+        class="scrollbar flex-1 space-y-4 overflow-x-hidden overflow-y-auto p-3"
         ref={chatContainerRef}
       >
-        <For each={chatStore.messages().filter(m => m.channel === chatStore.activeChannel())}>
+        <For
+          each={chatStore
+            .messages()
+            .filter((m) => m.channel === chatStore.activeChannel())}
+        >
           {(message) => (
             <div
-              class={`flex items-start gap-3 max-w-full min-w-0 ${
+              class={`flex max-w-full min-w-0 items-start gap-3 ${
                 message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
               }`}
             >
-              <div class="w-10 h-10 bg-slate-600 overflow-hidden shrink-0 rounded">
-                <img 
-                  src={message.avatar} 
+              <div class="h-10 w-10 shrink-0 overflow-hidden rounded bg-slate-600">
+                <img
+                  src={message.avatar}
                   alt={message.author}
-                  class="w-full h-full object-cover"
+                  class="h-full w-full object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"%2F%3E%3C%2Fsvg%3E';
+                    target.src =
+                      'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"%2F%3E%3C%2Fsvg%3E';
                   }}
                 />
               </div>
-              <div class={`flex flex-col gap-1 min-w-0 max-w-[calc(100%-3.5rem)] ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                <span class="text-xs font-medium text-gray-400">{message.author}</span>
+              <div
+                class={`flex max-w-[calc(100%-3.5rem)] min-w-0 flex-col gap-1 ${message.sender === 'user' ? 'items-end' : 'items-start'}`}
+              >
+                <span class="text-xs font-medium text-gray-400">
+                  {message.author}
+                </span>
                 <div
-                  class={`rounded-lg px-3 py-2 max-w-full break-words ${
+                  class={`max-w-full rounded-lg px-3 py-2 break-words ${
                     message.sender === 'user'
                       ? 'bg-blue-500 text-white'
                       : 'bg-slate-700 text-gray-100'
@@ -196,14 +208,17 @@ export default function ChatPage() {
       {showScrollButton() && (
         <button
           onClick={forceScrollToBottom}
-          class="fixed bottom-24 right-4 w-10 h-10 bg-blue-500 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-600 transition-colors"
+          class="fixed right-4 bottom-24 flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white shadow-lg transition-colors hover:bg-blue-600"
           title="К новым сообщениям"
         >
-          <Icon path={arrowDown} class="w-5 h-5" />
+          <Icon path={arrowDown} class="h-5 w-5" />
         </button>
       )}
-      <form onSubmit={handleSendMessage} class="flex-shrink-0 h-[72px] p-4 bg-slate-800 border-t border-slate-700 flex items-center">
-        <div class="flex space-x-2 w-full">
+      <form
+        onSubmit={handleSendMessage}
+        class="flex h-[72px] flex-shrink-0 items-center border-t border-slate-700 bg-slate-800 p-4"
+      >
+        <div class="flex w-full space-x-2">
           <textarea
             ref={textareaRef}
             rows={1}
@@ -211,17 +226,17 @@ export default function ChatPage() {
             onInput={handleInput}
             onKeyDown={handleKeyDown}
             placeholder="Введите сообщение..."
-            class="flex-1 h-[40px] min-h-[40px] max-h-[150px] px-4 py-2 bg-slate-700 text-white border-slate-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none scrollbar"
+            class="scrollbar h-[40px] max-h-[150px] min-h-[40px] flex-1 resize-none rounded-lg border border-slate-600 bg-slate-700 px-4 py-2 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
           <button
             type="submit"
-            class="w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 shrink-0"
+            class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-500 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             title="Отправить"
           >
-            <Icon path={paperAirplane} class="w-5 h-5 -rotate-45" />
+            <Icon path={paperAirplane} class="h-5 w-5 -rotate-45" />
           </button>
         </div>
       </form>
     </div>
   );
-} 
+}

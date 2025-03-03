@@ -7,7 +7,7 @@ export function BackButton() {
 
   return (
     <button
-      class="px-4 cursor-pointer flex items-center hover:text-gray-600 transition-colors"
+      class="flex cursor-pointer items-center px-4 transition-colors hover:text-gray-600"
       onClick={() => navigate(-1)}
     >
       <Icon path={arrowLeft} class="size-6" />

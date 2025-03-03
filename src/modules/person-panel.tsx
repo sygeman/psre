@@ -7,13 +7,13 @@ export const PersonPanel = () => {
   const navigate = useNavigate();
 
   return (
-    <div class="text-sm bg-slate-800 w-24">
-      <div 
-        class="flex size-24 bg-slate-700 relative cursor-pointer hover:bg-slate-600 transition-colors"
+    <div class="w-24 bg-slate-800 text-sm">
+      <div
+        class="relative flex size-24 cursor-pointer bg-slate-700 transition-colors hover:bg-slate-600"
         onClick={() => navigate('/person')}
       >
         <CharacterAvatar class="size-24" />
-        <div class="absolute left-1 top-1 bg-black px-1 rounded">
+        <div class="absolute top-1 left-1 rounded bg-black px-1">
           {accountState.level}
         </div>
       </div>

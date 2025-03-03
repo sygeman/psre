@@ -21,19 +21,19 @@ export const HeroCard: Component<Props> = (props) => {
         'bg-blue-900': props.heroStyle === 'blue',
       }}
     >
-      <div class="bg-black/90 top-0 ml-0.5 w-[calc(100%-4px)] h-[calc(100%-28px)]" />
+      <div class="top-0 ml-0.5 h-[calc(100%-28px)] w-[calc(100%-4px)] bg-black/90" />
       <div class="absolute bottom-12 left-1.5 font-bold">
         +{props.upgradeLevel}
       </div>
-      <div class="absolute bottom-12 right-1.5">Lv.{props.level}</div>
-      <div class="absolute bottom-7 left-0 w-full flex justify-center">
+      <div class="absolute right-1.5 bottom-12">Lv.{props.level}</div>
+      <div class="absolute bottom-7 left-0 flex w-full justify-center">
         {props.starLevel}*
       </div>
-      <div class="absolute bottom-0 flex items-center justify-center w-full">
-        <span class="bg-black/60 flex mx-0.5 px-2 absolute left-0">
+      <div class="absolute bottom-0 flex w-full items-center justify-center">
+        <span class="absolute left-0 mx-0.5 flex bg-black/60 px-2">
           {props.type}
         </span>
-        <span class="text-sm py-1">{props.name}</span>
+        <span class="py-1 text-sm">{props.name}</span>
       </div>
     </div>
   );

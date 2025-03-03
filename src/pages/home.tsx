@@ -6,7 +6,7 @@ import { MiniChat } from '../components/mini-chat';
 
 export function HomePage() {
   return (
-    <div class="relative flex flex-col h-screen">
+    <div class="relative flex h-screen flex-col">
       <ResourcesPanel />
       <div class="absolute top-8 flex shrink-0">
         <PersonPanel />
@@ -14,7 +14,7 @@ export function HomePage() {
       <div class="absolute top-8 left-24 flex shrink-0">
         <PowerPanel />
       </div>
-      <div class="flex h-[calc(100%-96px)] bg-slate-500 justify-center items-center">
+      <div class="flex h-[calc(100%-96px)] items-center justify-center bg-slate-500">
         Карта базы
       </div>
       <div class="absolute bottom-16 w-full">
