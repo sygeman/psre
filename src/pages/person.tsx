@@ -11,7 +11,7 @@ const PERSON_TABS: Tab[] = [
   { id: 'chip', label: 'Чип' },
   { id: 'module', label: 'Модуль' },
   { id: 'cube', label: 'Куб' },
-  { id: 'biomod', label: 'Биомодификатор' },
+  { id: 'biomod', label: 'Биомод' },
 ];
 
 export function PersonPage() {

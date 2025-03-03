@@ -14,6 +14,10 @@ type AccountState = {
   diamond: number;
   power: number;
   serum: number;
+  likes: number;
+  name: string;
+  exp: number;
+  kills: number;
 };
 
 const stateId = '5fd7059b-fb52-40e9-92b0-2ddbd4b2d2f6';
@@ -30,6 +34,10 @@ export const [accountState, setAccountState] = createStore<AccountState>({
   diamond: 0,
   power: 0,
   serum: 0,
+  likes: 0,
+  name: '',
+  exp: 0,
+  kills: 0,
 });
 
 const updateStateFromData = (data) => {
@@ -44,6 +52,10 @@ const updateStateFromData = (data) => {
     diamond: data?.diamond,
     power: data?.power,
     serum: data?.serum,
+    likes: data?.likes,
+    name: data?.name,
+    exp: data?.exp,
+    kills: data?.kills,
   });
 };
 

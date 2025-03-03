@@ -14,11 +14,11 @@ interface TabsProps {
 
 export function Tabs(props: TabsProps) {
   return (
-    <div class="flex bg-slate-800 overflow-x-auto hide-scrollbar">
+    <div class="flex bg-slate-800">
       <For each={props.tabs}>
         {(tab) => (
           <div
-            class={`px-3 py-2 cursor-pointer transition-colors whitespace-nowrap text-sm ${
+            class={`flex-1 h-10 cursor-pointer flex items-center justify-center text-sm font-medium ${
               tab.id === props.activeTab
                 ? 'bg-slate-700 text-white'
                 : 'text-slate-400 hover:text-slate-200'
