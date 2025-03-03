@@ -1,9 +1,41 @@
+import { StarIcon } from './star-icon';
+
 interface EquipmentSlotProps {
   icon: string;
   label: string;
   isEmpty?: boolean;
   upgradeLevel?: number;
   canUpgrade?: boolean;
+  stars?: number;
+}
+
+function renderStars(stars: number | undefined) {
+  if (!stars) return null;
+
+  const redStars = Math.floor((stars - 1) / 5);
+  const yellowStars = stars > 5 ? 5 : stars;
+
+  return (
+    <div class="absolute bottom-0 left-0 right-0">
+      <div class="bg-slate-900/80 rounded-b py-0.5">
+        <div class="flex justify-center">
+          <div class="flex -space-x-0.5">
+            {redStars > 0 ? (
+              // Красные звезды
+              Array.from({ length: redStars }).map((_, i) => (
+                <StarIcon class="size-3 text-red-500" />
+              ))
+            ) : (
+              // Желтые звезды
+              Array.from({ length: yellowStars }).map((_, i) => (
+                <StarIcon class="size-3 text-yellow-400" />
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function EquipmentSlot(props: EquipmentSlotProps) {
@@ -23,6 +55,7 @@ export function EquipmentSlot(props: EquipmentSlotProps) {
           <div class="absolute right-1 top-1 size-2 rounded-full bg-red-500" />
         )}
         <span class="text-2xl">{props.icon}</span>
+        {!props.isEmpty && renderStars(props.stars)}
       </div>
       <div class="text-sm text-slate-400">{props.label}</div>
     </div>
