@@ -1,6 +1,6 @@
 import { createSignal, For, onMount, createEffect, onCleanup } from 'solid-js';
 import { chatStore, type Message, type ChatChannel } from '../stores/chat';
-import { BackButton } from '../modules/back-button';
+import { BackLayout } from '../layouts/back-layout';
 import { Icon } from 'solid-heroicons';
 import { paperAirplane, arrowDown } from 'solid-heroicons/outline';
 import { useLocation } from '@solidjs/router';
@@ -90,32 +90,10 @@ export default function ChatPage() {
     forceScrollToBottom();
   });
 
-  const handleInput = (e: Event) => {
+  const handleInput = (e: InputEvent) => {
     const target = e.target as HTMLTextAreaElement;
     setNewMessage(target.value);
     adjustTextareaHeight();
-  };
-
-  const handleSendMessage = (e: Event) => {
-    e.preventDefault();
-    if (!newMessage().trim()) return;
-
-    const message: Message = {
-      id: Date.now().toString(),
-      text: newMessage(),
-      sender: 'user',
-      timestamp: new Date(),
-      author: 'Командир',
-      avatar: '/avatars/commander.jpg',
-      channel: chatStore.activeChannel(),
-    };
-
-    chatStore.addMessage(message);
-    setNewMessage('');
-    if (textareaRef) {
-      textareaRef.style.height = 'auto';
-    }
-    forceScrollToBottom();
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -125,15 +103,30 @@ export default function ChatPage() {
     }
   };
 
+  const handleSendMessage = (e: Event) => {
+    e.preventDefault();
+    const message = newMessage().trim();
+    if (message) {
+      chatStore.addMessage({
+        id: Date.now().toString(),
+        text: message,
+        author: 'User',
+        avatar: '',
+        channel: chatStore.activeChannel(),
+        sender: 'user',
+        timestamp: new Date(),
+      });
+      setNewMessage('');
+      if (textareaRef) {
+        textareaRef.style.height = '40px';
+      }
+      scrollToBottom();
+    }
+  };
+
   return (
-    <div class="fixed inset-0 flex flex-col bg-slate-900">
-      <div class="flex-shrink-0 bg-slate-800">
-        <div class="relative flex h-12 items-center justify-center">
-          <div class="absolute left-0">
-            <BackButton />
-          </div>
-          <div class="text-lg">Чат</div>
-        </div>
+    <BackLayout title="Чат">
+      <div class="flex flex-shrink-0 flex-col">
         <div class="flex border-b border-slate-700">
           <button
             class={`flex-1 cursor-pointer border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
@@ -237,6 +230,6 @@ export default function ChatPage() {
           </button>
         </div>
       </form>
-    </div>
+    </BackLayout>
   );
 }

@@ -1,0 +1,25 @@
+import { JSX } from 'solid-js';
+import { BackButton } from '../modules/back-button';
+
+type BackLayoutProps = {
+  children: JSX.Element;
+  title: string;
+  rightContent?: JSX.Element;
+};
+
+export function BackLayout(props: BackLayoutProps) {
+  return (
+    <div class="relative flex h-screen flex-col">
+      <div class="relative flex h-12 items-center justify-center bg-slate-800">
+        <div class="absolute left-0">
+          <BackButton />
+        </div>
+        <div class="text-lg">{props.title}</div>
+        {props.rightContent && (
+          <div class="absolute right-0">{props.rightContent}</div>
+        )}
+      </div>
+      {props.children}
+    </div>
+  );
+} 

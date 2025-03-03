@@ -1,14 +1,9 @@
-import { BackButton } from '../modules/back-button';
+import { BackLayout } from '../layouts/back-layout';
 
 export function VipPage() {
   return (
-    <div class="relative flex h-screen flex-col">
-      <div class="relative flex h-12 items-center justify-center bg-slate-800">
-        <div class="absolute left-0">
-          <BackButton />
-        </div>
-        <div class="text-lg">VIP Привилегии</div>
-      </div>
-    </div>
+    <BackLayout title="VIP Привилегии">
+      <div>Контент VIP страницы</div>
+    </BackLayout>
   );
 }

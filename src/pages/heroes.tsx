@@ -1,19 +1,13 @@
 import { HeroCard } from '../components/hero-card';
-import { BackButton } from '../modules/back-button';
+import { BackLayout } from '../layouts/back-layout';
 import { accountState } from '../stores/state';
 
 export function HeroesPage() {
   return (
-    <div class="relative flex h-screen flex-col">
-      <div class="relative flex h-12 items-center justify-center bg-slate-800">
-        <div class="absolute left-0">
-          <BackButton />
-        </div>
-        <div class="text-lg">Герои</div>
-        <div class="absolute right-0 px-2">
-          S {Number(accountState.serum).toLocaleString('en-US')}
-        </div>
-      </div>
+    <BackLayout 
+      title="Герои"
+      rightContent={<div class="px-2">S {Number(accountState.serum).toLocaleString('en-US')}</div>}
+    >
       <div>
         <div class="h-12 w-full" />
         <div class="grid grid-cols-4 gap-2 px-2">
@@ -59,6 +53,6 @@ export function HeroesPage() {
           />
         </div>
       </div>
-    </div>
+    </BackLayout>
   );
 }

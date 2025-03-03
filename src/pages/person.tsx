@@ -1,4 +1,4 @@
-import { BackButton } from '../modules/back-button';
+import { BackLayout } from '../layouts/back-layout';
 import { accountState } from '../stores/state';
 import { createSignal, Match, Switch } from 'solid-js';
 import { Tab, Tabs } from '../components/tabs';
@@ -18,14 +18,8 @@ export function PersonPage() {
   const [activeTab, setActiveTab] = createSignal('equipment');
 
   return (
-    <div class="relative flex h-screen flex-col">
+    <BackLayout title="Персонаж">
       <div class="flex flex-shrink-0 flex-col">
-        <div class="relative flex h-12 items-center justify-center bg-slate-800">
-          <div class="absolute left-0">
-            <BackButton />
-          </div>
-          <div class="text-lg">Персонаж</div>
-        </div>
         <Tabs
           tabs={PERSON_TABS}
           activeTab={activeTab()}
@@ -127,6 +121,6 @@ export function PersonPage() {
           </div>
         </div>
       </div>
-    </div>
+    </BackLayout>
   );
 }
