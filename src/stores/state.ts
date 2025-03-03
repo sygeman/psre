@@ -1,7 +1,7 @@
 import { createStore } from 'solid-js/store';
 import { directus } from '../lib/directus';
-import { readItem } from '@directus/sdk';
 import { createSignal } from 'solid-js';
+import { GET_ACCOUNT_STATE, UPDATE_ACCOUNT_STATE } from '../graphql/queries';
 
 type AccountState = {
   level: number;
@@ -14,14 +14,22 @@ type AccountState = {
   diamond: number;
   power: number;
   serum: number;
-  likes: number;
-  name: string;
   exp: number;
-  kills: number;
+  date_created?: string;
+  date_updated?: string;
 };
+
+// psre_account
+// ba12e291-2e9c-452e-ae06-81c1a885390e
 
 const stateId = '5fd7059b-fb52-40e9-92b0-2ddbd4b2d2f6';
 const collection = 'psre_account_state';
+const graphqlUrl = import.meta.env.VITE_GRAPHQL_URL;
+const apiToken = import.meta.env.VITE_API_TOKEN;
+
+if (!graphqlUrl || !apiToken) {
+  throw new Error('GraphQL URL and API token must be defined in environment variables');
+}
 
 export const [accountState, setAccountState] = createStore<AccountState>({
   level: 0,
@@ -34,36 +42,45 @@ export const [accountState, setAccountState] = createStore<AccountState>({
   diamond: 0,
   power: 0,
   serum: 0,
-  likes: 0,
-  name: '',
   exp: 0,
-  kills: 0,
 });
 
-const updateStateFromData = (data) => {
+const updateStateFromData = (data: any) => {
+  if (!data) return;
+  
   setAccountState({
-    level: data?.level,
-    action_points: data?.action_points,
-    stamina_points: data?.stamina_points,
-    food: data?.food,
-    wood: data?.wood,
-    steel: data?.steel,
-    fuel: data?.fuel,
-    diamond: data?.diamond,
-    power: data?.power,
-    serum: data?.serum,
-    likes: data?.likes,
-    name: data?.name,
-    exp: data?.exp,
-    kills: data?.kills,
+    level: data.level ?? 0,
+    action_points: data.action_points ?? 0,
+    stamina_points: data.stamina_points ?? 0,
+    food: Number(data.food ?? 0),
+    wood: Number(data.wood ?? 0),
+    steel: Number(data.steel ?? 0),
+    fuel: Number(data.fuel ?? 0),
+    diamond: Number(data.diamond ?? 0),
+    power: Number(data.power ?? 0),
+    serum: Number(data.serum ?? 0),
+    exp: Number(data.exp ?? 0),
+    date_created: data.date_created,
+    date_updated: data.date_updated,
   });
 };
 
 export const initializeStore = async () => {
   try {
-    const data = await directus.request(readItem(collection, stateId));
+    const response = await fetch(graphqlUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`
+      },
+      body: JSON.stringify({
+        query: GET_ACCOUNT_STATE,
+        variables: { id: stateId }
+      })
+    });
 
-    updateStateFromData(data);
+    const { data } = await response.json();
+    updateStateFromData(data.psre_account_state_by_id);
 
     const { subscription, unsubscribe } = await directus.subscribe(collection, {
       query: { filter: { id: { _eq: stateId } } },
@@ -71,7 +88,6 @@ export const initializeStore = async () => {
       uid: 'update-account-state',
     });
 
-    // Сохраняем функцию отписки для возможного использования в дальнейшем
     setUnsubscribeFunction(() => unsubscribe);
 
     (async () => {
@@ -97,10 +113,35 @@ export const initializeStore = async () => {
   }
 };
 
+export const updateState = async (data: Partial<AccountState>) => {
+  try {
+    const response = await fetch(graphqlUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiToken}`
+      },
+      body: JSON.stringify({
+        query: UPDATE_ACCOUNT_STATE,
+        variables: { id: stateId, data }
+      })
+    });
+
+    const result = await response.json();
+    
+    if (result.data) {
+      updateStateFromData(result.data.update_psre_account_state_item);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Ошибка при обновлении состояния:', error);
+    return false;
+  }
+};
+
 // Функция для хранения и использования функции отписки
-const [unsubscribeFunction, setUnsubscribeFunction] = createSignal<
-  (() => void) | null
->(null);
+const [unsubscribeFunction, setUnsubscribeFunction] = createSignal<(() => void) | null>(null);
 
 // Функция для отписки от обновлений при необходимости (например, при размонтировании компонента)
 export const unsubscribeFromUpdates = () => {
