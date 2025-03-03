@@ -1,5 +1,7 @@
 import { createSignal } from 'solid-js';
 
+export type ChatChannel = 'region' | 'alliance';
+
 export interface Message {
   id: string;
   text: string;
@@ -7,6 +9,7 @@ export interface Message {
   timestamp: Date;
   author: string;
   avatar: string;
+  channel: ChatChannel;
 }
 
 const [messages, setMessages] = createSignal<Message[]>([]);
@@ -22,13 +25,17 @@ const sendAutoMessage = () => {
   ];
   
   const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+  const channels: ChatChannel[] = ['region', 'alliance'];
+  const randomChannel = channels[Math.floor(Math.random() * channels.length)];
+  
   const message: Message = {
     id: Date.now().toString(),
     text: randomMessage,
     sender: 'other',
     timestamp: new Date(),
     author: 'Система',
-    avatar: '/avatars/system.jpg'
+    avatar: '/avatars/system.jpg',
+    channel: randomChannel
   };
 
   chatStore.addMessage(message);
@@ -55,7 +62,8 @@ const initializeMockMessages = () => {
       sender: 'other',
       timestamp: new Date(Date.now() - 3600000),
       author: 'Алексей',
-      avatar: '/avatars/alex.jpg'
+      avatar: '/avatars/alex.jpg',
+      channel: 'region'
     },
     {
       id: '2',
@@ -63,7 +71,8 @@ const initializeMockMessages = () => {
       sender: 'user',
       timestamp: new Date(Date.now() - 3300000),
       author: 'Командир',
-      avatar: '/avatars/commander.jpg'
+      avatar: '/avatars/commander.jpg',
+      channel: 'region'
     },
     {
       id: '3',
@@ -71,7 +80,8 @@ const initializeMockMessages = () => {
       sender: 'other',
       timestamp: new Date(Date.now() - 3000000),
       author: 'Алексей',
-      avatar: '/avatars/alex.jpg'
+      avatar: '/avatars/alex.jpg',
+      channel: 'region'
     },
     {
       id: '4',
@@ -79,60 +89,39 @@ const initializeMockMessages = () => {
       sender: 'user',
       timestamp: new Date(Date.now() - 2700000),
       author: 'Командир',
-      avatar: '/avatars/commander.jpg'
+      avatar: '/avatars/commander.jpg',
+      channel: 'region'
     },
     {
       id: '5',
-      text: 'Для завершения работ по укреплению казармы срочно требуется дополнительно 2000 единиц металла и 1500 энергетических кристаллов.',
+      text: 'Приветствую всех членов альянса! У кого-нибудь есть лишние ресурсы для улучшения турелей?',
       sender: 'user',
       timestamp: new Date(Date.now() - 900000),
       author: 'Командир',
-      avatar: '/avatars/commander.jpg'
+      avatar: '/avatars/commander.jpg',
+      channel: 'alliance'
     },
     {
       id: '6',
-      text: 'Могу поделиться ресурсами. У меня как раз есть излишки после недавней торговой экспедиции. Когда тебе будет удобно провести обмен?',
+      text: 'Я могу поделиться. Сколько нужно?',
       sender: 'other',
       timestamp: new Date(Date.now() - 600000),
-      author: 'Алексей',
-      avatar: '/avatars/alex.jpg'
+      author: 'Мария',
+      avatar: '/avatars/maria.jpg',
+      channel: 'alliance'
     },
     {
       id: '7',
-      text: 'Было бы отлично встретиться через час. Как раз закончу текущую миссию.',
+      text: 'Нужно примерно 5000 единиц металла для апгрейда до 4 уровня.',
       sender: 'user',
       timestamp: new Date(Date.now() - 300000),
       author: 'Командир',
-      avatar: '/avatars/commander.jpg'
-    },
-    {
-      id: '8',
-      text: 'Договорились! Кстати, слышал о новом событии на следующей неделе? Будет турнир по защите баз.',
-      sender: 'other',
-      timestamp: new Date(Date.now() - 240000),
-      author: 'Алексей',
-      avatar: '/avatars/alex.jpg'
-    },
-    {
-      id: '9',
-      text: 'Да, уже готовлюсь. Собираюсь участвовать. Надеюсь успеть улучшить все системы обороны к началу.',
-      sender: 'user',
-      timestamp: new Date(Date.now() - 180000),
-      author: 'Командир',
-      avatar: '/avatars/commander.jpg'
-    },
-    {
-      id: '10',
-      text: 'Отлично! Я тоже участвую. Может потренируемся вместе перед турниром? Можем устроить тестовые атаки на базы друг друга.',
-      sender: 'other',
-      timestamp: new Date(Date.now() - 120000),
-      author: 'Алексей',
-      avatar: '/avatars/alex.jpg'
+      avatar: '/avatars/commander.jpg',
+      channel: 'alliance'
     }
   ];
 
   setMessages(mockMessages);
-  // Запускаем автоматическую отправку сообщений сразу после инициализации
   startAutoMessages();
 };
 

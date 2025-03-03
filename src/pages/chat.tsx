@@ -1,5 +1,5 @@
 import { createSignal, For, onMount, createEffect, onCleanup } from 'solid-js';
-import { chatStore, type Message } from '../stores/chat';
+import { chatStore, type Message, type ChatChannel } from '../stores/chat';
 import { BackButton } from '../modules/back-button';
 import { Icon } from 'solid-heroicons';
 import { paperAirplane, arrowDown } from 'solid-heroicons/outline';
@@ -8,6 +8,7 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = createSignal('');
   const [showScrollButton, setShowScrollButton] = createSignal(false);
   const [isFirstRender, setIsFirstRender] = createSignal(true);
+  const [activeChannel, setActiveChannel] = createSignal<ChatChannel>('region');
   let chatContainerRef: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
@@ -72,6 +73,13 @@ export default function ChatPage() {
     setTimeout(scrollToBottom, 0);
   });
 
+  createEffect(() => {
+    // Следим за изменением активного канала
+    activeChannel();
+    // При смене канала прокручиваем чат вниз
+    forceScrollToBottom();
+  });
+
   const handleInput = (e: Event) => {
     const target = e.target as HTMLTextAreaElement;
     setNewMessage(target.value);
@@ -88,7 +96,8 @@ export default function ChatPage() {
       sender: 'user',
       timestamp: new Date(),
       author: 'Командир',
-      avatar: '/avatars/commander.jpg'
+      avatar: '/avatars/commander.jpg',
+      channel: activeChannel()
     };
 
     chatStore.addMessage(message);
@@ -96,29 +105,60 @@ export default function ChatPage() {
     if (textareaRef) {
       textareaRef.style.height = 'auto';
     }
-    forceScrollToBottom(); // Принудительная прокрутка при отправке сообщения
+    forceScrollToBottom();
+  };
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage(e);
+    }
   };
 
   return (
     <div class="relative flex flex-col h-screen bg-slate-900">
-      <div class="h-12 flex bg-slate-800 justify-center items-center relative">
-        <div class="left-0 absolute">
-          <BackButton />
+      <div class="flex-shrink-0 bg-slate-800">
+        <div class="h-12 flex justify-center items-center relative">
+          <div class="left-0 absolute">
+            <BackButton />
+          </div>
+          <div class="text-lg">Чат</div>
         </div>
-        <div class="text-lg">Чат</div>
+        <div class="flex border-b border-slate-700">
+          <button
+            class={`flex-1 px-4 py-2 text-sm font-medium ${
+              activeChannel() === 'region'
+                ? 'text-blue-500 border-b-2 border-blue-500'
+                : 'text-gray-400 hover:text-gray-300'
+            }`}
+            onClick={() => setActiveChannel('region')}
+          >
+            Регион
+          </button>
+          <button
+            class={`flex-1 px-4 py-2 text-sm font-medium ${
+              activeChannel() === 'alliance'
+                ? 'text-blue-500 border-b-2 border-blue-500'
+                : 'text-gray-400 hover:text-gray-300'
+            }`}
+            onClick={() => setActiveChannel('alliance')}
+          >
+            Альянс
+          </button>
+        </div>
       </div>
       <div 
-        class="flex-1 overflow-y-auto p-4 space-y-6"
+        class="flex-1 overflow-y-auto p-3 space-y-4"
         ref={chatContainerRef}
       >
-        <For each={chatStore.messages()}>
+        <For each={chatStore.messages().filter(m => m.channel === activeChannel())}>
           {(message) => (
             <div
-              class={`flex items-start gap-4 ${
+              class={`flex items-start gap-3 ${
                 message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
               }`}
             >
-              <div class="w-16 h-16 bg-slate-600 overflow-hidden shrink-0">
+              <div class="w-10 h-10 bg-slate-600 overflow-hidden shrink-0 rounded">
                 <img 
                   src={message.avatar} 
                   alt={message.author}
@@ -129,16 +169,16 @@ export default function ChatPage() {
                   }}
                 />
               </div>
-              <div class={`flex flex-col gap-1.5 ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
-                <span class="text-sm font-medium text-gray-300">{message.author}</span>
+              <div class={`flex flex-col gap-1 ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
+                <span class="text-xs font-medium text-gray-400">{message.author}</span>
                 <div
-                  class={`rounded-lg p-3 ${
+                  class={`rounded-lg px-3 py-2 ${
                     message.sender === 'user'
                       ? 'bg-blue-500 text-white'
                       : 'bg-slate-700 text-gray-100'
                   }`}
                 >
-                  <p>{message.text}</p>
+                  <p class="text-sm">{message.text}</p>
                 </div>
               </div>
             </div>
@@ -155,15 +195,16 @@ export default function ChatPage() {
           <Icon path={arrowDown} class="w-5 h-5" />
         </button>
       )}
-      <form onSubmit={handleSendMessage} class="p-4 bg-slate-800 border-t border-slate-700">
-        <div class="flex space-x-2">
+      <form onSubmit={handleSendMessage} class="flex-shrink-0 h-[72px] p-4 bg-slate-800 border-t border-slate-700 flex items-center">
+        <div class="flex space-x-2 w-full">
           <textarea
             ref={textareaRef}
             rows={1}
             value={newMessage()}
             onInput={handleInput}
+            onKeyDown={handleKeyDown}
             placeholder="Введите сообщение..."
-            class="flex-1 px-4 py-2 bg-slate-700 text-white border-slate-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none min-h-[40px] max-h-[150px]"
+            class="flex-1 h-[40px] px-4 py-2 bg-slate-700 text-white border-slate-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none overflow-y-auto"
           />
           <button
             type="submit"
