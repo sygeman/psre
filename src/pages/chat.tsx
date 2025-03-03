@@ -1,5 +1,5 @@
 import { createSignal, For, onMount, createEffect, onCleanup } from 'solid-js';
-import { chatStore, type Message, type ChatChannel } from '../stores/chat';
+import { chatStore, type ChatChannel } from '../stores/chat';
 import { BackLayout } from '../layouts/back-layout';
 import { Icon } from 'solid-heroicons';
 import { paperAirplane, arrowDown } from 'solid-heroicons/outline';
