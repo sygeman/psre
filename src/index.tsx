@@ -12,6 +12,7 @@ import { ShopPage } from './pages/shop';
 import { PersonPage } from './pages/person';
 import ChatPage from './pages/chat';
 import { chatStore } from './stores/chat';
+import { RankPage } from './pages/rank';
 
 await directus.connect();
 initializeStore();
@@ -27,6 +28,7 @@ render(
       <Route path="/shop" component={ShopPage} />
       <Route path="/person" component={PersonPage} />
       <Route path="/chat" component={ChatPage} />
+      <Route path="/rank" component={RankPage} />
     </Router>
   ),
   document.getElementById('root')
