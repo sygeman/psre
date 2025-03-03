@@ -2,6 +2,7 @@ import { A, useLocation } from '@solidjs/router';
 import { createMemo } from 'solid-js';
 import { Icon } from 'solid-heroicons';
 import { home, globeAlt, trophy, userCircle, clipboardDocumentList, userGroup, envelopeOpen } from 'solid-heroicons/outline';
+import { mailStore } from '../stores/mail';
 
 export const BottomMenu = () => {
   const location = useLocation();
@@ -25,7 +26,14 @@ export const BottomMenu = () => {
         <div class="text-xs">Герои</div>
       </A>
       <A href="/mail" class="flex flex-col items-center justify-center gap-1">
-        <Icon path={envelopeOpen} class="h-6 w-6 text-slate-400" />
+        <div class="relative">
+          <Icon path={envelopeOpen} class="h-6 w-6 text-slate-400" />
+          {mailStore.unreadCount > 0 && (
+            <div class="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-medium text-white">
+              {mailStore.unreadCount}
+            </div>
+          )}
+        </div>
         <div class="text-xs">Почта</div>
       </A>
       <A href="/alliance" class="flex flex-col items-center justify-center gap-1">
