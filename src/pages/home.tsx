@@ -2,7 +2,7 @@ import { BottomMenu } from '../modules/bottom-menu';
 import { PersonPanel } from '../modules/person-panel';
 import { ResourcesPanel } from '../modules/resources-panel';
 import { PowerPanel } from '../modules/power-panel';
-import { MiniChat } from '../components/MiniChat';
+import { MiniChat } from '../components/mini-chat';
 
 export function HomePage() {
   return (
