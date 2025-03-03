@@ -4,14 +4,14 @@ import { Tab } from '../components/tabs';
 import { EquipmentTabs } from '../components/equipment-tabs';
 
 const LEFT_EQUIPMENT_SLOTS = [
-  { icon: '⚔️', label: 'Оружие', upgradeLevel: 3 },
-  { icon: '🛡️', label: 'Щит', upgradeLevel: 1 },
+  { icon: '⚔️', label: 'Оружие', upgradeLevel: 3, canUpgrade: true, stars: 7 },
+  { icon: '🛡️', label: 'Щит', upgradeLevel: 1, stars: 3 },
   { icon: '💍', label: 'Кольцо' },
 ];
 
 const RIGHT_EQUIPMENT_SLOTS = [
-  { icon: '⛑️', label: 'Шлем', upgradeLevel: 2 },
-  { icon: '🦺', label: 'Броня', upgradeLevel: 4 },
+  { icon: '⛑️', label: 'Шлем', upgradeLevel: 2, canUpgrade: true, stars: 11 },
+  { icon: '🦺', label: 'Броня', upgradeLevel: 4, stars: 5 },
   { icon: '👢', label: 'Ботинки' },
 ];
 
@@ -36,6 +36,8 @@ export function EquipmentPage() {
               label={slot.label}
               isEmpty={!slot.upgradeLevel}
               upgradeLevel={slot.upgradeLevel}
+              canUpgrade={slot.canUpgrade}
+              stars={slot.stars}
             />
           )}</For>
         </div>
@@ -53,6 +55,8 @@ export function EquipmentPage() {
               label={slot.label}
               isEmpty={!slot.upgradeLevel}
               upgradeLevel={slot.upgradeLevel}
+              canUpgrade={slot.canUpgrade}
+              stars={slot.stars}
             />
           )}</For>
         </div>
