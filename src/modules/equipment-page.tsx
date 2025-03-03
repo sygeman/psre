@@ -4,14 +4,14 @@ import { Tab } from '../components/tabs';
 import { EquipmentTabs } from '../components/equipment-tabs';
 
 const LEFT_EQUIPMENT_SLOTS = [
-  { icon: '⚔️', label: 'Оружие' },
-  { icon: '🛡️', label: 'Щит' },
+  { icon: '⚔️', label: 'Оружие', upgradeLevel: 3 },
+  { icon: '🛡️', label: 'Щит', upgradeLevel: 1 },
   { icon: '💍', label: 'Кольцо' },
 ];
 
 const RIGHT_EQUIPMENT_SLOTS = [
-  { icon: '⛑️', label: 'Шлем' },
-  { icon: '🦺', label: 'Броня' },
+  { icon: '⛑️', label: 'Шлем', upgradeLevel: 2 },
+  { icon: '🦺', label: 'Броня', upgradeLevel: 4 },
   { icon: '👢', label: 'Ботинки' },
 ];
 
@@ -34,7 +34,8 @@ export function EquipmentPage() {
             <EquipmentSlot
               icon={slot.icon}
               label={slot.label}
-              isEmpty={true}
+              isEmpty={!slot.upgradeLevel}
+              upgradeLevel={slot.upgradeLevel}
             />
           )}</For>
         </div>
@@ -50,7 +51,8 @@ export function EquipmentPage() {
             <EquipmentSlot
               icon={slot.icon}
               label={slot.label}
-              isEmpty={true}
+              isEmpty={!slot.upgradeLevel}
+              upgradeLevel={slot.upgradeLevel}
             />
           )}</For>
         </div>
