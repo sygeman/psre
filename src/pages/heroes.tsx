@@ -1,6 +1,7 @@
 import { HeroCard } from '../components/hero-card';
 import { BackLayout } from '../layouts/back-layout';
 import { accountState } from '../stores/state';
+import { ResourceDisplay } from '../components/resource-display';
 
 export function HeroesPage() {
   return (
@@ -8,7 +9,7 @@ export function HeroesPage() {
       title="Герои"
       rightContent={
         <div class="px-2">
-          S {Number(accountState.serum).toLocaleString('en-US')}
+          <ResourceDisplay icon="🧪" value={accountState.serum} />
         </div>
       }
     >
