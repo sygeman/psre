@@ -74,48 +74,54 @@ export function MiniChat() {
 
   return (
     <div
-      class="relative h-[76px] w-full cursor-pointer overflow-hidden bg-slate-800/80 p-2 backdrop-blur-sm transition-colors select-none hover:bg-slate-800/90"
+      class="relative w-full cursor-pointer overflow-hidden select-none"
       onClick={handleClick}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       {/* Индикаторы каналов */}
-      <div class="mb-1.5 flex justify-center gap-2">
-        <div
-          class={`h-1.5 w-1.5 rounded-full transition-colors ${
-            chatStore.activeChannel() === 'region'
-              ? 'bg-blue-500'
-              : 'bg-slate-600'
-          }`}
-        />
-        <div
-          class={`h-1.5 w-1.5 rounded-full transition-colors ${
-            chatStore.activeChannel() === 'alliance'
-              ? 'bg-blue-500'
-              : 'bg-slate-600'
-          }`}
-        />
+      <div class="mb-1.5 flex justify-center">
+        <div class="inline-flex gap-2 rounded-full bg-slate-800/80 px-2 py-1 backdrop-blur-sm">
+          <div
+            class={`h-1.5 w-1.5 rounded-full transition-colors ${
+              chatStore.activeChannel() === 'region'
+                ? 'bg-blue-500'
+                : 'bg-slate-600'
+            }`}
+          />
+          <div
+            class={`h-1.5 w-1.5 rounded-full transition-colors ${
+              chatStore.activeChannel() === 'alliance'
+                ? 'bg-blue-500'
+                : 'bg-slate-600'
+            }`}
+          />
+        </div>
       </div>
 
-      <div class="relative h-[44px] overflow-hidden">
-        <div
-          class="absolute inset-0 transition-transform duration-300 ease-out"
-          style={{
-            'z-index': chatStore.activeChannel() === 'region' ? 2 : 1,
-            transform: `translateX(${chatStore.activeChannel() === 'region' ? '0' : '-100%'})`,
-          }}
-        >
-          <MessageContainer channel="region" />
-        </div>
-        <div
-          class="absolute inset-0 transition-transform duration-300 ease-out"
-          style={{
-            'z-index': chatStore.activeChannel() === 'alliance' ? 2 : 1,
-            transform: `translateX(${chatStore.activeChannel() === 'alliance' ? '0' : '100%'})`,
-          }}
-        >
-          <MessageContainer channel="alliance" />
+      <div class="relative overflow-hidden bg-slate-800/80 backdrop-blur-sm">
+        <div class="py-2">
+          <div class="relative h-[44px]">
+            <div
+              class="absolute inset-0 transition-transform duration-300 ease-out"
+              style={{
+                'z-index': chatStore.activeChannel() === 'region' ? 2 : 1,
+                transform: `translateX(${chatStore.activeChannel() === 'region' ? '0' : '-100%'})`,
+              }}
+            >
+              <MessageContainer channel="region" />
+            </div>
+            <div
+              class="absolute inset-0 transition-transform duration-300 ease-out"
+              style={{
+                'z-index': chatStore.activeChannel() === 'alliance' ? 2 : 1,
+                transform: `translateX(${chatStore.activeChannel() === 'alliance' ? '0' : '100%'})`,
+              }}
+            >
+              <MessageContainer channel="alliance" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
