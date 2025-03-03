@@ -15,7 +15,6 @@ export default function ChatPage() {
   const [newMessage, setNewMessage] = createSignal('');
   const [showScrollButton, setShowScrollButton] = createSignal(false);
   const [isFirstRender, setIsFirstRender] = createSignal(true);
-  const [activeChannel, setActiveChannel] = createSignal<ChatChannel>(initialChannel);
   let chatContainerRef: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
@@ -54,6 +53,7 @@ export default function ChatPage() {
   };
 
   onMount(() => {
+    chatStore.setActiveChannel(initialChannel);
     scrollToBottom();
     adjustTextareaHeight();
     // Добавляем слушатель события прокрутки
@@ -82,7 +82,7 @@ export default function ChatPage() {
 
   createEffect(() => {
     // Следим за изменением активного канала
-    activeChannel();
+    chatStore.activeChannel();
     // При смене канала прокручиваем чат вниз
     forceScrollToBottom();
   });
@@ -104,7 +104,7 @@ export default function ChatPage() {
       timestamp: new Date(),
       author: 'Командир',
       avatar: '/avatars/commander.jpg',
-      channel: activeChannel()
+      channel: chatStore.activeChannel()
     };
 
     chatStore.addMessage(message);
@@ -134,21 +134,21 @@ export default function ChatPage() {
         <div class="flex border-b border-slate-700">
           <button
             class={`flex-1 px-4 py-2 text-sm font-medium transition-colors border-b-2 cursor-pointer ${
-              activeChannel() === 'region'
+              chatStore.activeChannel() === 'region'
                 ? 'text-blue-500 border-blue-500'
                 : 'text-gray-400 border-transparent hover:text-gray-200 hover:bg-slate-700/50'
             }`}
-            onClick={() => setActiveChannel('region')}
+            onClick={() => chatStore.setActiveChannel('region')}
           >
             Регион
           </button>
           <button
             class={`flex-1 px-4 py-2 text-sm font-medium transition-colors border-b-2 cursor-pointer ${
-              activeChannel() === 'alliance'
+              chatStore.activeChannel() === 'alliance'
                 ? 'text-blue-500 border-blue-500'
                 : 'text-gray-400 border-transparent hover:text-gray-200 hover:bg-slate-700/50'
             }`}
-            onClick={() => setActiveChannel('alliance')}
+            onClick={() => chatStore.setActiveChannel('alliance')}
           >
             Альянс
           </button>
@@ -158,7 +158,7 @@ export default function ChatPage() {
         class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgb(51,65,85)_transparent] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full"
         ref={chatContainerRef}
       >
-        <For each={chatStore.messages().filter(m => m.channel === activeChannel())}>
+        <For each={chatStore.messages().filter(m => m.channel === chatStore.activeChannel())}>
           {(message) => (
             <div
               class={`flex items-start gap-3 max-w-full min-w-0 ${

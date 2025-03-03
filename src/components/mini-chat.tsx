@@ -6,12 +6,11 @@ import { globeAlt, userGroup } from 'solid-heroicons/outline';
 
 export function MiniChat() {
   const navigate = useNavigate();
-  const [activeChannel, setActiveChannel] = createSignal<ChatChannel>('region');
   const [touchStart, setTouchStart] = createSignal(0);
   const [isAnimating, setIsAnimating] = createSignal(false);
   
   const handleClick = () => {
-    navigate('/chat', { state: { activeChannel: activeChannel() } });
+    navigate('/chat', { state: { activeChannel: chatStore.activeChannel() } });
   };
 
   const handleTouchStart = (e: TouchEvent) => {
@@ -29,10 +28,10 @@ export function MiniChat() {
     
     if (Math.abs(diff) > 50 && !isAnimating()) {
       setIsAnimating(true);
-      if (diff > 0 && activeChannel() === 'alliance') {
-        setActiveChannel('region');
-      } else if (diff < 0 && activeChannel() === 'region') {
-        setActiveChannel('alliance');
+      if (diff > 0 && chatStore.activeChannel() === 'alliance') {
+        chatStore.setActiveChannel('region');
+      } else if (diff < 0 && chatStore.activeChannel() === 'region') {
+        chatStore.setActiveChannel('alliance');
       }
       setTimeout(() => setIsAnimating(false), 300);
     } else if (Math.abs(diff) <= 5) {
@@ -80,14 +79,14 @@ export function MiniChat() {
       <div class="flex justify-center gap-2 mb-1.5">
         <div 
           class={`w-1.5 h-1.5 rounded-full transition-colors ${
-            activeChannel() === 'region' 
+            chatStore.activeChannel() === 'region' 
               ? 'bg-blue-500' 
               : 'bg-slate-600'
           }`}
         />
         <div 
           class={`w-1.5 h-1.5 rounded-full transition-colors ${
-            activeChannel() === 'alliance' 
+            chatStore.activeChannel() === 'alliance' 
               ? 'bg-blue-500' 
               : 'bg-slate-600'
           }`}
@@ -98,8 +97,8 @@ export function MiniChat() {
         <div 
           class="absolute inset-0 transition-transform duration-300 ease-out" 
           style={{
-            "z-index": activeChannel() === 'region' ? 2 : 1,
-            transform: `translateX(${activeChannel() === 'region' ? '0' : '-100%'})`
+            "z-index": chatStore.activeChannel() === 'region' ? 2 : 1,
+            transform: `translateX(${chatStore.activeChannel() === 'region' ? '0' : '-100%'})`
           }}
         >
           <MessageContainer channel="region" />
@@ -107,8 +106,8 @@ export function MiniChat() {
         <div 
           class="absolute inset-0 transition-transform duration-300 ease-out" 
           style={{
-            "z-index": activeChannel() === 'alliance' ? 2 : 1,
-            transform: `translateX(${activeChannel() === 'alliance' ? '0' : '100%'})`
+            "z-index": chatStore.activeChannel() === 'alliance' ? 2 : 1,
+            transform: `translateX(${chatStore.activeChannel() === 'alliance' ? '0' : '100%'})`
           }}
         >
           <MessageContainer channel="alliance" />

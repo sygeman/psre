@@ -13,6 +13,7 @@ export interface Message {
 }
 
 const [messages, setMessages] = createSignal<Message[]>([]);
+const [activeChannel, setActiveChannel] = createSignal<ChatChannel>('region');
 let autoMessageInterval: number | undefined;
 
 const sendAutoMessage = () => {
@@ -137,6 +138,8 @@ const initializeMockMessages = () => {
 
 export const chatStore = {
   messages,
+  activeChannel,
+  setActiveChannel,
   addMessage: (message: Message) => {
     const currentMessages = messages();
     const newMessages = [...currentMessages, message];
