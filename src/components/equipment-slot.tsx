@@ -3,6 +3,7 @@ interface EquipmentSlotProps {
   label: string;
   isEmpty?: boolean;
   upgradeLevel?: number;
+  canUpgrade?: boolean;
 }
 
 export function EquipmentSlot(props: EquipmentSlotProps) {
@@ -12,9 +13,14 @@ export function EquipmentSlot(props: EquipmentSlotProps) {
         props.isEmpty ? 'bg-slate-800' : 'bg-slate-700'
       }`}>
         {props.upgradeLevel !== undefined && !props.isEmpty && (
-          <div class="absolute left-1 top-1 text-xs font-medium text-cyan-400">
+          <div class="absolute left-1 top-1 text-xs font-bold text-white" style={{
+            "text-shadow": "-1px -1px 0 #0F172A, 1px -1px 0 #0F172A, -1px 1px 0 #0F172A, 1px 1px 0 #0F172A"
+          }}>
             +{props.upgradeLevel}
           </div>
+        )}
+        {props.canUpgrade && !props.isEmpty && (
+          <div class="absolute right-1 top-1 size-2 rounded-full bg-red-500" />
         )}
         <span class="text-2xl">{props.icon}</span>
       </div>
