@@ -3,12 +3,19 @@ import { chatStore, type Message, type ChatChannel } from '../stores/chat';
 import { BackButton } from '../modules/back-button';
 import { Icon } from 'solid-heroicons';
 import { paperAirplane, arrowDown } from 'solid-heroicons/outline';
+import { useLocation } from "@solidjs/router";
+
+type LocationState = {
+  activeChannel?: ChatChannel;
+};
 
 export default function ChatPage() {
+  const location = useLocation<LocationState>();
+  const initialChannel = location.state?.activeChannel || 'region';
   const [newMessage, setNewMessage] = createSignal('');
   const [showScrollButton, setShowScrollButton] = createSignal(false);
   const [isFirstRender, setIsFirstRender] = createSignal(true);
-  const [activeChannel, setActiveChannel] = createSignal<ChatChannel>('region');
+  const [activeChannel, setActiveChannel] = createSignal<ChatChannel>(initialChannel);
   let chatContainerRef: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
 
@@ -126,20 +133,20 @@ export default function ChatPage() {
         </div>
         <div class="flex border-b border-slate-700">
           <button
-            class={`flex-1 px-4 py-2 text-sm font-medium ${
+            class={`flex-1 px-4 py-2 text-sm font-medium transition-colors border-b-2 cursor-pointer ${
               activeChannel() === 'region'
-                ? 'text-blue-500 border-b-2 border-blue-500'
-                : 'text-gray-400 hover:text-gray-300'
+                ? 'text-blue-500 border-blue-500'
+                : 'text-gray-400 border-transparent hover:text-gray-200 hover:bg-slate-700/50'
             }`}
             onClick={() => setActiveChannel('region')}
           >
             Регион
           </button>
           <button
-            class={`flex-1 px-4 py-2 text-sm font-medium ${
+            class={`flex-1 px-4 py-2 text-sm font-medium transition-colors border-b-2 cursor-pointer ${
               activeChannel() === 'alliance'
-                ? 'text-blue-500 border-b-2 border-blue-500'
-                : 'text-gray-400 hover:text-gray-300'
+                ? 'text-blue-500 border-blue-500'
+                : 'text-gray-400 border-transparent hover:text-gray-200 hover:bg-slate-700/50'
             }`}
             onClick={() => setActiveChannel('alliance')}
           >

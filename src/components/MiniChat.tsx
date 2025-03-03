@@ -11,7 +11,7 @@ export function MiniChat() {
   const [isAnimating, setIsAnimating] = createSignal(false);
   
   const handleClick = () => {
-    navigate('/chat');
+    navigate('/chat', { state: { activeChannel: activeChannel() } });
   };
 
   const handleTouchStart = (e: TouchEvent) => {
