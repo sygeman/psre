@@ -1,4 +1,5 @@
 import { Component } from 'solid-js';
+import { StarIcon } from './star-icon';
 
 type Props = {
   name: string;
@@ -8,6 +9,23 @@ type Props = {
   starLevel: number;
   upgradeLevel: number;
 };
+
+function renderStars(stars: number) {
+  const redStars = Math.floor((stars - 1) / 5);
+  const yellowStars = stars > 5 ? 5 : stars;
+
+  return (
+    <div class="flex -space-x-1">
+      {redStars > 0
+        ? Array.from({ length: redStars }).map(() => (
+            <StarIcon class="size-4 text-red-500" />
+          ))
+        : Array.from({ length: yellowStars }).map(() => (
+            <StarIcon class="size-4 text-yellow-400" />
+          ))}
+    </div>
+  );
+}
 
 export const HeroCard: Component<Props> = (props) => {
   return (
@@ -26,8 +44,8 @@ export const HeroCard: Component<Props> = (props) => {
         +{props.upgradeLevel}
       </div>
       <div class="absolute right-1.5 bottom-12">Lv.{props.level}</div>
-      <div class="absolute bottom-7 left-0 flex w-full justify-center">
-        {props.starLevel}*
+      <div class="absolute bottom-8 left-0 flex w-full justify-center">
+        {renderStars(props.starLevel)}
       </div>
       <div class="absolute bottom-0 flex w-full items-center justify-center">
         <span class="absolute left-0 mx-0.5 flex bg-black/60 px-2">
