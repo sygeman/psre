@@ -123,7 +123,7 @@ export default function ChatPage() {
   };
 
   return (
-    <div class="relative flex flex-col h-screen bg-slate-900">
+    <div class="relative flex flex-col h-screen overflow-hidden bg-slate-900">
       <div class="flex-shrink-0 bg-slate-800">
         <div class="h-12 flex justify-center items-center relative">
           <div class="left-0 absolute">
@@ -155,13 +155,13 @@ export default function ChatPage() {
         </div>
       </div>
       <div 
-        class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgb(51,65,85)_transparent] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded"
+        class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgb(51,65,85)_transparent] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full"
         ref={chatContainerRef}
       >
         <For each={chatStore.messages().filter(m => m.channel === activeChannel())}>
           {(message) => (
             <div
-              class={`flex items-start gap-3 max-w-full ${
+              class={`flex items-start gap-3 max-w-full min-w-0 ${
                 message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
               }`}
             >
@@ -176,7 +176,7 @@ export default function ChatPage() {
                   }}
                 />
               </div>
-              <div class={`flex flex-col gap-1 min-w-0 ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
+              <div class={`flex flex-col gap-1 min-w-0 max-w-[calc(100%-3.5rem)] ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
                 <span class="text-xs font-medium text-gray-400">{message.author}</span>
                 <div
                   class={`rounded-lg px-3 py-2 max-w-full break-words ${
@@ -211,7 +211,7 @@ export default function ChatPage() {
             onInput={handleInput}
             onKeyDown={handleKeyDown}
             placeholder="Введите сообщение..."
-            class="flex-1 h-[40px] px-4 py-2 bg-slate-700 text-white border-slate-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none overflow-y-auto"
+            class="flex-1 h-[40px] min-h-[40px] max-h-[150px] px-4 py-2 bg-slate-700 text-white border-slate-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none"
           />
           <button
             type="submit"

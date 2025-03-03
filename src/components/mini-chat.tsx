@@ -41,12 +41,12 @@ export function MiniChat() {
           class="w-5 h-5 text-gray-300"
         />
       </div>
-      <div class="flex-1 space-y-0.5 min-w-0 ml-3">
+      <div class="flex-1 space-y-0.5 min-w-0 ml-3 max-w-[calc(100%-60px)]">
         <For each={chatStore.messages()
           .filter(m => m.channel === props.channel)
           .slice(-2)
         }>{(message) => (
-          <div class="text-sm text-gray-100 truncate leading-[22px] max-w-full">
+          <div class="text-sm text-gray-100 truncate leading-[22px] max-w-full min-w-0">
             <span class="font-medium">{message.author}: </span>
             {message.text}
           </div>
