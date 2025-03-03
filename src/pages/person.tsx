@@ -4,6 +4,7 @@ import { createSignal, Match, Switch } from 'solid-js';
 import { Tab, Tabs } from '../components/tabs';
 import { EquipmentPage } from '../modules/equipment-page';
 import { PointsProgressBar } from '../components/points-progress-bar';
+import { CharacterAvatar } from '../components/character-avatar';
 
 const PERSON_TABS: Tab[] = [
   { id: 'equipment', label: 'Снаряжение' },
@@ -74,7 +75,7 @@ export function PersonPage() {
               <span>👍</span>
               <span>{Number(accountState.likes || 0).toLocaleString('en-US')}</span>
             </div>
-            <div class="text-lg font-medium">
+            <div class="font-medium">
               {accountState.name || 'Неизвестный'}
             </div>
           </div>
@@ -83,7 +84,7 @@ export function PersonPage() {
           <div class="flex gap-4">
             {/* Аватар */}
             <div class="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center flex-shrink-0">
-              <span class="text-2xl">👤</span>
+              <CharacterAvatar class="w-12 h-12" />
             </div>
 
             {/* Прогресс бары */}
