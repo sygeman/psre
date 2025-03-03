@@ -22,12 +22,12 @@ function renderStars(stars: number | undefined) {
           <div class="flex -space-x-0.5">
             {redStars > 0 ? (
               // Красные звезды
-              Array.from({ length: redStars }).map((_, i) => (
+              Array.from({ length: redStars }).map(() => (
                 <StarIcon class="size-3 text-red-500" />
               ))
             ) : (
               // Желтые звезды
-              Array.from({ length: yellowStars }).map((_, i) => (
+              Array.from({ length: yellowStars }).map(() => (
                 <StarIcon class="size-3 text-yellow-400" />
               ))
             )}
