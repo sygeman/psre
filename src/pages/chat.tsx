@@ -155,7 +155,7 @@ export default function ChatPage() {
         </div>
       </div>
       <div 
-        class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 [scrollbar-width:thin] [scrollbar-color:rgb(51,65,85)_transparent] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-700 [&::-webkit-scrollbar-thumb]:rounded-full"
+        class="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-4 scrollbar"
         ref={chatContainerRef}
       >
         <For each={chatStore.messages().filter(m => m.channel === chatStore.activeChannel())}>
@@ -211,7 +211,7 @@ export default function ChatPage() {
             onInput={handleInput}
             onKeyDown={handleKeyDown}
             placeholder="Введите сообщение..."
-            class="flex-1 h-[40px] min-h-[40px] max-h-[150px] px-4 py-2 bg-slate-700 text-white border-slate-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none"
+            class="flex-1 h-[40px] min-h-[40px] max-h-[150px] px-4 py-2 bg-slate-700 text-white border-slate-600 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 resize-none scrollbar"
           />
           <button
             type="submit"
