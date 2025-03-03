@@ -22,7 +22,10 @@ export const GET_ACCOUNT_STATE = gql`
 `;
 
 export const UPDATE_ACCOUNT_STATE = gql`
-  mutation UpdateAccountState($id: ID!, $data: update_psre_account_state_input!) {
+  mutation UpdateAccountState(
+    $id: ID!
+    $data: update_psre_account_state_input!
+  ) {
     update_psre_account_state_item(id: $id, data: $data) {
       id
       level
@@ -40,4 +43,4 @@ export const UPDATE_ACCOUNT_STATE = gql`
       date_updated
     }
   }
-`; 
+`;

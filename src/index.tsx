@@ -13,23 +13,29 @@ import { PersonPage } from './pages/person';
 import ChatPage from './pages/chat';
 import { chatStore } from './stores/chat';
 import { RankPage } from './pages/rank';
+import { connectionStore } from './stores/connection';
+import { ConnectionOverlay } from './components/connection-overlay';
 
 await directus.connect();
 initializeStore();
 chatStore.initializeMockMessages();
+connectionStore.initialize();
 
 render(
   () => (
-    <Router>
-      <Route path="/" component={HomePage} />
-      <Route path="/region" component={RegionPage} />
-      <Route path="/heroes" component={HeroesPage} />
-      <Route path="/vip" component={VipPage} />
-      <Route path="/shop" component={ShopPage} />
-      <Route path="/person" component={PersonPage} />
-      <Route path="/chat" component={ChatPage} />
-      <Route path="/rank" component={RankPage} />
-    </Router>
+    <>
+      <ConnectionOverlay isConnected={connectionStore.isConnected()} />
+      <Router>
+        <Route path="/" component={HomePage} />
+        <Route path="/region" component={RegionPage} />
+        <Route path="/heroes" component={HeroesPage} />
+        <Route path="/vip" component={VipPage} />
+        <Route path="/shop" component={ShopPage} />
+        <Route path="/person" component={PersonPage} />
+        <Route path="/chat" component={ChatPage} />
+        <Route path="/rank" component={RankPage} />
+      </Router>
+    </>
   ),
   document.getElementById('root')
 );

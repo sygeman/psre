@@ -4,9 +4,13 @@ import { accountState } from '../stores/state';
 
 export function HeroesPage() {
   return (
-    <BackLayout 
+    <BackLayout
       title="Герои"
-      rightContent={<div class="px-2">S {Number(accountState.serum).toLocaleString('en-US')}</div>}
+      rightContent={
+        <div class="px-2">
+          S {Number(accountState.serum).toLocaleString('en-US')}
+        </div>
+      }
     >
       <div>
         <div class="h-12 w-full" />

@@ -28,4 +28,4 @@ export function GameLayout(props: GameLayoutProps) {
       <BottomMenu />
     </div>
   );
-} 
+}

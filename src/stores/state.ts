@@ -28,7 +28,9 @@ const graphqlUrl = import.meta.env.VITE_GRAPHQL_URL;
 const apiToken = import.meta.env.VITE_API_TOKEN;
 
 if (!graphqlUrl || !apiToken) {
-  throw new Error('GraphQL URL and API token must be defined in environment variables');
+  throw new Error(
+    'GraphQL URL and API token must be defined in environment variables'
+  );
 }
 
 export const [accountState, setAccountState] = createStore<AccountState>({
@@ -47,7 +49,7 @@ export const [accountState, setAccountState] = createStore<AccountState>({
 
 const updateStateFromData = (data: any) => {
   if (!data) return;
-  
+
   setAccountState({
     level: data.level ?? 0,
     action_points: data.action_points ?? 0,
@@ -71,12 +73,12 @@ export const initializeStore = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiToken}`
+        Authorization: `Bearer ${apiToken}`,
       },
       body: JSON.stringify({
         query: GET_ACCOUNT_STATE,
-        variables: { id: stateId }
-      })
+        variables: { id: stateId },
+      }),
     });
 
     const { data } = await response.json();
@@ -119,16 +121,16 @@ export const updateState = async (data: Partial<AccountState>) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiToken}`
+        Authorization: `Bearer ${apiToken}`,
       },
       body: JSON.stringify({
         query: UPDATE_ACCOUNT_STATE,
-        variables: { id: stateId, data }
-      })
+        variables: { id: stateId, data },
+      }),
     });
 
     const result = await response.json();
-    
+
     if (result.data) {
       updateStateFromData(result.data.update_psre_account_state_item);
       return true;
@@ -141,7 +143,9 @@ export const updateState = async (data: Partial<AccountState>) => {
 };
 
 // Функция для хранения и использования функции отписки
-const [unsubscribeFunction, setUnsubscribeFunction] = createSignal<(() => void) | null>(null);
+const [unsubscribeFunction, setUnsubscribeFunction] = createSignal<
+  (() => void) | null
+>(null);
 
 // Функция для отписки от обновлений при необходимости (например, при размонтировании компонента)
 export const unsubscribeFromUpdates = () => {

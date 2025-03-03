@@ -1,4 +1,10 @@
-import { createDirectus, staticToken, realtime, rest, graphql } from '@directus/sdk';
+import {
+  createDirectus,
+  staticToken,
+  realtime,
+  rest,
+  graphql,
+} from '@directus/sdk';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 const apiToken = import.meta.env.VITE_API_TOKEN;

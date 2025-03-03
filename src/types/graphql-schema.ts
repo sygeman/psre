@@ -1,34 +1,43 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
-export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+export type MakeEmpty<
+  T extends { [key: string]: unknown },
+  K extends keyof T,
+> = { [_ in K]?: never };
+export type Incremental<T> =
+  | T
+  | {
+      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
+    };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string; }
-  String: { input: string; output: string; }
-  Boolean: { input: boolean; output: boolean; }
-  Int: { input: number; output: number; }
-  Float: { input: number; output: number; }
-  Date: { input: string; output: string; }
-  GraphQLBigInt: { input: any; output: any; }
-  GraphQLStringOrFloat: { input: any; output: any; }
-  JSON: { input: any; output: any; }
+  ID: { input: string; output: string };
+  String: { input: string; output: string };
+  Boolean: { input: boolean; output: boolean };
+  Int: { input: number; output: number };
+  Float: { input: number; output: number };
+  Date: { input: string; output: string };
+  GraphQLBigInt: { input: any; output: any };
+  GraphQLStringOrFloat: { input: any; output: any };
+  JSON: { input: any; output: any };
 };
 
-export type EventEnum =
-  | 'create'
-  | 'delete'
-  | 'update';
+export type EventEnum = 'create' | 'delete' | 'update';
 
 export type Mutation = {
   update_psre_account_state_batch: Array<Psre_Account_State>;
   update_psre_account_state_item?: Maybe<Psre_Account_State>;
   update_psre_account_state_items: Array<Psre_Account_State>;
 };
-
 
 export type MutationUpdate_Psre_Account_State_BatchArgs = {
   data?: InputMaybe<Array<Update_Psre_Account_State_Input>>;
@@ -40,12 +49,10 @@ export type MutationUpdate_Psre_Account_State_BatchArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type MutationUpdate_Psre_Account_State_ItemArgs = {
   data: Update_Psre_Account_State_Input;
   id: Scalars['ID']['input'];
 };
-
 
 export type MutationUpdate_Psre_Account_State_ItemsArgs = {
   data: Update_Psre_Account_State_Input;
@@ -93,7 +100,6 @@ export type Query = {
   psre_regions_by_version?: Maybe<Version_Psre_Regions>;
 };
 
-
 export type QueryPsre_AccountArgs = {
   filter?: InputMaybe<Psre_Account_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -102,7 +108,6 @@ export type QueryPsre_AccountArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Account_AggregatedArgs = {
   filter?: InputMaybe<Psre_Account_Filter>;
@@ -114,18 +119,15 @@ export type QueryPsre_Account_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Account_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QueryPsre_Account_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
-
 
 export type QueryPsre_Account_HeroesArgs = {
   filter?: InputMaybe<Psre_Account_Heroes_Filter>;
@@ -135,7 +137,6 @@ export type QueryPsre_Account_HeroesArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Account_Heroes_AggregatedArgs = {
   filter?: InputMaybe<Psre_Account_Heroes_Filter>;
@@ -147,18 +148,15 @@ export type QueryPsre_Account_Heroes_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Account_Heroes_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QueryPsre_Account_Heroes_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
-
 
 export type QueryPsre_Account_StateArgs = {
   filter?: InputMaybe<Psre_Account_State_Filter>;
@@ -168,7 +166,6 @@ export type QueryPsre_Account_StateArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Account_State_AggregatedArgs = {
   filter?: InputMaybe<Psre_Account_State_Filter>;
@@ -180,18 +177,15 @@ export type QueryPsre_Account_State_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Account_State_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QueryPsre_Account_State_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
-
 
 export type QueryPsre_AlliancesArgs = {
   filter?: InputMaybe<Psre_Alliances_Filter>;
@@ -201,7 +195,6 @@ export type QueryPsre_AlliancesArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Alliances_AggregatedArgs = {
   filter?: InputMaybe<Psre_Alliances_Filter>;
@@ -213,18 +206,15 @@ export type QueryPsre_Alliances_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Alliances_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QueryPsre_Alliances_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
-
 
 export type QueryPsre_Chat_MessageArgs = {
   filter?: InputMaybe<Psre_Chat_Message_Filter>;
@@ -234,7 +224,6 @@ export type QueryPsre_Chat_MessageArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Chat_Message_AggregatedArgs = {
   filter?: InputMaybe<Psre_Chat_Message_Filter>;
@@ -246,18 +235,15 @@ export type QueryPsre_Chat_Message_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Chat_Message_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QueryPsre_Chat_Message_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
-
 
 export type QueryPsre_ChatsArgs = {
   filter?: InputMaybe<Psre_Chats_Filter>;
@@ -267,7 +253,6 @@ export type QueryPsre_ChatsArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Chats_AggregatedArgs = {
   filter?: InputMaybe<Psre_Chats_Filter>;
@@ -279,18 +264,15 @@ export type QueryPsre_Chats_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Chats_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QueryPsre_Chats_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
-
 
 export type QueryPsre_HeroesArgs = {
   filter?: InputMaybe<Psre_Heroes_Filter>;
@@ -300,7 +282,6 @@ export type QueryPsre_HeroesArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Heroes_AggregatedArgs = {
   filter?: InputMaybe<Psre_Heroes_Filter>;
@@ -312,18 +293,15 @@ export type QueryPsre_Heroes_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Heroes_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
 
-
 export type QueryPsre_Heroes_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
-
 
 export type QueryPsre_RegionsArgs = {
   filter?: InputMaybe<Psre_Regions_Filter>;
@@ -333,7 +311,6 @@ export type QueryPsre_RegionsArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type QueryPsre_Regions_AggregatedArgs = {
   filter?: InputMaybe<Psre_Regions_Filter>;
@@ -345,12 +322,10 @@ export type QueryPsre_Regions_AggregatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type QueryPsre_Regions_By_IdArgs = {
   id: Scalars['ID']['input'];
   version?: InputMaybe<Scalars['String']['input']>;
 };
-
 
 export type QueryPsre_Regions_By_VersionArgs = {
   id: Scalars['ID']['input'];
@@ -368,41 +343,33 @@ export type Subscription = {
   psre_regions_mutated?: Maybe<Psre_Regions_Mutated>;
 };
 
-
 export type SubscriptionPsre_Account_Heroes_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
-
 
 export type SubscriptionPsre_Account_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
-
 export type SubscriptionPsre_Account_State_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
-
 
 export type SubscriptionPsre_Alliances_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
-
 export type SubscriptionPsre_Chat_Message_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
-
 
 export type SubscriptionPsre_Chats_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
-
 export type SubscriptionPsre_Heroes_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
-
 
 export type SubscriptionPsre_Regions_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
@@ -432,14 +399,18 @@ export type Count_Functions = {
 };
 
 export type Date_Filter_Operators = {
-  _between?: InputMaybe<Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>>;
+  _between?: InputMaybe<
+    Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>
+  >;
   _eq?: InputMaybe<Scalars['String']['input']>;
   _gt?: InputMaybe<Scalars['String']['input']>;
   _gte?: InputMaybe<Scalars['String']['input']>;
   _in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   _lt?: InputMaybe<Scalars['String']['input']>;
   _lte?: InputMaybe<Scalars['String']['input']>;
-  _nbetween?: InputMaybe<Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>>;
+  _nbetween?: InputMaybe<
+    Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>
+  >;
   _neq?: InputMaybe<Scalars['String']['input']>;
   _nin?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   _nnull?: InputMaybe<Scalars['Boolean']['input']>;
@@ -469,16 +440,22 @@ export type Datetime_Functions = {
 };
 
 export type Number_Filter_Operators = {
-  _between?: InputMaybe<Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>>;
+  _between?: InputMaybe<
+    Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>
+  >;
   _eq?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
   _gt?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
   _gte?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
   _in?: InputMaybe<Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>>;
   _lt?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
   _lte?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
-  _nbetween?: InputMaybe<Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>>;
+  _nbetween?: InputMaybe<
+    Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>
+  >;
   _neq?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
-  _nin?: InputMaybe<Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>>;
+  _nin?: InputMaybe<
+    Array<InputMaybe<Scalars['GraphQLStringOrFloat']['input']>>
+  >;
   _nnull?: InputMaybe<Scalars['Boolean']['input']>;
   _null?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -498,7 +475,6 @@ export type Psre_Account = {
   user_func?: Maybe<Count_Functions>;
 };
 
-
 export type Psre_AccountAlliance_IdArgs = {
   filter?: InputMaybe<Psre_Alliances_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -508,7 +484,6 @@ export type Psre_AccountAlliance_IdArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
 export type Psre_AccountRegion_IdArgs = {
   filter?: InputMaybe<Psre_Regions_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -517,7 +492,6 @@ export type Psre_AccountRegion_IdArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type Psre_AccountStateArgs = {
   filter?: InputMaybe<Psre_Account_State_Filter>;
@@ -573,7 +547,6 @@ export type Psre_Account_Heroes = {
   id: Scalars['ID']['output'];
 };
 
-
 export type Psre_Account_HeroesAccount_IdArgs = {
   filter?: InputMaybe<Psre_Account_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -582,7 +555,6 @@ export type Psre_Account_HeroesAccount_IdArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type Psre_Account_HeroesHeroArgs = {
   filter?: InputMaybe<Psre_Heroes_Filter>;
@@ -651,7 +623,6 @@ export type Psre_Account_State = {
   steel?: Maybe<Scalars['GraphQLBigInt']['output']>;
   wood?: Maybe<Scalars['GraphQLBigInt']['output']>;
 };
-
 
 export type Psre_Account_StateAccount_IdArgs = {
   filter?: InputMaybe<Psre_Account_Filter>;
@@ -746,7 +717,6 @@ export type Psre_Alliances = {
   region_id?: Maybe<Psre_Regions>;
 };
 
-
 export type Psre_AlliancesChat_IdArgs = {
   filter?: InputMaybe<Psre_Chats_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -755,7 +725,6 @@ export type Psre_AlliancesChat_IdArgs = {
   search?: InputMaybe<Scalars['String']['input']>;
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
-
 
 export type Psre_AlliancesRegion_IdArgs = {
   filter?: InputMaybe<Psre_Regions_Filter>;
@@ -810,7 +779,6 @@ export type Psre_Chat_Message = {
   date_updated_func?: Maybe<Datetime_Functions>;
   id: Scalars['ID']['output'];
 };
-
 
 export type Psre_Chat_MessageChat_IdArgs = {
   filter?: InputMaybe<Psre_Chats_Filter>;
@@ -974,7 +942,6 @@ export type Psre_Regions = {
   id: Scalars['ID']['output'];
   name?: Maybe<Scalars['String']['output']>;
 };
-
 
 export type Psre_RegionsChat_IdArgs = {
   filter?: InputMaybe<Psre_Chats_Filter>;
@@ -1152,13 +1119,45 @@ export type GetAccountStateQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
-
-export type GetAccountStateQuery = { psre_account_state_by_id?: { id: string, level?: number | null, action_points?: number | null, stamina_points?: number | null, food?: any | null, wood?: any | null, steel?: any | null, fuel?: any | null, diamond?: any | null, power?: any | null, serum?: any | null, exp?: any | null, date_created?: string | null, date_updated?: string | null } | null };
+export type GetAccountStateQuery = {
+  psre_account_state_by_id?: {
+    id: string;
+    level?: number | null;
+    action_points?: number | null;
+    stamina_points?: number | null;
+    food?: any | null;
+    wood?: any | null;
+    steel?: any | null;
+    fuel?: any | null;
+    diamond?: any | null;
+    power?: any | null;
+    serum?: any | null;
+    exp?: any | null;
+    date_created?: string | null;
+    date_updated?: string | null;
+  } | null;
+};
 
 export type UpdateAccountStateMutationVariables = Exact<{
   id: Scalars['ID']['input'];
   data: Update_Psre_Account_State_Input;
 }>;
 
-
-export type UpdateAccountStateMutation = { update_psre_account_state_item?: { id: string, level?: number | null, action_points?: number | null, stamina_points?: number | null, food?: any | null, wood?: any | null, steel?: any | null, fuel?: any | null, diamond?: any | null, power?: any | null, serum?: any | null, exp?: any | null, date_created?: string | null, date_updated?: string | null } | null };
+export type UpdateAccountStateMutation = {
+  update_psre_account_state_item?: {
+    id: string;
+    level?: number | null;
+    action_points?: number | null;
+    stamina_points?: number | null;
+    food?: any | null;
+    wood?: any | null;
+    steel?: any | null;
+    fuel?: any | null;
+    diamond?: any | null;
+    power?: any | null;
+    serum?: any | null;
+    exp?: any | null;
+    date_created?: string | null;
+    date_updated?: string | null;
+  } | null;
+};
