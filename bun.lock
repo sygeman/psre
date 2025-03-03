@@ -6,6 +6,7 @@
       "dependencies": {
         "@directus/sdk": "19.0.1",
         "@solidjs/router": "0.15.3",
+        "lucide-solid": "0.477.0",
         "solid-heroicons": "3.2.4",
         "solid-js": "1.9.5",
       },
@@ -480,6 +481,8 @@
     "lodash.upperfirst": ["lodash.upperfirst@4.3.1", "", {}, "sha512-sReKOYJIJf74dhJONhU4e0/shzi1trVbSWDOhKYE5XV2O+H7Sb2Dihwuc7xWxVl+DgFPyTqIN3zMfT9cq5iWDg=="],
 
     "lru-cache": ["lru-cache@5.1.1", "", { "dependencies": { "yallist": "^3.0.2" } }, "sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w=="],
+
+    "lucide-solid": ["lucide-solid@0.477.0", "", { "peerDependencies": { "solid-js": "^1.4.7" } }, "sha512-YshJtVmqCghkI0cur+/PgL48kXEhIh1fMLy6pDwex7heMqXS962eNcb/e+mIiTzSFsjg9r2dBKAWT9tX7Ci6mg=="],
 
     "merge-anything": ["merge-anything@5.1.7", "", { "dependencies": { "is-what": "^4.1.8" } }, "sha512-eRtbOb1N5iyH0tkQDAoQ4Ipsp/5qSR79Dzrz8hEPxRX10RWWR/iQXdoKmBSRCThY1Fh5EhISDtpSc93fpxUniQ=="],
 
