@@ -65,13 +65,38 @@ function BuildingCard(props: Building) {
     }
   };
 
+  // Получаем базовый цвет из пропса и создаем вариации для градиента
+  const baseColor = props.color.replace('bg-', '');
+  const gradientClass = {
+    'cyan': 'from-cyan-900/50 via-cyan-800/30 to-cyan-900/50',
+    'emerald': 'from-emerald-900/50 via-emerald-800/30 to-emerald-900/50',
+    'yellow': 'from-yellow-900/50 via-yellow-800/30 to-yellow-900/50',
+    'orange': 'from-orange-900/50 via-orange-800/30 to-orange-900/50',
+    'slate': 'from-slate-800/50 via-slate-700/30 to-slate-800/50',
+  }[baseColor.split('-')[0]] || 'from-slate-900/50 via-slate-800/30 to-slate-900/50';
+
   return (
     <div class="w-full h-32 select-none flex-shrink-0">
-      <div class={`relative h-full ${props.color} rounded-lg border border-white/10`}>
+      <div class={`relative h-full ${props.color} rounded-lg border border-white/10 overflow-hidden group`}>
+        {/* Анимированный градиентный фон */}
+        <div class={`absolute inset-0 bg-gradient-to-r ${gradientClass} animate-[pulse_4s_ease-in-out_infinite]`} />
+        
+        {/* Светящиеся частицы */}
+        <div class="absolute inset-0 opacity-30">
+          <div class="absolute w-12 h-12 -left-6 -top-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite]" />
+          <div class="absolute w-12 h-12 -right-6 -bottom-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite_0.5s]" />
+        </div>
+
+        {/* Анимированная подсветка при наведении */}
+        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="absolute inset-0 bg-gradient-to-t from-white/5 via-transparent to-transparent" />
+          <div class="absolute w-32 h-32 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/5 rounded-full blur-2xl animate-pulse" />
+        </div>
+
         {/* Название и уровень */}
-        <div class="h-8 flex items-center justify-between px-3 text-white/80 text-sm font-medium border-b border-white/10">
-          <span>{props.name}</span>
-          <span class="flex items-center justify-center w-6 h-6 rounded-md text-xs bg-black/30">
+        <div class="relative h-8 flex items-center justify-between px-3 text-white/80 text-sm font-medium border-b border-white/10 bg-black/20 backdrop-blur-sm">
+          <span class="drop-shadow-glow">{props.name}</span>
+          <span class="flex items-center justify-center w-6 h-6 rounded-md text-xs bg-black/30 backdrop-blur-sm">
             {props.level}
           </span>
         </div>
@@ -172,16 +197,69 @@ export const Map = () => {
 
   return (
     <div 
-      class="h-full w-full"
+      class="h-full w-full relative overflow-hidden"
       style={{
         "background-image": `
-          linear-gradient(to bottom right, rgb(17 24 39), rgb(31 41 55), rgb(17 24 39)),
-          url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm20 20h20v20H20V20zM0 20h20v20H0V20z' fill='%23374151' fill-opacity='0.4'/%3E%3C/svg%3E")
+          radial-gradient(circle at 50% 50%, rgb(30 41 59), rgb(17 24 39)),
+          linear-gradient(135deg, 
+            rgba(234, 88, 12, 0.25) 0%,
+            rgba(59, 130, 246, 0.2) 25%,
+            rgba(234, 88, 12, 0.25) 50%,
+            rgba(147, 51, 234, 0.2) 75%,
+            rgba(239, 68, 68, 0.25) 100%
+          ),
+          url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h60v60H0V0zm30 30h30v30H30V30zM0 30h30v30H0V30z' fill='%23374151' fill-opacity='0.3'/%3E%3C/svg%3E")
         `,
-        "background-repeat": "repeat",
+        "background-size": "cover, 400% 400%, 60px 60px",
+        "background-position": "center",
+        "animation": "background-pan 30s linear infinite"
       }}
     >
-      <div class="scrollbar grid grid-cols-2 gap-3 overflow-y-auto h-full py-48 px-4">
+      {/* Основной слой с частицами */}
+      <div 
+        class="absolute inset-0 opacity-40"
+        style={{
+          "background-image": `
+            radial-gradient(circle at 50% 50%, transparent 90%, rgb(17 24 39)),
+            radial-gradient(circle at 15% 15%, rgba(234, 88, 12, 0.4) 0%, transparent 35%),
+            radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.4) 0%, transparent 35%),
+            radial-gradient(circle at 15% 85%, rgba(147, 51, 234, 0.4) 0%, transparent 35%),
+            radial-gradient(circle at 85% 85%, rgba(234, 88, 12, 0.4) 0%, transparent 35%)
+          `,
+          "background-size": "cover",
+          "animation": "pulse 3s ease-in-out infinite"
+        }}
+      />
+      {/* Дополнительный слой с движущимися частицами */}
+      <div 
+        class="absolute inset-0 opacity-30"
+        style={{
+          "background-image": `
+            radial-gradient(circle at 30% 30%, rgba(234, 88, 12, 0.5) 0%, transparent 25%),
+            radial-gradient(circle at 70% 70%, rgba(234, 88, 12, 0.5) 0%, transparent 25%),
+            radial-gradient(circle at 50% 50%, rgba(234, 88, 12, 0.3) 0%, transparent 35%)
+          `,
+          "background-size": "100% 100%",
+          "animation": "particles-move 15s ease-in-out infinite alternate"
+        }}
+      />
+      {/* Дополнительный слой с подсветкой */}
+      <div 
+        class="absolute inset-0 opacity-20"
+        style={{
+          "background-image": `
+            linear-gradient(45deg,
+              rgba(234, 88, 12, 0.4) 0%,
+              transparent 45%,
+              transparent 55%,
+              rgba(234, 88, 12, 0.4) 100%
+            )
+          `,
+          "background-size": "200% 200%",
+          "animation": "background-pan 20s linear infinite"
+        }}
+      />
+      <div class="scrollbar grid grid-cols-2 gap-3 overflow-y-auto h-full py-48 px-4 relative z-10">
         <For each={buildings}>{building => (
           <BuildingCard {...building} />
         )}</For>
