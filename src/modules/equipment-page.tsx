@@ -1,7 +1,7 @@
 import { For, createSignal } from 'solid-js';
-import { EquipmentSlot } from '../components/equipment-slot';
-import { Tab } from '../components/tabs';
-import { EquipmentTabs } from '../components/equipment-tabs';
+import { EquipmentSlot } from '@/components/equipment-slot';
+import { Tab } from '@/components/tabs';
+import { EquipmentTabs } from '@/components/equipment-tabs';
 
 const LEFT_EQUIPMENT_SLOTS = [
   { icon: '⚔️', label: 'Оружие', upgradeLevel: 3, canUpgrade: true, stars: 7 },

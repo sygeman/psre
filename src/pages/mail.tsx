@@ -1,6 +1,6 @@
-import { BackLayout } from '../layouts/back-layout';
+import { BackLayout } from '@/layouts/back-layout';
 import { For } from 'solid-js';
-import { mailStore, type Mail } from '../stores/mail';
+import { mailStore, type Mail } from '@/stores/mail';
 
 export function MailPage() {
   const getRewardIcon = (type: Mail['hasReward']['type']) => {
@@ -49,7 +49,9 @@ export function MailPage() {
                     <div class="flex items-center gap-1 text-sm">
                       <span>Награда:</span>
                       <span>{getRewardIcon(mail.hasReward.type)}</span>
-                      <span>{mail.hasReward.amount.toLocaleString('en-US')}</span>
+                      <span>
+                        {mail.hasReward.amount.toLocaleString('en-US')}
+                      </span>
                     </div>
                   )}
                 </div>
@@ -60,4 +62,4 @@ export function MailPage() {
       </div>
     </BackLayout>
   );
-} 
+}

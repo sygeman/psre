@@ -1,7 +1,7 @@
-import { PointsProgressBar } from '../components/points-progress-bar';
-import { accountState } from '../stores/state';
+import { PointsProgressBar } from '@/components/points-progress-bar';
+import { accountState } from '@/stores/state';
 import { useNavigate } from '@solidjs/router';
-import { CharacterAvatar } from '../components/character-avatar';
+import { CharacterAvatar } from '@/components/character-avatar';
 
 export const PersonPanel = () => {
   const navigate = useNavigate();

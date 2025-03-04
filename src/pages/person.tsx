@@ -1,10 +1,10 @@
-import { BackLayout } from '../layouts/back-layout';
-import { accountState } from '../stores/state';
+import { BackLayout } from '@/layouts/back-layout';
+import { accountState } from '@/stores/state';
 import { createSignal, Match, Switch } from 'solid-js';
-import { Tab, Tabs } from '../components/tabs';
-import { EquipmentPage } from '../modules/equipment-page';
-import { PointsProgressBar } from '../components/points-progress-bar';
-import { CharacterAvatar } from '../components/character-avatar';
+import { Tab, Tabs } from '@/components/tabs';
+import { EquipmentPage } from '@/modules/equipment-page';
+import { PointsProgressBar } from '@/components/points-progress-bar';
+import { CharacterAvatar } from '@/components/character-avatar';
 
 const PERSON_TABS: Tab[] = [
   { id: 'equipment', label: 'Снаряжение' },

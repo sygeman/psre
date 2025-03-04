@@ -1,4 +1,4 @@
-import { BackLayout } from '../layouts/back-layout';
+import { BackLayout } from '@/layouts/back-layout';
 import { For } from 'solid-js';
 
 export function RankPage() {
@@ -36,7 +36,9 @@ export function RankPage() {
             <For each={players}>
               {(player) => (
                 <div class="flex items-center gap-4 px-4 py-2">
-                  <div class={`w-8 text-center rounded-md px-1.5 py-0.5 ${getRankStyle(player.id)}`}>
+                  <div
+                    class={`w-8 rounded-md px-1.5 py-0.5 text-center ${getRankStyle(player.id)}`}
+                  >
                     {player.id}
                   </div>
                   <div class="flex h-10 w-10 items-center justify-center rounded bg-slate-800">

@@ -1,4 +1,4 @@
-import { BackLayout } from '../layouts/back-layout';
+import { BackLayout } from '@/layouts/back-layout';
 import { For, createSignal } from 'solid-js';
 
 type Quest = {
@@ -129,7 +129,9 @@ export function QuestsPage() {
                     <div class="h-2 flex-1 overflow-hidden rounded-full bg-slate-700">
                       <div
                         class="h-full bg-blue-500 transition-all duration-300"
-                        style={{ width: `${(quest.progress / quest.total) * 100}%` }}
+                        style={{
+                          width: `${(quest.progress / quest.total) * 100}%`,
+                        }}
                       />
                     </div>
                     <div class="text-sm text-slate-400">
@@ -144,4 +146,4 @@ export function QuestsPage() {
       </div>
     </BackLayout>
   );
-} 
+}

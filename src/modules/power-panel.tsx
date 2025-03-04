@@ -1,4 +1,4 @@
-import { accountState } from '../stores/state';
+import { accountState } from '@/stores/state';
 import { useNavigate } from '@solidjs/router';
 
 export const PowerPanel = () => {

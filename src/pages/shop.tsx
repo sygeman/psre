@@ -1,7 +1,7 @@
-import { BackLayout } from '../layouts/back-layout';
+import { BackLayout } from '@/layouts/back-layout';
 import { createSignal, For } from 'solid-js';
-import { accountState } from '../stores/state';
-import { ResourceDisplay } from '../components/resource-display';
+import { accountState } from '@/stores/state';
+import { ResourceDisplay } from '@/components/resource-display';
 
 type ShopCategory = {
   id: string;
@@ -32,24 +32,108 @@ const formatter = new Intl.NumberFormat('ru-RU', {
 
 const SHOP_ITEMS: ShopItem[] = [
   // Алмазы
-  { id: 'diamonds_100', name: '100 алмазов', description: 'Малый набор алмазов', price: 79, amount: 100, category: 'diamonds' },
-  { id: 'diamonds_500', name: '500 алмазов', description: 'Средний набор алмазов', price: 349, amount: 500, category: 'diamonds' },
-  { id: 'diamonds_1000', name: '1000 алмазов', description: 'Большой набор алмазов', price: 649, amount: 1000, category: 'diamonds' },
-  
+  {
+    id: 'diamonds_100',
+    name: '100 алмазов',
+    description: 'Малый набор алмазов',
+    price: 79,
+    amount: 100,
+    category: 'diamonds',
+  },
+  {
+    id: 'diamonds_500',
+    name: '500 алмазов',
+    description: 'Средний набор алмазов',
+    price: 349,
+    amount: 500,
+    category: 'diamonds',
+  },
+  {
+    id: 'diamonds_1000',
+    name: '1000 алмазов',
+    description: 'Большой набор алмазов',
+    price: 649,
+    amount: 1000,
+    category: 'diamonds',
+  },
+
   // Ресурсы
-  { id: 'food_pack', name: 'Пакет еды', description: 'Содержит 1000 единиц еды', price: 29, amount: 1000, category: 'resources' },
-  { id: 'wood_pack', name: 'Пакет дерева', description: 'Содержит 1000 единиц дерева', price: 29, amount: 1000, category: 'resources' },
-  { id: 'steel_pack', name: 'Пакет стали', description: 'Содержит 1000 единиц стали', price: 49, amount: 1000, category: 'resources' },
-  { id: 'fuel_pack', name: 'Пакет топлива', description: 'Содержит 1000 единиц топлива', price: 69, amount: 1000, category: 'resources' },
-  
+  {
+    id: 'food_pack',
+    name: 'Пакет еды',
+    description: 'Содержит 1000 единиц еды',
+    price: 29,
+    amount: 1000,
+    category: 'resources',
+  },
+  {
+    id: 'wood_pack',
+    name: 'Пакет дерева',
+    description: 'Содержит 1000 единиц дерева',
+    price: 29,
+    amount: 1000,
+    category: 'resources',
+  },
+  {
+    id: 'steel_pack',
+    name: 'Пакет стали',
+    description: 'Содержит 1000 единиц стали',
+    price: 49,
+    amount: 1000,
+    category: 'resources',
+  },
+  {
+    id: 'fuel_pack',
+    name: 'Пакет топлива',
+    description: 'Содержит 1000 единиц топлива',
+    price: 69,
+    amount: 1000,
+    category: 'resources',
+  },
+
   // Предметы
-  { id: 'ap_potion', name: 'Зелье действия', description: 'Восстанавливает 50 AP', price: 19, amount: 1, category: 'items' },
-  { id: 'sp_potion', name: 'Зелье выносливости', description: 'Восстанавливает 50 SP', price: 19, amount: 1, category: 'items' },
-  { id: 'exp_boost', name: 'Усилитель опыта', description: '+50% к получаемому опыту на 1 час', price: 99, amount: 1, category: 'items' },
-  
+  {
+    id: 'ap_potion',
+    name: 'Зелье действия',
+    description: 'Восстанавливает 50 AP',
+    price: 19,
+    amount: 1,
+    category: 'items',
+  },
+  {
+    id: 'sp_potion',
+    name: 'Зелье выносливости',
+    description: 'Восстанавливает 50 SP',
+    price: 19,
+    amount: 1,
+    category: 'items',
+  },
+  {
+    id: 'exp_boost',
+    name: 'Усилитель опыта',
+    description: '+50% к получаемому опыту на 1 час',
+    price: 99,
+    amount: 1,
+    category: 'items',
+  },
+
   // Особое
-  { id: 'name_change', name: 'Смена имени', description: 'Позволяет изменить имя персонажа', price: 299, amount: 1, category: 'special' },
-  { id: 'avatar_frame', name: 'Рамка аватара', description: 'Уникальная рамка для аватара', price: 499, amount: 1, category: 'special' },
+  {
+    id: 'name_change',
+    name: 'Смена имени',
+    description: 'Позволяет изменить имя персонажа',
+    price: 299,
+    amount: 1,
+    category: 'special',
+  },
+  {
+    id: 'avatar_frame',
+    name: 'Рамка аватара',
+    description: 'Уникальная рамка для аватара',
+    price: 499,
+    amount: 1,
+    category: 'special',
+  },
 ];
 
 export function ShopPage() {
@@ -61,7 +145,7 @@ export function ShopPage() {
   };
 
   return (
-    <BackLayout 
+    <BackLayout
       title="Магазин"
       rightContent={
         <div class="px-2">
@@ -91,7 +175,11 @@ export function ShopPage() {
         {/* Список товаров */}
         <div class="hide-scrollbar flex-1 overflow-y-auto">
           <div class="grid gap-4 p-4">
-            <For each={SHOP_ITEMS.filter(item => item.category === activeCategory())}>
+            <For
+              each={SHOP_ITEMS.filter(
+                (item) => item.category === activeCategory()
+              )}
+            >
               {(item) => (
                 <div class="flex items-center justify-between rounded-lg bg-slate-800 p-4">
                   <div class="flex flex-col gap-1">

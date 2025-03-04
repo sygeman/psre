@@ -1,5 +1,5 @@
 import { Component, Show } from 'solid-js';
-import { Spinner } from './spinner';
+import { Spinner } from '@/components/spinner';
 
 type ConnectionOverlayProps = {
   isConnected: boolean;

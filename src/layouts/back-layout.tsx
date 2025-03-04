@@ -1,5 +1,5 @@
 import { JSX } from 'solid-js';
-import { BackButton } from '../modules/back-button';
+import { BackButton } from '@/modules/back-button';
 
 type BackLayoutProps = {
   children: JSX.Element;

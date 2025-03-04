@@ -1,6 +1,6 @@
 import { For, createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
-import { chatStore, type ChatChannel } from '../stores/chat';
+import { chatStore, type ChatChannel } from '@/stores/chat';
 import { Icon } from 'solid-heroicons';
 import { globeAlt, userGroup } from 'solid-heroicons/outline';
 

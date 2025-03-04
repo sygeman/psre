@@ -1,7 +1,6 @@
 import { createStore } from 'solid-js/store';
-import { directus } from '../lib/directus';
-import { createSignal } from 'solid-js';
-import { GET_ACCOUNT_STATE } from '../graphql/queries';
+import { directus } from '@/lib/directus';
+import { GET_ACCOUNT_STATE } from '@/graphql/queries';
 
 type AccountState = {
   level: number;
@@ -15,6 +14,20 @@ type AccountState = {
   power: number;
   serum: number;
   exp: number;
+};
+
+type AccountStateData = {
+  level?: number;
+  action_points?: number;
+  stamina_points?: number;
+  food?: number | string;
+  wood?: number | string;
+  steel?: number | string;
+  fuel?: number | string;
+  diamond?: number | string;
+  power?: number | string;
+  serum?: number | string;
+  exp?: number | string;
 };
 
 // psre_account
@@ -37,7 +50,7 @@ export const [accountState, setAccountState] = createStore<AccountState>({
   exp: 0,
 });
 
-const updateStateFromData = (data: any) => {
+const updateStateFromData = (data: AccountStateData) => {
   if (!data) return;
 
   setAccountState({
@@ -63,13 +76,11 @@ export const initializeStore = async () => {
 
     updateStateFromData(data.psre_account_state_by_id);
 
-    const { subscription, unsubscribe } = await directus.subscribe(collection, {
+    const { subscription } = await directus.subscribe(collection, {
       query: { filter: { id: { _eq: stateId } } },
       event: 'update',
       uid: 'update-account-state',
     });
-
-    setUnsubscribeFunction(() => unsubscribe);
 
     (async () => {
       try {
@@ -92,20 +103,4 @@ export const initializeStore = async () => {
     console.error('Не удалось инициализировать хранилище:', error);
     return false;
   }
-};
-
-// Функция для хранения и использования функции отписки
-const [unsubscribeFunction, setUnsubscribeFunction] = createSignal<
-  (() => void) | null
->(null);
-
-// Функция для отписки от обновлений при необходимости (например, при размонтировании компонента)
-export const unsubscribeFromUpdates = () => {
-  const unsubscribe = unsubscribeFunction();
-  if (typeof unsubscribe === 'function') {
-    unsubscribe();
-    setUnsubscribeFunction(null);
-    return true;
-  }
-  return false;
 };

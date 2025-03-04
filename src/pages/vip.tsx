@@ -1,4 +1,4 @@
-import { BackLayout } from '../layouts/back-layout';
+import { BackLayout } from '@/layouts/back-layout';
 
 export function VipPage() {
   return (

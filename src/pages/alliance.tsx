@@ -1,4 +1,4 @@
-import { BackLayout } from '../layouts/back-layout';
+import { BackLayout } from '@/layouts/back-layout';
 import { createSignal, For } from 'solid-js';
 
 type TabType = 'info' | 'members' | 'diplomacy';
@@ -30,7 +30,8 @@ export function AlliancePage() {
     tag: '[NS]',
     level: 5,
     power: 1250000,
-    description: 'Один из сильнейших альянсов северного региона. Мы всегда готовы принять в свои ряды активных игроков, стремящихся к развитию и взаимопомощи.',
+    description:
+      'Один из сильнейших альянсов северного региона. Мы всегда готовы принять в свои ряды активных игроков, стремящихся к развитию и взаимопомощи.',
     members: [
       {
         id: 1,
@@ -118,7 +119,9 @@ export function AlliancePage() {
                 <div class="text-sm text-slate-400">{alliance.description}</div>
               </div>
               <div class="rounded-lg bg-slate-800 p-4">
-                <div class="mb-2 text-sm font-medium">Требования для вступления</div>
+                <div class="mb-2 text-sm font-medium">
+                  Требования для вступления
+                </div>
                 <div class="space-y-2 text-sm text-slate-400">
                   <div>• Минимальная мощь: 50,000</div>
                   <div>• Ежедневная активность</div>
@@ -155,7 +158,9 @@ export function AlliancePage() {
                       </div>
                       <div class="flex items-center justify-between">
                         <div class="text-sm text-slate-400">{member.rank}</div>
-                        <div class="text-sm text-slate-400">{member.lastOnline}</div>
+                        <div class="text-sm text-slate-400">
+                          {member.lastOnline}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -167,15 +172,21 @@ export function AlliancePage() {
           {activeTab() === 'diplomacy' && (
             <div class="p-4">
               <div class="rounded-lg bg-slate-800 p-4">
-                <div class="mb-4 text-sm font-medium">Дипломатические отношения</div>
+                <div class="mb-4 text-sm font-medium">
+                  Дипломатические отношения
+                </div>
                 <div class="space-y-4">
                   <div>
                     <div class="mb-2 text-sm text-green-400">Союзники</div>
-                    <div class="text-sm text-slate-400">Нет активных союзов</div>
+                    <div class="text-sm text-slate-400">
+                      Нет активных союзов
+                    </div>
                   </div>
                   <div>
                     <div class="mb-2 text-sm text-red-400">Враги</div>
-                    <div class="text-sm text-slate-400">Нет объявленных войн</div>
+                    <div class="text-sm text-slate-400">
+                      Нет объявленных войн
+                    </div>
                   </div>
                 </div>
               </div>
@@ -185,4 +196,4 @@ export function AlliancePage() {
       </div>
     </BackLayout>
   );
-} 
+}

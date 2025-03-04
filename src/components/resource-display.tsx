@@ -12,4 +12,4 @@ export const ResourceDisplay: Component<Props> = (props) => {
       <span>{props.value.toLocaleString('en-US')}</span>
     </div>
   );
-}; 
+};

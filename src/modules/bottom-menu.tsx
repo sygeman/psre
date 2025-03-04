@@ -1,8 +1,16 @@
 import { A, useLocation } from '@solidjs/router';
 import { createMemo } from 'solid-js';
 import { Icon } from 'solid-heroicons';
-import { home, globeAlt, trophy, userCircle, clipboardDocumentList, userGroup, envelopeOpen } from 'solid-heroicons/outline';
-import { mailStore } from '../stores/mail';
+import {
+  home,
+  globeAlt,
+  trophy,
+  userCircle,
+  clipboardDocumentList,
+  userGroup,
+  envelopeOpen,
+} from 'solid-heroicons/outline';
+import { mailStore } from '@/stores/mail';
 
 export const BottomMenu = () => {
   const location = useLocation();
@@ -16,8 +24,13 @@ export const BottomMenu = () => {
       >
         <div class="absolute inset-0 bg-yellow-800/70" />
         <div class="relative flex flex-col items-center gap-1">
-          <Icon path={isHome() ? globeAlt : home} class="h-6 w-6 text-yellow-100" />
-          <div class="text-xs text-yellow-100">{isHome() ? 'Мир' : 'Домой'}</div>
+          <Icon
+            path={isHome() ? globeAlt : home}
+            class="h-6 w-6 text-yellow-100"
+          />
+          <div class="text-xs text-yellow-100">
+            {isHome() ? 'Мир' : 'Домой'}
+          </div>
         </div>
       </A>
       <A href="/quests" class="flex flex-col items-center justify-center gap-1">
@@ -32,14 +45,17 @@ export const BottomMenu = () => {
         <div class="relative">
           <Icon path={envelopeOpen} class="h-6 w-6 text-slate-400" />
           {mailStore.unreadCount > 0 && (
-            <div class="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
+            <div class="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
               {mailStore.unreadCount}
             </div>
           )}
         </div>
         <div class="text-xs">Почта</div>
       </A>
-      <A href="/alliance" class="flex flex-col items-center justify-center gap-1">
+      <A
+        href="/alliance"
+        class="flex flex-col items-center justify-center gap-1"
+      >
         <Icon path={userGroup} class="h-6 w-6 text-slate-400" />
         <div class="text-xs">Альянс</div>
       </A>

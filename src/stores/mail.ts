@@ -16,7 +16,8 @@ const DEMO_MAILS: Mail[] = [
   {
     id: 1,
     title: 'Добро пожаловать!',
-    message: 'Добро пожаловать в игру! Примите этот подарок в знак нашей благодарности.',
+    message:
+      'Добро пожаловать в игру! Примите этот подарок в знак нашей благодарности.',
     date: '2024-03-20',
     isRead: false,
     hasReward: { type: 'diamond', amount: 100 },
@@ -47,13 +48,11 @@ export const mailStore = {
     return mailState.mails;
   },
   get unreadCount() {
-    return mailState.mails.filter(mail => !mail.isRead).length;
+    return mailState.mails.filter((mail) => !mail.isRead).length;
   },
   markAsRead(id: number) {
-    setMailState('mails', mails => 
-      mails.map(mail => 
-        mail.id === id ? { ...mail, isRead: true } : mail
-      )
+    setMailState('mails', (mails) =>
+      mails.map((mail) => (mail.id === id ? { ...mail, isRead: true } : mail))
     );
   },
-}; 
+};
