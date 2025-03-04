@@ -14,7 +14,9 @@ export interface Message {
 
 const [messages, setMessages] = createSignal<Message[]>([]);
 const [activeChannel, setActiveChannel] = createSignal<ChatChannel>('region');
-let autoMessageInterval: number | undefined;
+const [regionChatId, setRegionChatId] = createSignal<string | undefined>();
+const [allianceChatId, setAllianceChatId] = createSignal<string | undefined>();
+let autoMessageInterval: ReturnType<typeof setInterval> | undefined;
 
 const sendAutoMessage = () => {
   const messages = [
@@ -148,6 +150,12 @@ export const chatStore = {
   messages,
   activeChannel,
   setActiveChannel,
+  regionChatId,
+  allianceChatId,
+  setChatIds: (regionId: string | undefined, allianceId: string | undefined) => {
+    setRegionChatId(regionId);
+    setAllianceChatId(allianceId);
+  },
   addMessage: (message: Message) => {
     const currentMessages = messages();
     const newMessages = [...currentMessages, message];

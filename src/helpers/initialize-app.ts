@@ -28,6 +28,7 @@ export const initializeApp = async () => {
     console.log('Region chat ID:', regionChatId);
     console.log('Alliance chat ID:', allianceChatId);
 
+    chatStore.setChatIds(regionChatId, allianceChatId);
     updateStateFromData(state);
 
     const { subscription } = await directus.subscribe(collection, {
