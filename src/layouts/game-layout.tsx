@@ -12,21 +12,25 @@ type GameLayoutProps = {
 export function GameLayout(props: GameLayoutProps) {
   return (
     <div class="relative flex h-screen flex-col">
+      <div class="absolute top-8 w-full h-[calc(100%-64px-32px)] overflow-hidden">
+        {props.children}
+      </div>
       <ToastNotifications />
-      <ResourcesPanel />
+      <div class="absolute top-0 w-full flex shrink-0">
+        <ResourcesPanel />
+      </div>
       <div class="absolute top-8 flex shrink-0">
         <PersonPanel />
       </div>
       <div class="absolute top-8 left-24 flex shrink-0">
         <PowerPanel />
       </div>
-      <div class="flex h-[calc(100%-96px)] items-center justify-center bg-slate-500">
-        {props.children}
-      </div>
       <div class="absolute bottom-16 w-full">
         <MiniChat />
       </div>
-      <BottomMenu />
+      <div class="absolute bottom-0 w-full">
+        <BottomMenu />
+      </div>
     </div>
   );
 }
