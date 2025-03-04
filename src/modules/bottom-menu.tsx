@@ -32,7 +32,7 @@ export const BottomMenu = () => {
         <div class="relative">
           <Icon path={envelopeOpen} class="h-6 w-6 text-slate-400" />
           {mailStore.unreadCount > 0 && (
-            <div class="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-blue-500 text-[10px] font-medium text-white">
+            <div class="absolute -right-1 -top-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
               {mailStore.unreadCount}
             </div>
           )}
