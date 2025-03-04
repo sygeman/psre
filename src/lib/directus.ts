@@ -18,3 +18,13 @@ export const directus = createDirectus(apiUrl)
   .with(rest())
   .with(graphql())
   .with(realtime());
+
+export const connect = async () => {
+  try {
+    await directus.connect();
+    console.log('Successfully connected to Directus');
+  } catch (error) {
+    console.error('Failed to connect to Directus:', error);
+    throw error;
+  }
+};

@@ -1,4 +1,4 @@
-import { directus } from '@/lib/directus';
+import { directus, connect } from '@/lib/directus';
 import { GET_ACCOUNT_STATE } from '@/graphql/queries';
 import { updateStateFromData } from './state';
 import { chatStore } from './chat';
@@ -45,7 +45,7 @@ export const initializeStore = async () => {
 };
 
 export const initializeAllStores = async () => {
-  await directus.connect();
+  await connect();
   await initializeStore();
   chatStore.initializeMockMessages();
   connectionStore.initialize();
