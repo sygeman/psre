@@ -1,13 +1,4 @@
 import { createSignal, onCleanup, For } from "solid-js";
-import { Icon } from 'solid-heroicons';
-import { 
-  beaker, // для лаборатории
-  buildingStorefront, // для лесопилки
-  fire, // для заправки
-  wrenchScrewdriver, // для сталелитейного
-  buildingOffice2, // для фермы
-} from 'solid-heroicons/solid';
-import { accountState } from '@/stores/state';
 
 type Building = {
   color: string;
