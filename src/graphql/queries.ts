@@ -23,12 +23,13 @@ export const GET_ACCOUNT = gql`
         id
         chat_id {
           id
-          messages(limit: 20, sort: "-date_created") {
+          messages(limit: 20, sort: "date_created") {
             id
             content
             author {
               id
               name
+              date_created
             }
           }
         }
@@ -37,12 +38,13 @@ export const GET_ACCOUNT = gql`
         id
         chat_id {
           id
-          messages(limit: 20, sort: "-date_created") {
+          messages(limit: 20, sort: "date_created") {
             id
             content
             author {
               id
               name
+              date_created
             }
           }
         }

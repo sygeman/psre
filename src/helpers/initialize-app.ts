@@ -53,7 +53,7 @@ export const initializeApp = async () => {
       }
     })();
 
-    chatStore.initializeMockMessages();
+    chatStore.initializeChats(account);
 
     return true;
   } catch (error) {
