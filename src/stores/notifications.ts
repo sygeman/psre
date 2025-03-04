@@ -15,12 +15,12 @@ const [notificationState, setNotificationState] = createStore({
 
 export const notificationStore = {
   get notifications() {
-    console.log('Getting notifications:', notificationState.notifications);
+    // console.log('Getting notifications:', notificationState.notifications);
     return notificationState.notifications;
   },
 
   addNotification(notification: Omit<Notification, 'id' | 'timestamp'>) {
-    console.log('Adding notification:', notification);
+    // console.log('Adding notification:', notification);
     const newNotification: Notification = {
       ...notification,
       id: Date.now(),
@@ -29,13 +29,13 @@ export const notificationStore = {
 
     setNotificationState('notifications', (notifications) => {
       const newNotifications = [newNotification, ...notifications];
-      console.log('New notifications array:', newNotifications);
+      // console.log('New notifications array:', newNotifications);
       return newNotifications;
     });
 
     // Автоматически удаляем уведомление через 3 секунды
     setTimeout(() => {
-      console.log('Removing notification:', newNotification.id);
+      // console.log('Removing notification:', newNotification.id);
       setNotificationState('notifications', (notifications) =>
         notifications.filter((n) => n.id !== newNotification.id)
       );

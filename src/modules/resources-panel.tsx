@@ -10,7 +10,7 @@ export const ResourcesPanel = () => {
   const navigate = useNavigate();
 
   return (
-    <div class="grid h-8 w-full grid-cols-5 px-4">
+    <div class="grid h-8 w-full grid-cols-5 px-4 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-sm">
       <div class="flex items-center gap-1">
         🌾 {formatter.format(accountState.food)}
       </div>

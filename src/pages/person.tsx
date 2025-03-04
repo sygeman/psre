@@ -85,6 +85,7 @@ export function PersonPage() {
             <div class="flex flex-grow flex-col gap-2">
               <PointsProgressBar
                 points={() => accountState.exp}
+                max={500000}
                 label="XP"
                 icon="✨"
                 color="bg-purple-500"

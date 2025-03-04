@@ -2,8 +2,10 @@ import { directus } from '@/lib/directus';
 import { GET_ACCOUNT } from '@/graphql/queries';
 import { updateStateFromData } from '@/stores/state';
 import { chatStore } from '@/stores/chat';
-
-const collection = 'psre_account_state';
+import { accountStateSubscription } from '@/subscriptions/account-state';
+import { regionChatSubscription } from '@/subscriptions/region-chat';
+import { TEST_NOTIFICATIONS } from '@/mocks/notification';
+import { notificationStore } from '@/stores/notifications';
 
 export const initializeApp = async () => {
   try {
@@ -25,35 +27,23 @@ export const initializeApp = async () => {
     const regionChatId = account?.region_id?.chat_id?.id;
     const allianceChatId = account?.alliance_id?.chat_id?.id;
 
-    console.log('Region chat ID:', regionChatId);
-    console.log('Alliance chat ID:', allianceChatId);
-
     chatStore.setChatIds(regionChatId, allianceChatId);
-    updateStateFromData(state);
-
-    const { subscription } = await directus.subscribe(collection, {
-      query: { filter: { id: { _eq: stateId } } },
-      event: 'update',
-      uid: 'update-account-state',
-    });
-
-    (async () => {
-      try {
-        for await (const item of subscription) {
-          if (
-            item.event === 'update' &&
-            Array.isArray(item.data) &&
-            item.data.length > 0
-          ) {
-            updateStateFromData(item.data[0]);
-          }
-        }
-      } catch (subscriptionError) {
-        console.error('Ошибка при обработке обновлений:', subscriptionError);
-      }
-    })();
-
     chatStore.initializeChats(account);
+    
+    updateStateFromData(state);
+    accountStateSubscription(stateId);
+    regionChatSubscription(regionChatId);
+
+    // Отправляем тестовое уведомление каждые 5 секунд
+    setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * TEST_NOTIFICATIONS.length);
+      const notification = TEST_NOTIFICATIONS[randomIndex];
+      notificationStore.addNotification(notification);
+    }, 5000);
+
+    // Отправляем первое уведомление сразу
+    const firstNotification = TEST_NOTIFICATIONS[0];
+    notificationStore.addNotification(firstNotification);
 
     return true;
   } catch (error) {

@@ -1,5 +1,6 @@
 import { JSX } from 'solid-js';
 import { BackButton } from '@/modules/back-button';
+import { ToastNotifications } from '@/components/toast-notifications';
 
 type BackLayoutProps = {
   children: JSX.Element;
@@ -10,6 +11,7 @@ type BackLayoutProps = {
 export function BackLayout(props: BackLayoutProps) {
   return (
     <div class="relative flex h-screen flex-col">
+      <ToastNotifications />
       <div class="relative flex h-14 shrink-0 items-center justify-center bg-slate-800 px-4">
         <div class="absolute left-0">
           <BackButton />

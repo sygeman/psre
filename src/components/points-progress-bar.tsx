@@ -1,16 +1,18 @@
-import { Accessor, Component, createMemo } from 'solid-js';
+import { Accessor, Component, createMemo, mergeProps } from 'solid-js';
 
 type Props = {
   label: string;
   points: Accessor<number>;
   color: string;
   icon: string;
+  max?: number;
 };
 
-export const PointsProgressBar: Component<Props> = (props) => {
-  const max = 120;
+export const PointsProgressBar: Component<Props> = (oProps) => {
+  const props = mergeProps({ max: 120 }, oProps)
+
   const progress = createMemo(() =>
-    Math.min((props.points() / max) * 100, 100)
+    Math.min((props.points() / props.max) * 100, 100)
   );
 
   return (
@@ -23,7 +25,7 @@ export const PointsProgressBar: Component<Props> = (props) => {
         {props.icon}
       </div>
       <div class="flex w-full items-center justify-end pr-1">
-        {props.points()} <span class="pl-1 text-xs text-white/50">/ {max}</span>
+        {props.points()} <span class="pl-1 text-xs text-white/50">/ {props.max}</span>
       </div>
     </div>
   );
