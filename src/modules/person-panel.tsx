@@ -7,9 +7,9 @@ export const PersonPanel = () => {
   const navigate = useNavigate();
 
   return (
-    <div class="w-24 bg-slate-800 text-sm">
+    <div class="w-24 bg-slate-800 text-sm ring-1 ring-white/10">
       <div
-        class="relative flex size-24 cursor-pointer bg-slate-700 transition-colors hover:bg-slate-600"
+        class="relative flex size-24 cursor-pointer bg-slate-700 transition-colors hover:bg-slate-600 ring-1 ring-white/10"
         onClick={() => navigate('/person')}
       >
         <CharacterAvatar class="size-24" />

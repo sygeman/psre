@@ -11,7 +11,7 @@ type Building = {
   onLevelUp: () => void;
 }
 
-function BuildingCard(props: Building) {
+function BuildingCard(props: Building) {  
   const [progress, setProgress] = createSignal(props.initialProgress || 0);
   const [timeLeft, setTimeLeft] = createSignal(
     props.initialProgress === 100 ? 0 : props.collectionTime
@@ -34,7 +34,7 @@ function BuildingCard(props: Building) {
   const handleCollect = () => {
     if (progress() === 100) {
       setProgress(0);
-      // Здесь будет логика начисления ресурсов
+      setTimeLeft(props.collectionTime);
     }
   };
 
@@ -47,94 +47,61 @@ function BuildingCard(props: Building) {
           
           {/* Уровень */}
           <span 
-            class={`px-2 py-0.5 rounded text-xs ${props.color.replace('bg-', 'bg-').replace('-900', '-800')} ring-1 ring-white/20`}
+            class="flex items-center justify-center w-6 h-6 rounded-md text-xs bg-black/30"
           >
-            Ур. {props.level}
+            {props.level}
           </span>
         </div>
 
         {/* Кнопки сбора и повышения уровня */}
         <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-end gap-6">
-          <div class="relative">
-            {/* Таймер или подсказка над кнопкой */}
-            <div class="absolute -top-8 left-1/2 -translate-x-1/2">
-              <div class="relative text-xs text-white/60 bg-black/20 px-2 py-0.5 rounded-full whitespace-nowrap">
-                {progress() === 100 
-                  ? `Нажми чтобы собрать ${props.resourceName}`
-                  : formatTime(timeLeft())
-                }
-                <div class="absolute left-1/2 -translate-x-1/2 top-[100%] w-0 h-0 border-x-[6px] border-x-transparent border-t-[6px] border-t-black/20" />
-              </div>
-            </div>
-            
-            {/* Круговой прогресс */}
-            <svg class="absolute -top-1 -left-1 w-14 h-14 -rotate-90">
-              <circle
-                cx="28"
-                cy="28"
-                r="26"
-                stroke-width="2"
-                fill="none"
-                class="stroke-white/10"
-              />
-              <circle
-                cx="28"
-                cy="28"
-                r="26"
-                stroke-width="2"
-                fill="none"
-                stroke-dasharray="163.36"
-                stroke-dashoffset={163.36 - (163.36 * progress()) / 100}
-                class="stroke-white/30 transition-all duration-300"
-              />
-            </svg>
-            
-            <button 
-              onClick={handleCollect}
-              disabled={progress() < 100}
-              class="relative w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center transition-all focus:outline-none"
-              classList={{
-                'opacity-50 cursor-default': progress() < 100,
-                'cursor-pointer': progress() === 100
-              }}
-            >
-              {/* Внешнее свечение */}
-              <div 
-                class="absolute -inset-3 rounded-full blur-md transition-opacity"
-                classList={{
-                  'animate-pulse bg-white/20': progress() === 100,
-                  'opacity-0': progress() < 100
-                }}
-              />
-              
-              <span 
-                class={`relative flex items-center justify-center w-8 h-8 rounded-full ${props.color} transition-colors`}
+          {/* Кнопка сбора ресурса */}
+          <div class="relative flex flex-col items-center w-12">
+            <div class="relative w-12 h-12">
+              {/* Кнопка */}
+              <button 
+                onClick={handleCollect}
+                disabled={progress() < 100}
+                class={`w-full h-full rounded-full flex items-center justify-center transition-colors ${
+                  progress() === 100 
+                    ? `animate-[pulse_2s_ease-in-out_infinite] ${props.color.replace('-900', '-700')} cursor-pointer`
+                    : 'bg-slate-900 cursor-not-allowed'
+                }`}
               >
-                {props.icon}
-              </span>
-            </button>
+                <span 
+                  class={`flex items-center justify-center w-8 h-8 rounded-full ${props.color}`}
+                >
+                  {props.icon}
+                </span>
+                
+                {progress() < 100 && (
+                  <div class="absolute inset-0 flex items-center justify-center text-xs text-white/60 bg-black/50 rounded-full">
+                    {formatTime(timeLeft())}
+                  </div>
+                )}
+              </button>
+            </div>
+            <span class="mt-1 text-xs text-white/60">{props.resourceName}</span>
           </div>
 
           {/* Кнопка повышения уровня */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              props.onLevelUp();
-            }}
-            disabled={true}
-            class="relative w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center transition-all focus:outline-none opacity-50 cursor-default"
-          >
-            {/* Внешнее свечение */}
-            <div 
-              class="absolute -inset-3 rounded-full blur-md bg-white/10 opacity-0"
-            />
-            
-            <span 
-              class={`relative flex items-center justify-center w-8 h-8 rounded-full ${props.color} text-sm font-bold`}
-            >
-              ↑
-            </span>
-          </button>
+          <div class="flex flex-col items-center">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                props.onLevelUp();
+              }}
+              disabled={true}
+              class="relative w-12 h-12 bg-slate-900 rounded-full flex items-center justify-center transition-all focus:outline-none opacity-50 cursor-default"
+            >              
+              <span 
+                class={`relative flex items-center justify-center w-8 h-8 rounded-full ${props.color} text-sm font-bold`}
+              >
+                ↑
+              </span>
+            </button>
+            <span class="mt-1 text-xs text-white/60">Улучшить</span>
+          </div>
         </div>
       </div>
     </div>
@@ -144,64 +111,59 @@ function BuildingCard(props: Building) {
 export const Map = () => {
   const buildings: Building[] = [
     { 
-      color: 'bg-blue-900', 
+      color: 'bg-cyan-900',
       name: 'Лаборатория', 
-      resourceName: 'вакцина', 
+      resourceName: 'Вакцина', // Заглавная
       level: 1, 
       collectionTime: 300,
       icon: '🧪',
       onLevelUp: () => {
-        // Логика повышения уровня для лаборатории
         console.log('Повышение уровня лаборатории');
       }
     },
     { 
-      color: 'bg-orange-900', 
+      color: 'bg-emerald-900',
       name: 'Лесопилка', 
-      resourceName: 'древесина', 
+      resourceName: 'Древесина', // Заглавная
       level: 1, 
       collectionTime: 180,
       icon: '🪵',
       onLevelUp: () => {
-        // Логика повышения уровня для лесопилки
         console.log('Повышение уровня лесопилки');
       }
     },
     { 
-      color: 'bg-green-900', 
+      color: 'bg-yellow-900',
       name: 'Ферма', 
-      resourceName: 'еда', 
+      resourceName: 'Еда', // Заглавная
       level: 1, 
       collectionTime: 120,
       icon: '🌾',
-      initialProgress: 100, // Ферма готова к сбору
+      initialProgress: 100,
       onLevelUp: () => {
-        // Логика повышения уровня для фермы
         console.log('Повышение уровня фермы');
       }
     },
     { 
-      color: 'bg-purple-900', 
+      color: 'bg-orange-900',
       name: 'Заправка', 
-      resourceName: 'топливо', 
+      resourceName: 'Топливо', // Заглавная
       level: 1, 
       collectionTime: 240,
       icon: '🛢️',
       onLevelUp: () => {
-        // Логика повышения уровня для заправки
         console.log('Повышение уровня заправки');
       }
     },
     { 
-      color: 'bg-red-900', 
-      name: 'Сталелитейный завод', // исправлено название
-      resourceName: 'сталь', 
+      color: 'bg-slate-700',
+      name: 'Плавильня', 
+      resourceName: 'Сталь', // Заглавная
       level: 1, 
       collectionTime: 360,
       icon: '🔩',
       onLevelUp: () => {
-        // Логика повышения уровня для сталелитейного
-        console.log('Повышение уровня сталелитейного завода');
+        console.log('Повышение уровня плавильни');
       }
     },
   ];
@@ -217,7 +179,7 @@ export const Map = () => {
         "background-repeat": "repeat",
       }}
     >
-      <div class="scrollbar flex flex-col gap-3 overflow-y-auto h-full py-48 px-4">
+      <div class="scrollbar grid grid-cols-2 gap-3 overflow-y-auto h-full py-48 px-4">
         <For each={buildings}>{building => (
           <BuildingCard {...building} />
         )}</For>
