@@ -2,7 +2,6 @@ import { directus } from '@/lib/directus';
 import { GET_ACCOUNT } from '@/graphql/queries';
 import { updateStateFromData } from '@/stores/state';
 import { chatStore } from '@/stores/chat';
-import { connectionStore } from '@/stores/connection';
 
 const collection = 'psre_account_state';
 
@@ -49,7 +48,6 @@ export const initializeApp = async () => {
     })();
 
     chatStore.initializeMockMessages();
-    connectionStore.initialize();
 
     return true;
   } catch (error) {

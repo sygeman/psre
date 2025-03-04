@@ -13,30 +13,25 @@ import { RankPage } from '@/pages/rank';
 import { QuestsPage } from '@/pages/quests';
 import { AlliancePage } from '@/pages/alliance';
 import { MailPage } from '@/pages/mail';
-import { ConnectionOverlay } from '@/components/connection-overlay';
 import { initializeApp } from '@/helpers/initialize-app';
-import { connectionStore } from '@/stores/connection';
 
 await initializeApp();
 
 render(
   () => (
-    <>
-      <ConnectionOverlay isConnected={connectionStore.isConnected()} />
-      <Router>
-        <Route path="/" component={HomePage} />
-        <Route path="/region" component={RegionPage} />
-        <Route path="/heroes" component={HeroesPage} />
-        <Route path="/mail" component={MailPage} />
-        <Route path="/vip" component={VipPage} />
-        <Route path="/shop" component={ShopPage} />
-        <Route path="/person" component={PersonPage} />
-        <Route path="/chat" component={ChatPage} />
-        <Route path="/rank" component={RankPage} />
-        <Route path="/quests" component={QuestsPage} />
-        <Route path="/alliance" component={AlliancePage} />
-      </Router>
-    </>
+    <Router>
+      <Route path="/" component={HomePage} />
+      <Route path="/region" component={RegionPage} />
+      <Route path="/heroes" component={HeroesPage} />
+      <Route path="/mail" component={MailPage} />
+      <Route path="/vip" component={VipPage} />
+      <Route path="/shop" component={ShopPage} />
+      <Route path="/person" component={PersonPage} />
+      <Route path="/chat" component={ChatPage} />
+      <Route path="/rank" component={RankPage} />
+      <Route path="/quests" component={QuestsPage} />
+      <Route path="/alliance" component={AlliancePage} />
+    </Router>
   ),
   document.getElementById('root')
 );
