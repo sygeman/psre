@@ -23,12 +23,28 @@ export const GET_ACCOUNT = gql`
         id
         chat_id {
           id
+          messages(limit: 20, sort: "-date_created") {
+            id
+            content
+            author {
+              id
+              name
+            }
+          }
         }
       }
       alliance_id {
         id
         chat_id {
           id
+          messages(limit: 20, sort: "-date_created") {
+            id
+            content
+            author {
+              id
+              name
+            }
+          }
         }
       }
     }
