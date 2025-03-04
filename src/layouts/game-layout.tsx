@@ -4,7 +4,7 @@ import { PersonPanel } from '@/modules/person-panel';
 import { PowerPanel } from '@/modules/power-panel';
 import { ResourcesPanel } from '@/modules/resources-panel';
 import { MiniChat } from '@/components/mini-chat';
-
+import { ToastNotifications } from '@/components/toast-notifications';
 type GameLayoutProps = {
   children: JSX.Element;
 };
@@ -12,6 +12,7 @@ type GameLayoutProps = {
 export function GameLayout(props: GameLayoutProps) {
   return (
     <div class="relative flex h-screen flex-col">
+      <ToastNotifications />
       <ResourcesPanel />
       <div class="absolute top-8 flex shrink-0">
         <PersonPanel />
