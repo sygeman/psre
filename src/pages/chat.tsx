@@ -127,22 +127,22 @@ export default function ChatPage() {
   return (
     <BackLayout title="Чат">
       <div class="flex flex-shrink-0 flex-col">
-        <div class="flex border-b border-slate-700">
+        <div class="flex bg-slate-800">
           <button
-            class={`flex-1 cursor-pointer border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+            class={`flex-1 cursor-pointer px-4 py-2 text-sm font-medium transition-colors ${
               chatStore.activeChannel === 'region'
-                ? 'border-blue-500 text-blue-500'
-                : 'border-transparent text-gray-400 hover:bg-slate-700/50 hover:text-gray-200'
+                ? 'bg-slate-700 text-white'
+                : 'text-slate-400 hover:text-slate-200'
             }`}
             onClick={() => chatStore.setActiveChannel('region')}
           >
             Регион
           </button>
           <button
-            class={`flex-1 cursor-pointer border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
+            class={`flex-1 cursor-pointer px-4 py-2 text-sm font-medium transition-colors ${
               chatStore.activeChannel === 'alliance'
-                ? 'border-blue-500 text-blue-500'
-                : 'border-transparent text-gray-400 hover:bg-slate-700/50 hover:text-gray-200'
+                ? 'bg-slate-700 text-white'
+                : 'text-slate-400 hover:text-slate-200'
             }`}
             onClick={() => chatStore.setActiveChannel('alliance')}
           >
