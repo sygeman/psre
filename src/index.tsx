@@ -4,25 +4,20 @@ import './index.css';
 
 import { HomePage } from '@/pages/home';
 import { RegionPage } from '@/pages/region';
-import { directus } from '@/lib/directus';
-import { initializeStore } from '@/stores/state';
 import { HeroesPage } from '@/pages/heroes';
 import { VipPage } from '@/pages/vip';
 import { ShopPage } from '@/pages/shop';
 import { PersonPage } from '@/pages/person';
 import ChatPage from '@/pages/chat';
-import { chatStore } from '@/stores/chat';
 import { RankPage } from '@/pages/rank';
 import { QuestsPage } from '@/pages/quests';
 import { AlliancePage } from '@/pages/alliance';
 import { MailPage } from '@/pages/mail';
-import { connectionStore } from '@/stores/connection';
 import { ConnectionOverlay } from '@/components/connection-overlay';
+import { initializeAllStores } from '@/stores/init';
+import { connectionStore } from '@/stores/connection';
 
-await directus.connect();
-initializeStore();
-chatStore.initializeMockMessages();
-connectionStore.initialize();
+await initializeAllStores();
 
 render(
   () => (
