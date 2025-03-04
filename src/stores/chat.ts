@@ -12,11 +12,13 @@ export interface Message {
   channel: ChatChannel;
 }
 
-const transformMessages = (messages: any[], accountId: string, channel: ChatChannel): Message[] => {
+const currentAccountId = 'ba12e291-2e9c-452e-ae06-81c1a885390e';
+
+const transformMessages = (messages: any[], channel: ChatChannel): Message[] => {
   return messages.map((msg) => ({
     id: msg.id,
     text: msg.content,
-    sender: msg.author.id === accountId ? 'user' : 'other',
+    sender: msg.author.id === currentAccountId ? 'user' : 'other',
     timestamp: new Date(msg.date_created),
     author: msg.author.name,
     avatar: `/avatars/${msg.author.name.toLowerCase()}.jpg`,
@@ -56,19 +58,7 @@ export const [chatStore, setChatStore] = createStore({
     return chatStore.messages.slice(-count);
   },
 
-  initializeChats(account: any) {
-    const messages: Message[] = [];
-
-    // Добавляем сообщения из регионального чата
-    if (account?.region_id?.chat_id?.messages) {
-      messages.push(...transformMessages(account.region_id.chat_id.messages, account.id, 'region'));
-    }
-
-    // Добавляем сообщения из чата альянса
-    if (account?.alliance_id?.chat_id?.messages) {
-      messages.push(...transformMessages(account.alliance_id.chat_id.messages, account.id, 'alliance'));
-    }
-    
-    setChatStore('messages', messages);
-  },
+  addMessagesToChannel(channel: ChatChannel, messages: any) {
+    setChatStore('messages', (preMessages) => [...preMessages, ...transformMessages(messages, channel)]);
+  }
 });

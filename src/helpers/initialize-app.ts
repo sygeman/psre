@@ -3,7 +3,7 @@ import { GET_ACCOUNT } from '@/graphql/queries';
 import { updateStateFromData } from '@/stores/state';
 import { chatStore } from '@/stores/chat';
 import { accountStateSubscription } from '@/subscriptions/account-state';
-import { regionChatSubscription } from '@/subscriptions/region-chat';
+import { chatSubscription } from '@/subscriptions/chat';
 import { TEST_NOTIFICATIONS } from '@/mocks/notification';
 import { notificationStore } from '@/stores/notifications';
 
@@ -28,11 +28,13 @@ export const initializeApp = async () => {
     const allianceChatId = account?.alliance_id?.chat_id?.id;
 
     chatStore.setChatIds(regionChatId, allianceChatId);
-    chatStore.initializeChats(account);
+    chatStore.addMessagesToChannel('region', account.region_id.chat_id.messages)
+    chatStore.addMessagesToChannel('alliance', account.alliance_id.chat_id.messages)
     
     updateStateFromData(state);
     accountStateSubscription(stateId);
-    regionChatSubscription(regionChatId);
+    chatSubscription('region', regionChatId);
+    chatSubscription('alliance', allianceChatId);
 
     // Отправляем тестовое уведомление каждые 5 секунд
     setInterval(() => {
