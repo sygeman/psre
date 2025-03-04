@@ -11,18 +11,12 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\"",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
-    "server:watch": "bun --watch server.ts",
-    "codegen": "graphql-codegen",
-    "codegen:watch": "graphql-codegen --watch"
+    "server:watch": "bun --watch server.ts"
   },
   "type": "module",
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "9.21.0",
-    "@graphql-codegen/cli": "5.0.5",
-    "@graphql-codegen/typescript": "4.1.5",
-    "@graphql-codegen/typescript-operations": "4.5.1",
-    "@parcel/watcher": "2.5.1",
     "@tailwindcss/vite": "4.0.9",
     "@typescript-eslint/eslint-plugin": "8.25.0",
     "@typescript-eslint/parser": "8.25.0",
@@ -42,7 +36,6 @@
   "dependencies": {
     "@directus/sdk": "19.0.1",
     "@solidjs/router": "0.15.3",
-    "@tanstack/solid-query": "5.67.1",
     "solid-heroicons": "3.2.4",
     "solid-js": "1.9.5"
   }
