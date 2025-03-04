@@ -1,4 +1,4 @@
-import { createItem, updateItem } from "@directus/sdk";
+import { createItem, deleteItems, updateItem } from "@directus/sdk";
 import { directus } from "./src/lib/directus";
 
 function getRandomInt(n: number) {
@@ -30,16 +30,28 @@ const allianceChatId = '52b49c7a-5b8a-40b9-95af-c31be0c8e39b'
 
 const accountId = 'ba12e291-2e9c-452e-ae06-81c1a885390e';
 
-setInterval(async () => {
-    await directus.request(createItem('psre_chat_message', {
-        chat_id: regionChatId,
-        content: `Тестовое сообщение в чат региона - ${getRandomInt(100000)}`,
-        author: accountId
-    }))
+await directus.request(deleteItems('psre_chat_message', {
+  filter: { chat_id: { _eq: regionChatId }, },
+  limit: -1
+}))
 
-    await directus.request(createItem('psre_chat_message', {
-      chat_id: allianceChatId,
-      content: `Тестовое сообщение в чат альянса - ${getRandomInt(100000)}`,
+await directus.request(deleteItems('psre_chat_message', {
+  filter: { chat_id: { _eq: allianceChatId } },
+  limit: -1
+}))
+
+setInterval(async () => {
+  await directus.request(createItem('psre_chat_message', {
+      chat_id: regionChatId,
+      content: `Тестовое сообщение в чат региона - ${getRandomInt(100000)}`,
       author: accountId
   }))
-  }, 3000)
+
+  await directus.request(createItem('psre_chat_message', {
+    chat_id: allianceChatId,
+    content: `Тестовое сообщение в чат альянса - ${getRandomInt(100000)}`,
+    author: accountId
+}))
+}, 3000)
+
+   
