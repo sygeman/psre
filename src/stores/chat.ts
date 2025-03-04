@@ -1,5 +1,4 @@
 import { createStore } from "solid-js/store";
-import { mockMessages, autoMessages, authors } from '@/mocks/chat';
 
 export type ChatChannel = 'region' | 'alliance';
 
@@ -13,10 +12,21 @@ export interface Message {
   channel: ChatChannel;
 }
 
+const transformMessages = (messages: any[], accountId: string, channel: ChatChannel): Message[] => {
+  return messages.map((msg) => ({
+    id: msg.id,
+    text: msg.content,
+    sender: msg.author.id === accountId ? 'user' : 'other',
+    timestamp: new Date(msg.date_created),
+    author: msg.author.name,
+    avatar: `/avatars/${msg.author.name.toLowerCase()}.jpg`,
+    channel,
+  }));
+};
+
 export const [chatStore, setChatStore] = createStore({
   messages: [] as Message[],
   activeChannel: 'region' as ChatChannel,
-  autoMessageInterval: undefined as ReturnType<typeof setInterval> | undefined,
   regionChatId: undefined as string | undefined,
   allianceChatId: undefined as string | undefined,
 
@@ -46,44 +56,19 @@ export const [chatStore, setChatStore] = createStore({
     return chatStore.messages.slice(-count);
   },
 
-  sendAutoMessage() {
-    const randomMessage = autoMessages[Math.floor(Math.random() * autoMessages.length)];
-    const channels: ChatChannel[] = ['region', 'alliance'];
-    const randomChannel = channels[Math.floor(Math.random() * channels.length)];
+  initializeChats(account: any) {
+    const messages: Message[] = [];
 
-    const randomAuthor =
-      authors[randomChannel][
-        Math.floor(Math.random() * authors[randomChannel].length)
-      ];
-
-    const message: Message = {
-      id: Date.now().toString(),
-      text: randomMessage,
-      sender: 'other',
-      timestamp: new Date(),
-      author: randomAuthor,
-      avatar: `/avatars/${randomAuthor.toLowerCase()}.jpg`,
-      channel: randomChannel,
-    };
-
-    chatStore.addMessage(message);
-  },
-
-  startAutoMessages() {
-    if (!chatStore.autoMessageInterval) {
-      setChatStore('autoMessageInterval', setInterval(() => chatStore.sendAutoMessage(), 3000));
+    // Добавляем сообщения из регионального чата
+    if (account?.region_id?.chat_id?.messages) {
+      messages.push(...transformMessages(account.region_id.chat_id.messages, account.id, 'region'));
     }
-  },
 
-  stopAutoMessages() {
-    if (chatStore.autoMessageInterval) {
-      clearInterval(chatStore.autoMessageInterval);
-      setChatStore('autoMessageInterval', undefined);
+    // Добавляем сообщения из чата альянса
+    if (account?.alliance_id?.chat_id?.messages) {
+      messages.push(...transformMessages(account.alliance_id.chat_id.messages, account.id, 'alliance'));
     }
-  },
-
-  initializeMockMessages() {
-    setChatStore('messages', mockMessages);
-    chatStore.startAutoMessages();
+    
+    setChatStore('messages', messages);
   },
 });
