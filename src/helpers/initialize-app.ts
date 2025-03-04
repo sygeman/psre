@@ -22,6 +22,8 @@ export const initializeApp = async () => {
 
     const state = account?.state[0];
     const stateId = state?.id;
+    const regionChatId = account?.region_id?.chat_id?.id;
+    const allianceChatId = account?.alliance_id?.chat_id?.id;
 
     updateStateFromData(state);
 
