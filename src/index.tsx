@@ -14,10 +14,10 @@ import { QuestsPage } from '@/pages/quests';
 import { AlliancePage } from '@/pages/alliance';
 import { MailPage } from '@/pages/mail';
 import { ConnectionOverlay } from '@/components/connection-overlay';
-import { initializeAllStores } from '@/stores/init';
+import { initializeApp } from '@/helpers/initialize-app';
 import { connectionStore } from '@/stores/connection';
 
-await initializeAllStores();
+await initializeApp();
 
 render(
   () => (

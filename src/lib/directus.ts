@@ -20,16 +20,16 @@ export const directus = createDirectus(apiUrl)
   .with(realtime());
 
 directus.onWebSocket('open', function () {
-    console.log('Connection is open');
+  console.log('Connection is open');
 });
 
 directus.onWebSocket('close', function () {
-    console.log('Connection has closed');
+  console.log('Connection has closed');
 });
 
 directus.onWebSocket('error', function (error) {
-    console.log('Connection has had an error');
-    console.log(error);
+  console.log('Connection has had an error');
+  console.log(error);
 });
 
 export const connect = async () => {
