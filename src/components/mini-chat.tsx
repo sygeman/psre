@@ -10,7 +10,7 @@ export function MiniChat() {
   const [isAnimating, setIsAnimating] = createSignal(false);
 
   const handleClick = () => {
-    navigate('/chat', { state: { activeChannel: chatStore.activeChannel() } });
+    navigate('/chat', { state: { activeChannel: chatStore.activeChannel } });
   };
 
   const handleTouchStart = (e: TouchEvent) => {
@@ -28,9 +28,9 @@ export function MiniChat() {
 
     if (Math.abs(diff) > 50 && !isAnimating()) {
       setIsAnimating(true);
-      if (diff > 0 && chatStore.activeChannel() === 'alliance') {
+      if (diff > 0 && chatStore.activeChannel === 'alliance') {
         chatStore.setActiveChannel('region');
-      } else if (diff < 0 && chatStore.activeChannel() === 'region') {
+      } else if (diff < 0 && chatStore.activeChannel === 'region') {
         chatStore.setActiveChannel('alliance');
       }
       setTimeout(() => setIsAnimating(false), 300);
@@ -52,8 +52,7 @@ export function MiniChat() {
       </div>
       <div class="ml-2 max-w-[calc(100%-60px)] min-w-0 flex-1 space-y-0.5">
         <For
-          each={chatStore
-            .messages()
+          each={chatStore.messages
             .filter((m) => m.channel === props.channel)
             .slice(-2)}
         >
@@ -64,7 +63,7 @@ export function MiniChat() {
             </div>
           )}
         </For>
-        {chatStore.messages().filter((m) => m.channel === props.channel)
+        {chatStore.messages.filter((m) => m.channel === props.channel)
           .length === 0 && (
           <div class="flex h-[44px] items-center justify-center">
             <p class="text-xs text-gray-400 select-none">Нет сообщений</p>
@@ -87,14 +86,14 @@ export function MiniChat() {
         <div class="inline-flex gap-2 rounded-full bg-slate-800/80 px-2 py-1 backdrop-blur-sm">
           <div
             class={`h-1.5 w-1.5 rounded-full transition-colors ${
-              chatStore.activeChannel() === 'region'
+              chatStore.activeChannel === 'region'
                 ? 'bg-blue-500'
                 : 'bg-slate-600'
             }`}
           />
           <div
             class={`h-1.5 w-1.5 rounded-full transition-colors ${
-              chatStore.activeChannel() === 'alliance'
+              chatStore.activeChannel === 'alliance'
                 ? 'bg-blue-500'
                 : 'bg-slate-600'
             }`}
@@ -108,8 +107,8 @@ export function MiniChat() {
             <div
               class="absolute inset-0 transition-transform duration-300 ease-out"
               style={{
-                'z-index': chatStore.activeChannel() === 'region' ? 2 : 1,
-                transform: `translateX(${chatStore.activeChannel() === 'region' ? '0' : '-100%'})`,
+                'z-index': chatStore.activeChannel === 'region' ? 2 : 1,
+                transform: `translateX(${chatStore.activeChannel === 'region' ? '0' : '-100%'})`,
               }}
             >
               <MessageContainer channel="region" />
@@ -117,8 +116,8 @@ export function MiniChat() {
             <div
               class="absolute inset-0 transition-transform duration-300 ease-out"
               style={{
-                'z-index': chatStore.activeChannel() === 'alliance' ? 2 : 1,
-                transform: `translateX(${chatStore.activeChannel() === 'alliance' ? '0' : '100%'})`,
+                'z-index': chatStore.activeChannel === 'alliance' ? 2 : 1,
+                transform: `translateX(${chatStore.activeChannel === 'alliance' ? '0' : '100%'})`,
               }}
             >
               <MessageContainer channel="alliance" />

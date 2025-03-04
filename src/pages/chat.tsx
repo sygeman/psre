@@ -78,14 +78,14 @@ export default function ChatPage() {
 
   createEffect(() => {
     // Вызываем scrollToBottom при изменении списка сообщений
-    chatStore.messages();
+    const _ = chatStore.messages;
     // Скроллим только если пользователь близко к низу
     setTimeout(scrollToBottom, 0);
   });
 
   createEffect(() => {
     // Следим за изменением активного канала
-    chatStore.activeChannel();
+    const _ = chatStore.activeChannel;
     // При смене канала прокручиваем чат вниз
     forceScrollToBottom();
   });
@@ -112,7 +112,7 @@ export default function ChatPage() {
         text: message,
         author: 'User',
         avatar: '',
-        channel: chatStore.activeChannel(),
+        channel: chatStore.activeChannel,
         sender: 'user',
         timestamp: new Date(),
       });
@@ -130,7 +130,7 @@ export default function ChatPage() {
         <div class="flex border-b border-slate-700">
           <button
             class={`flex-1 cursor-pointer border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
-              chatStore.activeChannel() === 'region'
+              chatStore.activeChannel === 'region'
                 ? 'border-blue-500 text-blue-500'
                 : 'border-transparent text-gray-400 hover:bg-slate-700/50 hover:text-gray-200'
             }`}
@@ -140,7 +140,7 @@ export default function ChatPage() {
           </button>
           <button
             class={`flex-1 cursor-pointer border-b-2 px-4 py-2 text-sm font-medium transition-colors ${
-              chatStore.activeChannel() === 'alliance'
+              chatStore.activeChannel === 'alliance'
                 ? 'border-blue-500 text-blue-500'
                 : 'border-transparent text-gray-400 hover:bg-slate-700/50 hover:text-gray-200'
             }`}
@@ -155,9 +155,8 @@ export default function ChatPage() {
         ref={chatContainerRef}
       >
         <For
-          each={chatStore
-            .messages()
-            .filter((m) => m.channel === chatStore.activeChannel())}
+          each={chatStore.messages
+            .filter((m) => m.channel === chatStore.activeChannel)}
         >
           {(message) => (
             <div

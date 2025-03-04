@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { createStore } from "solid-js/store";
 import { mockMessages, autoMessages, authors } from '@/mocks/chat';
 
 export type ChatChannel = 'region' | 'alliance';
@@ -13,37 +13,37 @@ export interface Message {
   channel: ChatChannel;
 }
 
-const [messages, setMessages] = createSignal<Message[]>([]);
-
-export const chatStore = {
-  messages,
+export const [chatStore, setChatStore] = createStore({
+  messages: [] as Message[],
   activeChannel: 'region' as ChatChannel,
   autoMessageInterval: undefined as ReturnType<typeof setInterval> | undefined,
   regionChatId: undefined as string | undefined,
   allianceChatId: undefined as string | undefined,
 
   setActiveChannel(channel: ChatChannel) {
-    this.activeChannel = channel;
+    setChatStore('activeChannel', channel);
   },
 
   setChatIds(regionId: string | undefined, allianceId: string | undefined) {
-    this.regionChatId = regionId;
-    this.allianceChatId = allianceId;
+    setChatStore({
+      regionChatId: regionId,
+      allianceChatId: allianceId,
+    });
   },
 
   addMessage(message: Message) {
-    const currentMessages = messages();
+    const currentMessages = chatStore.messages;
     const newMessages = [...currentMessages, message];
     if (newMessages.length > 40) {
       // Оставляем только последние 40 сообщений
-      setMessages(newMessages.slice(-40));
+      setChatStore('messages', newMessages.slice(-40));
     } else {
-      setMessages(newMessages);
+      setChatStore('messages', newMessages);
     }
   },
 
   getLastMessages(count: number) {
-    return messages().slice(-count);
+    return chatStore.messages.slice(-count);
   },
 
   sendAutoMessage() {
@@ -66,24 +66,24 @@ export const chatStore = {
       channel: randomChannel,
     };
 
-    this.addMessage(message);
+    chatStore.addMessage(message);
   },
 
   startAutoMessages() {
-    if (!this.autoMessageInterval) {
-      this.autoMessageInterval = setInterval(() => this.sendAutoMessage(), 3000);
+    if (!chatStore.autoMessageInterval) {
+      setChatStore('autoMessageInterval', setInterval(() => chatStore.sendAutoMessage(), 3000));
     }
   },
 
   stopAutoMessages() {
-    if (this.autoMessageInterval) {
-      clearInterval(this.autoMessageInterval);
-      this.autoMessageInterval = undefined;
+    if (chatStore.autoMessageInterval) {
+      clearInterval(chatStore.autoMessageInterval);
+      setChatStore('autoMessageInterval', undefined);
     }
   },
 
   initializeMockMessages() {
-    setMessages(mockMessages);
-    this.startAutoMessages();
+    setChatStore('messages', mockMessages);
+    chatStore.startAutoMessages();
   },
-};
+});

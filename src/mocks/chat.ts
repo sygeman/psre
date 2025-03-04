@@ -1,4 +1,4 @@
-import { Message, ChatChannel } from '@/stores/chat';
+import { Message } from '@/stores/chat';
 
 export const mockMessages: Message[] = [
   {
