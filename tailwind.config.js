@@ -11,9 +11,15 @@ export default {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(0)' },
         },
+        'shake': {
+          '0%, 100%': { transform: 'translateX(-50%) rotate(0deg)' },
+          '25%': { transform: 'translateX(-50%) rotate(-5deg)' },
+          '75%': { transform: 'translateX(-50%) rotate(5deg)' }
+        }
       },
       animation: {
         'slide-down': 'slide-down 0.3s ease-out',
+        'shake': 'shake 1s ease-in-out infinite'
       },
     },
   },
