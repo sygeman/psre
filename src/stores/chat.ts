@@ -13,8 +13,10 @@ export interface Message {
   channel: ChatChannel;
 }
 
+const [messages, setMessages] = createSignal<Message[]>([]);
+
 export const chatStore = {
-  messages: [] as Message[],
+  messages,
   activeChannel: 'region' as ChatChannel,
   autoMessageInterval: undefined as ReturnType<typeof setInterval> | undefined,
   regionChatId: undefined as string | undefined,
@@ -30,17 +32,18 @@ export const chatStore = {
   },
 
   addMessage(message: Message) {
-    const newMessages = [...this.messages, message];
+    const currentMessages = messages();
+    const newMessages = [...currentMessages, message];
     if (newMessages.length > 40) {
       // Оставляем только последние 40 сообщений
-      this.messages = newMessages.slice(-40);
+      setMessages(newMessages.slice(-40));
     } else {
-      this.messages = newMessages;
+      setMessages(newMessages);
     }
   },
 
   getLastMessages(count: number) {
-    return this.messages.slice(-count);
+    return messages().slice(-count);
   },
 
   sendAutoMessage() {
@@ -80,7 +83,7 @@ export const chatStore = {
   },
 
   initializeMockMessages() {
-    this.messages = mockMessages;
+    setMessages(mockMessages);
     this.startAutoMessages();
   },
 };
