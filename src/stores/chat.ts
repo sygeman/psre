@@ -12,8 +12,8 @@ export interface Message {
   channel: ChatChannel;
 }
 
-const [messages, setMessages] = createSignal<Message[]>([]);
-const [activeChannel, setActiveChannel] = createSignal<ChatChannel>('region');
+let messages: Message[] = [];
+let activeChannel: ChatChannel = 'region';
 let autoMessageInterval: ReturnType<typeof setInterval> | undefined;
 
 let regionChatId: string | undefined;
@@ -143,14 +143,16 @@ const initializeMockMessages = () => {
     },
   ];
 
-  setMessages(mockMessages);
+  messages = mockMessages;
   startAutoMessages();
 };
 
 export const chatStore = {
-  messages,
-  activeChannel,
-  setActiveChannel,
+  messages: () => messages,
+  activeChannel: () => activeChannel,
+  setActiveChannel: (channel: ChatChannel) => {
+    activeChannel = channel;
+  },
   regionChatId: () => regionChatId,
   allianceChatId: () => allianceChatId,
   setChatIds: (regionId: string | undefined, allianceId: string | undefined) => {
@@ -158,17 +160,16 @@ export const chatStore = {
     allianceChatId = allianceId;
   },
   addMessage: (message: Message) => {
-    const currentMessages = messages();
-    const newMessages = [...currentMessages, message];
+    const newMessages = [...messages, message];
     if (newMessages.length > 40) {
       // Оставляем только последние 40 сообщений
-      setMessages(newMessages.slice(-40));
+      messages = newMessages.slice(-40);
     } else {
-      setMessages(newMessages);
+      messages = newMessages;
     }
   },
   getLastMessages: (count: number) => {
-    return messages().slice(-count);
+    return messages.slice(-count);
   },
   initializeMockMessages,
   startAutoMessages,
