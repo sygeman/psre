@@ -19,7 +19,9 @@ export function BackLayout(props: BackLayoutProps) {
         </div>
         {props.rightContent && <div>{props.rightContent}</div>}
       </div>
-      {props.children}
+      <div class="flex-1 overflow-y-auto">
+        {props.children}
+      </div>
     </div>
   );
 }
