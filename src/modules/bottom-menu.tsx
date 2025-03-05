@@ -65,7 +65,7 @@ export const BottomMenu = () => {
       >
         {allianceStore.helpAvailable > 0 && (
           <div 
-            class="absolute -top-12 left-1/2 -translate-x-1/2 cursor-pointer"
+            class="absolute -top-14 left-1/2 -translate-x-1/2 cursor-pointer"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -91,7 +91,10 @@ export const BottomMenu = () => {
             </div>
           </div>
         )}
-        <Icon path={userGroup} class="h-6 w-6 text-slate-400" />
+        <div class="relative">
+          <Icon path={userGroup} class="h-6 w-6 text-slate-400" />
+          <NotificationBadge count={5} />
+        </div>
         <div class="text-xs">Альянс</div>
       </A>
       <A href="/rank" class="flex flex-col items-center justify-center gap-1 transition-colors hover:bg-white/5">
