@@ -42,11 +42,28 @@ export function MiniChat() {
 
   const MessageContainer = (props: { channel: ChatChannel }) => (
     <div class="flex min-w-0">
-      <div class="ml-2 flex h-[44px] w-[44px] flex-shrink-0 items-center justify-center">
+      <div class="ml-2 flex h-[44px] w-[44px] flex-shrink-0 flex-col items-center">
         <div class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900">
           <Icon
             path={props.channel === 'region' ? globeAlt : userGroup}
             class="h-5 w-5 text-gray-300"
+          />
+        </div>
+        {/* Индикаторы каналов под иконкой */}
+        <div class="mt-1 flex gap-1">
+          <div 
+            class={`h-1.5 w-1.5 rounded-full transition-colors ${
+              chatStore.activeChannel === 'region' 
+                ? 'bg-blue-500' 
+                : 'bg-slate-600'
+            }`} 
+          />
+          <div 
+            class={`h-1.5 w-1.5 rounded-full transition-colors ${
+              chatStore.activeChannel === 'alliance' 
+                ? 'bg-blue-500' 
+                : 'bg-slate-600'
+            }`} 
           />
         </div>
       </div>
@@ -81,26 +98,6 @@ export function MiniChat() {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Индикаторы каналов */}
-      <div class="mb-1.5 flex justify-center">
-        <div class="inline-flex gap-2 rounded-full bg-slate-800/80 px-2 py-1 backdrop-blur-sm">
-          <div
-            class={`h-1.5 w-1.5 rounded-full transition-colors ${
-              chatStore.activeChannel === 'region'
-                ? 'bg-blue-500'
-                : 'bg-slate-600'
-            }`}
-          />
-          <div
-            class={`h-1.5 w-1.5 rounded-full transition-colors ${
-              chatStore.activeChannel === 'alliance'
-                ? 'bg-blue-500'
-                : 'bg-slate-600'
-            }`}
-          />
-        </div>
-      </div>
-
       <div class="relative overflow-hidden bg-slate-800/80 backdrop-blur-sm">
         <div class="py-2">
           <div class="relative h-[44px]">
