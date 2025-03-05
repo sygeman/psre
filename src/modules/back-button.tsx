@@ -7,11 +7,21 @@ export function BackButton() {
 
   return (
     <button
-      class="relative flex size-10 cursor-pointer items-center justify-center rounded-lg bg-slate-700/50 transition-all hover:bg-slate-600/50 active:scale-95 before:absolute before:inset-0 before:rounded-lg before:border before:border-white/10"
+      class="group relative flex h-full aspect-square cursor-pointer items-center justify-center transition-all active:translate-y-[1px]"
       onClick={() => navigate(-1)}
     >
-      <div class="absolute inset-0 rounded-lg bg-gradient-to-b from-white/10 to-transparent" />
-      <Icon path={arrowLeft} class="size-5 relative z-10" />
+      {/* Эффект при наведении */}
+      <div class="absolute inset-0 bg-white/5 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+      
+      {/* Разделитель справа */}
+      <div class="absolute right-0 h-full w-[1px] bg-slate-700" />
+      <div class="absolute right-[1px] h-full w-[1px] bg-black/20" />
+      
+      {/* Иконка */}
+      <Icon 
+        path={arrowLeft} 
+        class="relative z-10 size-5 text-slate-300 transition-colors duration-200 group-hover:text-slate-200" 
+      />
     </button>
   );
 }

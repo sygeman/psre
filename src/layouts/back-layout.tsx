@@ -12,7 +12,7 @@ export function BackLayout(props: BackLayoutProps) {
   return (
     <div class="relative flex h-screen flex-col">
       <ToastNotifications />
-      <div class="relative flex h-14 shrink-0 items-center justify-between bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-sm px-3">
+      <div class="relative flex h-14 shrink-0 items-center justify-between bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-sm border-b border-white/10">
         <BackButton />
         <div class="absolute left-1/2 -translate-x-1/2 text-lg font-medium">
           {props.title}

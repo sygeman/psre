@@ -45,13 +45,13 @@ setInterval(async () => {
 setInterval(async () => {
   await directus.request(createItem('psre_chat_message', {
       chat_id: regionChatId,
-      content: `Тестовое сообщение в чат региона - ${getRandomInt(100000)}`,
+      content: `Тестовое длииииииииное сообщение в чат региона - ${getRandomInt(100000)}`,
       author: accountId
   }))
 
   await directus.request(createItem('psre_chat_message', {
     chat_id: allianceChatId,
-    content: `Тестовое сообщение в чат альянса - ${getRandomInt(100000)}`,
+    content: `Тестовое длииииииииное сообщение в чат альянса - ${getRandomInt(100000)}`,
     author: accountId
 }))
 }, 3000)
