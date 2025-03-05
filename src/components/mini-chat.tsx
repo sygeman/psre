@@ -74,9 +74,9 @@ export function MiniChat() {
             .slice(-2)}
         >
           {(message) => (
-            <div class="max-w-full min-w-0 truncate text-sm leading-[22px]">
-              <span class="font-medium select-none text-gray-200/90">{message.author}: </span>
-              <span class="select-none text-gray-400/90">{message.text}</span>
+            <div class="max-w-full min-w-0 text-sm leading-[22px] text-gray-400/90 flex">
+              <span class="font-medium select-none text-gray-200/90 flex-shrink-0">{message.author}:</span>
+              <span class="select-none truncate ml-1">{message.text}</span>
             </div>
           )}
         </For>

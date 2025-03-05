@@ -42,18 +42,40 @@ setInterval(async () => {
   }))
 }, 20000)
 
+const regionMessages = [
+  "Кто-нибудь хочет объединиться для рейда?",
+  "Продам редкие ресурсы, пишите в ЛС",
+  "Ищем активных игроков в топ альянс",
+  "Народ, где лучше фармить сталь?",
+  "В секторе 7 замечена вражеская активность",
+  "Обменяю 1000 дерева на 800 стали",
+  "Кто может помочь с прокачкой?",
+  "Сервер лагает или только у меня?",
+  "Собираем пати на босса в 21:00"
+];
+
+const allianceMessages = [
+  "Общий сбор через 30 минут!",
+  "Не забываем про ежедневные задания альянса",
+  "Нужна помощь с защитой базы",
+  "Кто может поделиться ресурсами на развитие?",
+  "Внимание! Готовимся к межсерверному событию",
+  "У кого есть лишние чертежи?",
+  "Обсудим тактику на следующую войну альянсов?",
+  "Поздравляем новых членов альянса!",
+  "Давайте координировать атаки в секторе 5"
+];
+
 setInterval(async () => {
   await directus.request(createItem('psre_chat_message', {
       chat_id: regionChatId,
-      content: `Тестовое длииииииииное сообщение в чат региона - ${getRandomInt(100000)}`,
+      content: regionMessages[Math.floor(Math.random() * regionMessages.length)],
       author: accountId
-  }))
+  }));
 
   await directus.request(createItem('psre_chat_message', {
     chat_id: allianceChatId,
-    content: `Тестовое длииииииииное сообщение в чат альянса - ${getRandomInt(100000)}`,
+    content: allianceMessages[Math.floor(Math.random() * allianceMessages.length)],
     author: accountId
-}))
-}, 3000)
-
-   
+  }));
+}, 3000);
