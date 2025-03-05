@@ -4,8 +4,7 @@ import { updateStateFromData } from '@/stores/state';
 import { chatStore } from '@/stores/chat';
 import { accountStateSubscription } from '@/subscriptions/account-state';
 import { chatSubscription } from '@/subscriptions/chat';
-import { TEST_NOTIFICATIONS } from '@/mocks/notification';
-import { notificationStore } from '@/stores/notifications';
+import { initAllianceHelp } from '@/stores/alliance';
 
 export const initializeApp = async () => {
   try {
@@ -36,16 +35,8 @@ export const initializeApp = async () => {
     chatSubscription('region', regionChatId);
     chatSubscription('alliance', allianceChatId);
 
-    // // Отправляем тестовое уведомление каждые 5 секунд
-    // setInterval(() => {
-    //   const randomIndex = Math.floor(Math.random() * TEST_NOTIFICATIONS.length);
-    //   const notification = TEST_NOTIFICATIONS[randomIndex];
-    //   notificationStore.addNotification(notification);
-    // }, 5000);
-
-    // // Отправляем первое уведомление сразу
-    // const firstNotification = TEST_NOTIFICATIONS[0];
-    // notificationStore.addNotification(firstNotification);
+    // Инициализация увеличения помощи альянса
+    initAllianceHelp();
 
     return true;
   } catch (error) {

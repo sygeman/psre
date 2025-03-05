@@ -1,5 +1,5 @@
 import { A, useLocation } from '@solidjs/router';
-import { createMemo, createSignal } from 'solid-js';
+import { createMemo } from 'solid-js';
 import { Icon } from 'solid-heroicons';
 import {
   home,
@@ -14,11 +14,11 @@ import {
 import { mailStore } from '@/stores/mail';
 import { questsStore } from '@/stores/quests';
 import { NotificationBadge } from '@/components/notification-badge';
+import { allianceStore, setAllianceStore } from '@/stores/alliance';
 
 export const BottomMenu = () => {
   const location = useLocation();
   const isHome = createMemo(() => location.pathname === '/');
-  const [showHandshake, setShowHandshake] = createSignal(true);
 
   return (
     <div class="grid h-16 w-full grid-cols-6 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-sm border-t border-white/10">
@@ -63,14 +63,14 @@ export const BottomMenu = () => {
         href="/alliance"
         class="relative flex flex-col items-center justify-center gap-1 transition-colors hover:bg-white/5"
       >
-        {showHandshake() && (
+        {allianceStore.helpAvailable > 0 && (
           <div 
+            class="absolute -top-12 left-1/2 -translate-x-1/2 cursor-pointer"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setShowHandshake(false);
+              setAllianceStore('helpAvailable', 0);
             }}
-            class="absolute -top-12 left-1/2 -translate-x-1/2 cursor-pointer"
           >
             <div class="relative flex flex-col items-center">
               <div class="relative flex items-center justify-center">
@@ -78,7 +78,7 @@ export const BottomMenu = () => {
                   <span class="text-xl relative">
                     🤝
                     <NotificationBadge 
-                      count={1} 
+                      count={allianceStore.helpAvailable} 
                       class="!-right-4 !-top-3.5" 
                     />
                   </span>
