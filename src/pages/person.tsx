@@ -83,26 +83,30 @@ export function PersonPage() {
             </div>
 
             {/* Прогресс бары */}
-            <div class="flex flex-grow flex-col gap-2">
-              <PointsProgressBar
-                points={() => accountState.exp}
-                max={500000}
-                label="XP"
-                icon="✨"
-                color="bg-purple-500"
-              />
-              <PointsProgressBar
-                points={() => accountState.stamina_points}
-                label="SP"
-                icon="🔋"
-                color="bg-orange-500"
-              />
-              <PointsProgressBar
-                points={() => accountState.action_points}
-                label="AP"
-                icon="⚡"
-                color="bg-blue-500"
-              />
+            <div class="flex flex-col gap-1.5 flex-grow px-1">
+              {/* Опыт */}
+              <div class="flex items-center gap-2">
+                <div class="w-full h-2 rounded-sm bg-slate-800">
+                  <div class="h-full rounded-sm bg-blue-500" style={{ width: '60%' }} />
+                </div>
+                <span class="text-xs text-slate-400 w-12 text-right">60/100</span>
+              </div>
+
+              {/* Энергия */}
+              <div class="flex items-center gap-2">
+                <div class="w-full h-2 rounded-sm bg-slate-800">
+                  <div class="h-full rounded-sm bg-yellow-500" style={{ width: '80%' }} />
+                </div>
+                <span class="text-xs text-slate-400 w-12 text-right">80/100</span>
+              </div>
+
+              {/* Здоровье */}
+              <div class="flex items-center gap-2">
+                <div class="w-full h-2 rounded-sm bg-slate-800">
+                  <div class="h-full rounded-sm bg-red-500" style={{ width: '45%' }} />
+                </div>
+                <span class="text-xs text-slate-400 w-12 text-right">45/100</span>
+              </div>
             </div>
           </div>
 

@@ -14,35 +14,40 @@ export const ResourcesPanel = () => {
   return (
     <div class="grid h-8 w-full grid-cols-5 px-4 bg-slate-950/90 backdrop-blur-md border-b border-white/5 shadow-lg">
       <div 
-        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100"
+        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100 min-w-0"
         onClick={() => navigate('/shop')}
       >
-        {RESOURCES.FOOD.icon} <AnimatedNumber value={accountState.food} />
+        <span class="flex-shrink-0">{RESOURCES.FOOD.icon}</span>
+        <span class="truncate"><AnimatedNumber value={accountState.food} /></span>
       </div>
       <div 
-        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100"
+        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100 min-w-0"
         onClick={() => navigate('/shop')}
       >
-        {RESOURCES.WOOD.icon} <AnimatedNumber value={accountState.wood} />
+        <span class="flex-shrink-0">{RESOURCES.WOOD.icon}</span>
+        <span class="truncate"><AnimatedNumber value={accountState.wood} /></span>
       </div>
       <div 
-        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100"
+        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100 min-w-0"
         onClick={() => navigate('/shop')}
       >
-        {RESOURCES.STEEL.icon} <AnimatedNumber value={accountState.steel} />
+        <span class="flex-shrink-0">{RESOURCES.STEEL.icon}</span>
+        <span class="truncate"><AnimatedNumber value={accountState.steel} /></span>
       </div>
       <div 
-        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100"
+        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100 min-w-0"
         onClick={() => navigate('/shop')}
       >
-        {RESOURCES.FUEL.icon} <AnimatedNumber value={accountState.fuel} />
+        <span class="flex-shrink-0">{RESOURCES.FUEL.icon}</span>
+        <span class="truncate"><AnimatedNumber value={accountState.fuel} /></span>
       </div>
       <div 
-        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100"
+        class="flex items-center gap-1 text-gray-200 cursor-pointer hover:text-gray-100 min-w-0"
         onClick={() => navigate('/shop')}
       >
-        {RESOURCES.DIAMOND.icon} <AnimatedNumber value={accountState.diamond} />
-        <span class="inline-flex items-center font-bold text-yellow-400">+</span>
+        <span class="flex-shrink-0">{RESOURCES.DIAMOND.icon}</span>
+        <span class="truncate"><AnimatedNumber value={accountState.diamond} /></span>
+        <span class="inline-flex items-center font-bold text-yellow-400 flex-shrink-0">+</span>
       </div>
     </div>
   );

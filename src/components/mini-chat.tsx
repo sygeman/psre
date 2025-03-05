@@ -67,7 +67,7 @@ export function MiniChat() {
           />
         </div>
       </div>
-      <div class="ml-2 max-w-[calc(100%-60px)] min-w-0 flex-1 space-y-0.5">
+      <div class="ml-2 max-w-[calc(100%-60px)] min-w-0 flex-1 space-y-0.5 pr-2">
         <For
           each={chatStore.messages
             .filter((m) => m.channel === props.channel)

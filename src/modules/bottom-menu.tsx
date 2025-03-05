@@ -11,6 +11,8 @@ import {
   envelopeOpen,
 } from 'solid-heroicons/outline';
 import { mailStore } from '@/stores/mail';
+import { questsStore } from '@/stores/quests';
+import { NotificationBadge } from '@/components/notification-badge';
 
 export const BottomMenu = () => {
   const location = useLocation();
@@ -34,7 +36,12 @@ export const BottomMenu = () => {
         </div>
       </A>
       <A href="/quests" class="flex flex-col items-center justify-center gap-1 transition-colors hover:bg-white/5">
-        <Icon path={clipboardDocumentList} class="h-6 w-6 text-slate-400" />
+        <div class="relative">
+          <Icon path={clipboardDocumentList} class="h-6 w-6 text-slate-400" />
+          {questsStore.availableCount > 0 && (
+            <NotificationBadge count={questsStore.availableCount} />
+          )}
+        </div>
         <div class="text-xs">Квесты</div>
       </A>
       <A href="/heroes" class="flex flex-col items-center justify-center gap-1 transition-colors hover:bg-white/5">
@@ -45,9 +52,7 @@ export const BottomMenu = () => {
         <div class="relative">
           <Icon path={envelopeOpen} class="h-6 w-6 text-slate-400" />
           {mailStore.unreadCount > 0 && (
-            <div class="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-medium text-white">
-              {mailStore.unreadCount}
-            </div>
+            <NotificationBadge count={mailStore.unreadCount} />
           )}
         </div>
         <div class="text-xs">Почта</div>
