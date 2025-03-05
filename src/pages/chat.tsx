@@ -152,7 +152,7 @@ export default function ChatPage() {
         </div>
       </div>
       <div
-        class="scrollbar flex-1 space-y-4 overflow-x-hidden overflow-y-auto p-3"
+        class="scrollbar flex-1 space-y-4 overflow-x-hidden overflow-y-auto p-3 bg-slate-900"
         ref={chatContainerRef}
       >
         <For
@@ -175,10 +175,10 @@ export default function ChatPage() {
                   {message.author}
                 </span>
                 <div
-                  class={`max-w-full rounded-lg px-3 py-2 break-words ${
+                  class={`max-w-full rounded-lg px-3 py-2 break-words backdrop-blur-sm ${
                     message.sender === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-slate-700 text-gray-100'
+                      ? 'bg-white/20 backdr20 backdr20 backdr20 backdr20 backdr20 backdr20 backdr20 backdr20 backdrop-blur-3xl text-white'
+                      : 'bg-white/10 backdrop-blur-3xl text-gray-100'
                   }`}
                 >
                   <p class="text-sm">{message.text}</p>
