@@ -1,5 +1,8 @@
 import { BuildingButton } from "@/components/building-button";
 import { createSignal, onCleanup, For } from "solid-js";
+import { RESOURCES } from '@/constants/resources';
+import { Icon } from 'solid-heroicons';
+import { arrowUp } from 'solid-heroicons/outline';
 
 type Building = {
   color: string;
@@ -94,9 +97,9 @@ function BuildingCard(props: Building) {
         </div>
 
         {/* Название и уровень */}
-        <div class="relative h-8 flex items-center justify-between px-3 text-white/80 text-sm font-medium border-b border-white/10 bg-black/20 backdrop-blur-sm">
+        <div class="relative h-8 flex items-center justify-between px-3 text-white/80 text-sm font-medium border-b border-white/10 bg-black/10 backdrop-blur-sm">
           <span class="drop-shadow-glow">{props.name}</span>
-          <span class="flex items-center justify-center w-6 h-6 rounded-md text-xs bg-black/30 backdrop-blur-sm">
+          <span class="flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold bg-black/20 backdrop-blur-sm">
             {props.level}
           </span>
         </div>
@@ -117,7 +120,7 @@ function BuildingCard(props: Building) {
             onClick={handleUpgrade}
             disabled={upgradeProgress() < 100}
             color={props.color}
-            icon="↑"
+            icon={<Icon path={arrowUp} class="w-5 h-5" />}
             label="Улучшить"
             timer={upgradeProgress() < 100 ? formatTime(upgradeTimeLeft()) : undefined}
             pulseAnimation={upgradeProgress() === 100}
@@ -133,11 +136,11 @@ export const Map = () => {
     { 
       color: 'bg-cyan-900',
       name: 'Лаборатория', 
-      resourceName: 'Вакцина',
-      level: 1, 
+      resourceName: RESOURCES.VACCINE.name,
+      level: 3, 
       collectionTime: 300,
       upgradeDuration: 600,
-      icon: '🧪',
+      icon: RESOURCES.VACCINE.icon,
       initialUpgradeProgress: 75,
       onLevelUp: () => {
         console.log('Повышение уровня лаборатории');
@@ -146,11 +149,11 @@ export const Map = () => {
     { 
       color: 'bg-emerald-900',
       name: 'Лесопилка', 
-      resourceName: 'Древесина',
-      level: 1, 
+      resourceName: RESOURCES.WOOD.name,
+      level: 5, 
       collectionTime: 180,
       upgradeDuration: 360,
-      icon: '🪵',
+      icon: RESOURCES.WOOD.icon,
       onLevelUp: () => {
         console.log('Повышение уровня лесопилки');
       }
@@ -158,11 +161,11 @@ export const Map = () => {
     { 
       color: 'bg-yellow-900',
       name: 'Ферма', 
-      resourceName: 'Еда',
-      level: 1, 
+      resourceName: RESOURCES.FOOD.name,
+      level: 4, 
       collectionTime: 120,
       upgradeDuration: 300,
-      icon: '🌾',
+      icon: RESOURCES.FOOD.icon,
       initialProgress: 100,
       initialUpgradeProgress: 100,
       onLevelUp: () => {
@@ -172,11 +175,11 @@ export const Map = () => {
     { 
       color: 'bg-orange-900',
       name: 'Заправка', 
-      resourceName: 'Топливо',
-      level: 1, 
+      resourceName: RESOURCES.FUEL.name,
+      level: 2, 
       collectionTime: 240,
       upgradeDuration: 480,
-      icon: '🛢️',
+      icon: RESOURCES.FUEL.icon,
       onLevelUp: () => {
         console.log('Повышение уровня заправки');
       }
@@ -184,11 +187,11 @@ export const Map = () => {
     { 
       color: 'bg-slate-700',
       name: 'Плавильня', 
-      resourceName: 'Сталь',
+      resourceName: RESOURCES.STEEL.name,
       level: 1, 
       collectionTime: 360,
       upgradeDuration: 720,
-      icon: '🔩',
+      icon: RESOURCES.STEEL.icon,
       onLevelUp: () => {
         console.log('Повышение уровня плавильни');
       }

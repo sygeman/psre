@@ -7,13 +7,17 @@ export const PersonPanel = () => {
   const navigate = useNavigate();
 
   return (
-    <div class="w-24 bg-slate-800 text-sm ring-1 ring-white/10">
+    <div class="w-24 bg-slate-800/80 text-sm backdrop-blur-sm">
       <div
-        class="relative flex size-24 cursor-pointer bg-slate-700 transition-colors hover:bg-slate-600 ring-1 ring-white/10"
+        class="relative flex size-24 cursor-pointer bg-slate-700/80 transition-colors hover:bg-slate-600/80 overflow-hidden"
         onClick={() => navigate('/person')}
       >
-        <CharacterAvatar class="size-24" />
-        <div class="absolute top-1 left-1 rounded bg-black px-1">
+        {/* Градиентная обводка */}
+        <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
+        <div class="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" />
+        
+        <CharacterAvatar class="size-24 relative z-10" />
+        <div class="absolute top-1 left-1 rounded-md bg-black/70 px-1.5 py-0.5 z-20 backdrop-blur-sm border border-white/10 text-yellow-100 font-medium shadow-lg text-xs">
           {accountState.level}
         </div>
       </div>
