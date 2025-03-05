@@ -4,6 +4,7 @@ import { BackLayout } from '@/layouts/back-layout';
 import { Icon } from 'solid-heroicons';
 import { paperAirplane, arrowDown } from 'solid-heroicons/outline';
 import { useLocation } from '@solidjs/router';
+import { CharacterAvatar } from '@/components/character-avatar';
 
 type LocationState = {
   activeChannel?: ChatChannel;
@@ -164,17 +165,8 @@ export default function ChatPage() {
                 message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
               }`}
             >
-              <div class="h-10 w-10 shrink-0 overflow-hidden rounded bg-slate-600">
-                <img
-                  src={message.avatar}
-                  alt={message.author}
-                  class="h-full w-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src =
-                      'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ffffff"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"%2F%3E%3C%2Fsvg%3E';
-                  }}
-                />
+              <div class="h-12 w-12 shrink-0 overflow-hidden rounded bg-slate-600">
+                <CharacterAvatar class="size-12" />
               </div>
               <div
                 class={`flex max-w-[calc(100%-3.5rem)] min-w-0 flex-col gap-1 ${message.sender === 'user' ? 'items-end' : 'items-start'}`}

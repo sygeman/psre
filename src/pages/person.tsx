@@ -78,7 +78,7 @@ export function PersonPage() {
           <div class="flex gap-4">
             {/* Аватар */}
             <div class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-slate-800">
-              <CharacterAvatar class="h-12 w-12" />
+              <CharacterAvatar class="h-16 w-16" />
             </div>
 
             {/* Прогресс бары */}
