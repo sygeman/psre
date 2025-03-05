@@ -2,11 +2,12 @@ import { Component } from 'solid-js';
 
 interface NotificationBadgeProps {
   count: number;
+  class?: string;
 }
 
 export const NotificationBadge: Component<NotificationBadgeProps> = (props) => {
   return (
-    <div class="absolute -top-1.5 -right-2.5">
+    <div class={`absolute -top-1.5 -right-2.5 ${props.class || ''}`}>
       {/* Внешняя обводка с размытием */}
       <div class="absolute inset-0 rounded-full bg-blue-400/50 blur-sm" />
       {/* Основной индикатор */}

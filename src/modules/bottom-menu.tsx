@@ -1,5 +1,5 @@
 import { A, useLocation } from '@solidjs/router';
-import { createMemo } from 'solid-js';
+import { createMemo, createSignal } from 'solid-js';
 import { Icon } from 'solid-heroicons';
 import {
   home,
@@ -9,6 +9,7 @@ import {
   clipboardDocumentList,
   userGroup,
   envelopeOpen,
+  chevronDown,
 } from 'solid-heroicons/outline';
 import { mailStore } from '@/stores/mail';
 import { questsStore } from '@/stores/quests';
@@ -17,6 +18,7 @@ import { NotificationBadge } from '@/components/notification-badge';
 export const BottomMenu = () => {
   const location = useLocation();
   const isHome = createMemo(() => location.pathname === '/');
+  const [showHandshake, setShowHandshake] = createSignal(true);
 
   return (
     <div class="grid h-16 w-full grid-cols-6 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-sm border-t border-white/10">
@@ -59,8 +61,36 @@ export const BottomMenu = () => {
       </A>
       <A
         href="/alliance"
-        class="flex flex-col items-center justify-center gap-1 transition-colors hover:bg-white/5"
+        class="relative flex flex-col items-center justify-center gap-1 transition-colors hover:bg-white/5"
       >
+        {showHandshake() && (
+          <div 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowHandshake(false);
+            }}
+            class="absolute -top-12 left-1/2 -translate-x-1/2 cursor-pointer"
+          >
+            <div class="relative flex flex-col items-center">
+              <div class="relative flex items-center justify-center">
+                <div class="rounded-full bg-slate-800/95 px-3 py-2 shadow-lg border-[3px] border-blue-500/50 backdrop-blur-sm">
+                  <span class="text-xl relative">
+                    🤝
+                    <NotificationBadge 
+                      count={1} 
+                      class="!-right-4 !-top-3.5" 
+                    />
+                  </span>
+                </div>
+              </div>
+              <Icon 
+                path={chevronDown} 
+                class="h-4 w-4 text-blue-500/50 -mt-1" 
+              />
+            </div>
+          </div>
+        )}
         <Icon path={userGroup} class="h-6 w-6 text-slate-400" />
         <div class="text-xs">Альянс</div>
       </A>
