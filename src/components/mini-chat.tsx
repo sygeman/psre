@@ -43,10 +43,10 @@ export function MiniChat() {
   const MessageContainer = (props: { channel: ChatChannel }) => (
     <div class="flex min-w-0">
       <div class="ml-2 flex h-[44px] w-[44px] flex-shrink-0 flex-col items-center">
-        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900">
+        <div class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 before:absolute before:inset-0 before:rounded-full before:border before:border-white/20 relative">
           <Icon
             path={props.channel === 'region' ? globeAlt : userGroup}
-            class="h-5 w-5 text-gray-300"
+            class="h-5 w-5 text-gray-200/90"
           />
         </div>
         {/* Индикаторы каналов под иконкой */}
@@ -74,16 +74,16 @@ export function MiniChat() {
             .slice(-2)}
         >
           {(message) => (
-            <div class="max-w-full min-w-0 truncate text-sm leading-[22px] text-gray-100">
-              <span class="font-medium select-none">{message.author}: </span>
-              <span class="select-none">{message.text}</span>
+            <div class="max-w-full min-w-0 truncate text-sm leading-[22px]">
+              <span class="font-medium select-none text-gray-200/90">{message.author}: </span>
+              <span class="select-none text-gray-400/90">{message.text}</span>
             </div>
           )}
         </For>
         {chatStore.messages.filter((m) => m.channel === props.channel)
           .length === 0 && (
           <div class="flex h-[44px] items-center justify-center">
-            <p class="text-xs text-gray-400 select-none">Нет сообщений</p>
+            <p class="text-xs text-gray-500/80 select-none">Нет сообщений</p>
           </div>
         )}
       </div>
@@ -98,7 +98,7 @@ export function MiniChat() {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <div class="relative overflow-hidden bg-slate-800/80 backdrop-blur-sm">
+      <div class="relative overflow-hidden bg-slate-800/80 backdrop-blur-sm before:absolute before:inset-x-0 before:top-0 before:border-t before:border-white/10">
         <div class="py-2">
           <div class="relative h-[44px]">
             <div
