@@ -1,5 +1,6 @@
 import { BackLayout } from '@/layouts/back-layout';
 import { For } from 'solid-js';
+import { AnimatedNumber } from '@/components/animated-number';
 
 export function RankPage() {
   const players = Array.from({ length: 50 }, (_, index) => ({
@@ -51,7 +52,7 @@ export function RankPage() {
                     </div>
                   </div>
                   <div class="text-right">
-                    {player.power.toLocaleString('en-US')}
+                    <AnimatedNumber value={player.power} />
                   </div>
                 </div>
               )}

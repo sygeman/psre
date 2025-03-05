@@ -1,5 +1,6 @@
 import { BackLayout } from '@/layouts/back-layout';
 import { For, createSignal } from 'solid-js';
+import { AnimatedNumber } from '@/components/animated-number';
 
 type Quest = {
   id: number;
@@ -121,7 +122,7 @@ export function QuestsPage() {
                     <div class="font-medium">{quest.title}</div>
                     <div class="flex items-center gap-1">
                       <span>{getRewardIcon(quest.reward.type)}</span>
-                      <span>{quest.reward.amount.toLocaleString('en-US')}</span>
+                      <span><AnimatedNumber value={quest.reward.amount} /></span>
                     </div>
                   </div>
                   <div class="text-sm text-slate-400">{quest.description}</div>

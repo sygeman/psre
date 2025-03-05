@@ -5,6 +5,7 @@ import { Tab, Tabs } from '@/components/tabs';
 import { EquipmentPage } from '@/modules/equipment-page';
 import { PointsProgressBar } from '@/components/points-progress-bar';
 import { CharacterAvatar } from '@/components/character-avatar';
+import { AnimatedNumber } from '@/components/animated-number';
 
 const PERSON_TABS: Tab[] = [
   { id: 'equipment', label: 'Снаряжение' },
@@ -68,7 +69,7 @@ export function PersonPage() {
             <div class="flex items-center gap-1">
               <span>👍</span>
               <span>
-                {Number(accountState.likes || 0).toLocaleString('en-US')}
+                <AnimatedNumber value={accountState.likes || 0} />
               </span>
             </div>
             <div class="font-medium">{accountState.name || 'Неизвестный'}</div>
@@ -110,13 +111,13 @@ export function PersonPage() {
             <div class="flex items-center justify-center gap-1 rounded-lg bg-slate-800 py-2">
               <span>💪</span>
               <span>
-                {Number(accountState.power || 0).toLocaleString('en-US')}
+                <AnimatedNumber value={accountState.power || 0} />
               </span>
             </div>
             <div class="flex items-center justify-center gap-1 rounded-lg bg-slate-800 py-2">
               <span>💀</span>
               <span>
-                {Number(accountState.kills || 0).toLocaleString('en-US')}
+                <AnimatedNumber value={accountState.kills || 0} />
               </span>
             </div>
           </div>

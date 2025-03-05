@@ -1,3 +1,4 @@
+import { AnimatedNumber } from '@/components/animated-number';
 import { BackLayout } from '@/layouts/back-layout';
 import { createSignal, For } from 'solid-js';
 
@@ -153,7 +154,7 @@ export function AlliancePage() {
                       <div class="flex items-center justify-between">
                         <div class="font-medium">{member.name}</div>
                         <div class="text-sm text-slate-400">
-                          {member.power.toLocaleString('en-US')} 🔥
+                          <AnimatedNumber value={member.power} /> 🔥
                         </div>
                       </div>
                       <div class="flex items-center justify-between">

@@ -19,18 +19,23 @@ export function BuildingButton(props: BuildingButtonProps) {
           disabled={props.disabled}
           class={`w-full h-full rounded-full flex items-center justify-center transition-colors ${
             props.pulseAnimation
-              ? `animate-[pulse_2s_ease-in-out_infinite] ${props.color.replace('-900', '-700')} cursor-pointer`
-              : `bg-slate-900 ${props.disabled ? 'cursor-not-allowed opacity-50' : ''}`
+              ? `bg-slate-800/80 cursor-pointer ring-2 ring-white/20` 
+              : `bg-slate-900 ${props.disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`
           }`}
         >
           <span 
-            class={`flex items-center justify-center w-8 h-8 rounded-full ${props.color}`}
+            class={`relative flex items-center justify-center w-8 h-8 rounded-full ${props.color}`}
           >
-            {props.icon}
+            {props.pulseAnimation && (
+              <span class="absolute inset-0 rounded-full animate-[pulse_2s_ease-in-out_infinite]" />
+            )}
+            <span class="relative">
+              {props.icon}
+            </span>
           </span>
           
           {props.timer && (
-            <div class="absolute inset-0 flex items-center justify-center text-xs text-white/60 bg-black/50 rounded-full">
+            <div class="absolute inset-0 flex items-center justify-center text-xs text-white/60 bg-black/50 rounded-full z-20">
               {props.timer}
             </div>
           )}

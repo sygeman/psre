@@ -1,3 +1,4 @@
+import { AnimatedNumber } from '@/components/animated-number';
 import { accountState } from '@/stores/state';
 import { useNavigate } from '@solidjs/router';
 
@@ -40,7 +41,7 @@ export const PowerPanel = () => {
           💪
         </span>
         <span class="relative z-10 font-medium text-slate-200">
-          {Number(accountState.power).toLocaleString('en-US')}
+          <AnimatedNumber value={accountState.power} compact={false} />
         </span>
       </span>
     </div>
