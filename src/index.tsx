@@ -13,6 +13,7 @@ import { RankPage } from '@/pages/rank';
 import { QuestsPage } from '@/pages/quests';
 import { AlliancePage } from '@/pages/alliance';
 import { MailPage } from '@/pages/mail';
+import { ArmoryPage } from '@/pages/armory';
 import { initializeApp } from '@/helpers/initialize-app';
 
 await initializeApp();
@@ -21,6 +22,7 @@ render(
   () => (
     <Router>
       <Route path="/" component={HomePage} />
+      <Route path="/armory" component={ArmoryPage} />
       <Route path="/region" component={RegionPage} />
       <Route path="/heroes" component={HeroesPage} />
       <Route path="/mail" component={MailPage} />

@@ -12,6 +12,7 @@ export type AccountState = {
   power: number;
   serum: number;
   exp: number;
+  materials: number;
 };
 
 export type AccountStateData = {
@@ -26,6 +27,7 @@ export type AccountStateData = {
   power?: number | string;
   serum?: number | string;
   exp?: number | string;
+  materials?: number | string;
 };
 
 export const [accountState, setAccountState] = createStore<AccountState>({
@@ -40,6 +42,7 @@ export const [accountState, setAccountState] = createStore<AccountState>({
   power: 0,
   serum: 0,
   exp: 0,
+  materials: 0,
 });
 
 export const updateStateFromData = (data: AccountStateData) => {
@@ -57,5 +60,6 @@ export const updateStateFromData = (data: AccountStateData) => {
     power: Number(data.power ?? 0),
     serum: Number(data.serum ?? 0),
     exp: Number(data.exp ?? 0),
+    materials: Number(data.materials ?? 0),
   });
 };

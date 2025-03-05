@@ -2,6 +2,7 @@ import { BackLayout } from '@/layouts/back-layout';
 import { createSignal, For } from 'solid-js';
 import { accountState } from '@/stores/state';
 import { ResourceDisplay } from '@/components/resource-display';
+import { RESOURCES } from '@/constants/resources';
 
 type ShopCategory = {
   id: string;
@@ -185,6 +186,9 @@ export function ShopPage() {
                   <div class="flex flex-col gap-1">
                     <div class="font-medium">{item.name}</div>
                     <div class="text-sm text-slate-400">{item.description}</div>
+                    <div class="text-sm text-slate-400">
+                      Стоимость: {RESOURCES.DIAMOND.icon} {item.price}
+                    </div>
                   </div>
                   <button
                     class="flex items-center gap-2 rounded bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"

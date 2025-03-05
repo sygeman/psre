@@ -3,6 +3,12 @@ import { createSignal, onCleanup, For } from "solid-js";
 import { RESOURCES } from '@/constants/resources';
 import { Icon } from 'solid-heroicons';
 import { arrowUp } from 'solid-heroicons/outline';
+import { useNavigate } from '@solidjs/router';
+
+const ARMORY_CONFIG = {
+  icon: '🗡️',
+  actionName: 'Создать'
+} as const;
 
 type Building = {
   color: string;
@@ -17,7 +23,8 @@ type Building = {
   onLevelUp: () => void;
 }
 
-function BuildingCard(props: Building) {  
+function BuildingCard(props: Building) {
+  const navigate = useNavigate();
   const [progress, setProgress] = createSignal(props.initialProgress || 0);
   const [timeLeft, setTimeLeft] = createSignal(
     props.initialProgress === 100 ? 0 : props.collectionTime
@@ -54,6 +61,10 @@ function BuildingCard(props: Building) {
   };
 
   const handleCollect = () => {
+    if (isArmory) {
+      navigate('/armory');
+      return;
+    }
     if (progress() === 100) {
       setProgress(0);
       setTimeLeft(props.collectionTime);
@@ -78,6 +89,8 @@ function BuildingCard(props: Building) {
     'slate': 'from-slate-800/50 via-slate-700/30 to-slate-800/50',
   }[baseColor.split('-')[0]] || 'from-slate-900/50 via-slate-800/30 to-slate-900/50';
 
+  const isArmory = props.name === 'Арсенал';
+  
   return (
     <div class="w-full h-32 select-none flex-shrink-0">
       <div class={`relative h-full ${props.color} rounded-lg border border-white/10 overflow-hidden group`}>
@@ -108,12 +121,12 @@ function BuildingCard(props: Building) {
         <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-end gap-6">
           <BuildingButton
             onClick={handleCollect}
-            disabled={progress() < 100}
+            disabled={isArmory ? false : progress() < 100}
             color={props.color}
-            icon={props.icon}
-            label={props.resourceName}
-            timer={progress() < 100 ? formatTime(timeLeft()) : undefined}
-            pulseAnimation={progress() === 100}
+            icon={isArmory ? ARMORY_CONFIG.icon : props.icon}
+            label={isArmory ? ARMORY_CONFIG.actionName : props.resourceName}
+            timer={isArmory ? undefined : progress() < 100 ? formatTime(timeLeft()) : undefined}
+            pulseAnimation={isArmory ? false : progress() === 100}
           />
 
           <BuildingButton
@@ -194,6 +207,18 @@ export const Map = () => {
       icon: RESOURCES.STEEL.icon,
       onLevelUp: () => {
         console.log('Повышение уровня плавильни');
+      }
+    },
+    { 
+      color: 'bg-red-900',
+      name: 'Арсенал', 
+      resourceName: '', // пустая строка, так как это не ресурсное здание
+      level: 2, 
+      collectionTime: 0, // не используется для Арсенала
+      upgradeDuration: 600,
+      icon: ARMORY_CONFIG.icon,
+      onLevelUp: () => {
+        console.log('Повышение уровня арсенала');
       }
     },
   ];
