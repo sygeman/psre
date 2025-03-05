@@ -11,13 +11,16 @@ export function RankPage() {
     power: Math.floor(1000000 * Math.pow(0.99, index)), // Экспоненциальное уменьшение мощи
   }));
 
-  // Предположим, что это данные текущего игрока
+  // Изменяем данные текущего игрока на первое место
   const currentPlayer = {
-    id: 15,
-    name: 'Игрок 15',
-    alliance: 'Альянс 3',
-    power: Math.floor(1000000 * Math.pow(0.99, 14)), // Соответствующая мощь для 15-го места
+    id: 1,
+    name: 'Игрок 1',
+    alliance: 'Альянс 1',
+    power: Math.floor(1000000), // Максимальная мощь для первого места
   };
+
+  // Заменяем первого игрока в списке на текущего игрока
+  players[0] = currentPlayer;
 
   const getRowStyle = (rank: number) => {
     switch (rank) {
@@ -29,6 +32,7 @@ export function RankPage() {
           after:absolute after:inset-0 
           after:bg-[radial-gradient(circle_at_50%_50%,rgba(234,179,8,0.1),transparent_60%)]
           after:animate-[pulse_3s_ease-in-out_infinite]
+          [&>div.shine]:animate-[shine_3s_ease-in-out_infinite]
         `;
       case 2:
         return `
@@ -38,6 +42,7 @@ export function RankPage() {
           after:absolute after:inset-0 
           after:bg-[radial-gradient(circle_at_50%_50%,rgba(226,232,240,0.1),transparent_60%)]
           after:animate-[pulse_3s_ease-in-out_infinite]
+          [&>div.shine]:animate-[shine_3s_ease-in-out_infinite]
         `;
       case 3:
         return `
@@ -47,6 +52,7 @@ export function RankPage() {
           after:absolute after:inset-0 
           after:bg-[radial-gradient(circle_at_50%_50%,rgba(217,119,6,0.1),transparent_60%)]
           after:animate-[pulse_3s_ease-in-out_infinite]
+          [&>div.shine]:animate-[shine_3s_ease-in-out_infinite]
         `;
       default:
         return '';
@@ -92,13 +98,16 @@ export function RankPage() {
 
   const PlayerRow = (player: typeof players[0]) => (
     <div 
-      class={`relative flex items-center gap-4 px-4 py-2 group hover:bg-slate-800/30 transition-colors ${getRowStyle(player.id)}`}
+      class={`relative flex h-14 items-center gap-4 px-4 group hover:bg-slate-800/30 transition-colors ${getRowStyle(player.id)}`}
     >
       {player.id <= 3 && (
-        <div class="absolute inset-0 opacity-30">
-          <div class="absolute w-12 h-12 -left-6 -top-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite]" />
-          <div class="absolute w-12 h-12 -right-6 -bottom-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite_0.5s]" />
-        </div>
+        <>
+          <div class="absolute inset-0 opacity-30">
+            <div class="absolute w-12 h-12 -left-6 -top-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite]" />
+            <div class="absolute w-12 h-12 -right-6 -bottom-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite_0.5s]" />
+          </div>
+          <div class="shine absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+        </>
       )}
       
       <div class={`w-10 rounded-md text-center ${getRankStyle(player.id)}`}>
@@ -120,7 +129,10 @@ export function RankPage() {
   );
 
   const CurrentPlayerRow = (
-    <div class="border-t border-slate-700 bg-slate-800">
+    <div class="sticky bottom-0 border-t border-white/5 backdrop-blur-[2px]">
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-50/5 via-white/[0.15] to-slate-50/5" />
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.05),transparent_70%)]" />
+      <div class="absolute inset-0 bg-slate-950/40" />
       {PlayerRow(currentPlayer)}
     </div>
   );
@@ -131,11 +143,14 @@ export function RankPage() {
       bottomContent={CurrentPlayerRow}
     >
       <div class="flex flex-col h-full">
-        <div class="flex h-10 shrink-0 items-center border-b border-slate-700 px-4 text-xs text-slate-400 bg-slate-950 sticky top-0 z-20">
-          <div class="w-10 text-center">Ранг</div>
-          <div class="w-10" />
-          <div class="flex-1 pl-4">Командир</div>
-          <div>Мощь</div>
+        <div class="flex h-10 shrink-0 items-center border-b border-slate-700/50 px-4 text-xs text-slate-400 sticky top-0 z-20 backdrop-blur-[2px]">
+          <div class="absolute inset-0 bg-slate-950/40" />
+          <div class="absolute inset-0 bg-gradient-to-r from-slate-50/5 via-white/[0.15] to-slate-50/5" />
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_100%,rgba(255,255,255,0.05),transparent_70%)]" />
+          <div class="w-10 text-center relative z-10">Ранг</div>
+          <div class="w-10 relative z-10" />
+          <div class="flex-1 pl-4 relative z-10">Командир</div>
+          <div class="relative z-10">Мощь</div>
         </div>
 
         <div class="flex-1 overflow-y-auto">
