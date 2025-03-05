@@ -12,7 +12,7 @@ type GameLayoutProps = {
 export function GameLayout(props: GameLayoutProps) {
   return (
     <div class="relative flex h-screen flex-col">
-      <div class="absolute top-8 w-full h-[calc(100%-64px-32px-60px)] overflow-hidden z-0">
+      <div class="absolute top-8 w-full h-[calc(100%-64px-32px)] overflow-hidden z-0">
         {props.children}
       </div>
       <ToastNotifications />
