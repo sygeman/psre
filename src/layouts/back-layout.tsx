@@ -6,6 +6,7 @@ type BackLayoutProps = {
   children: JSX.Element;
   title: string;
   rightContent?: JSX.Element;
+  bottomContent?: JSX.Element;
 };
 
 export function BackLayout(props: BackLayoutProps) {
@@ -22,6 +23,11 @@ export function BackLayout(props: BackLayoutProps) {
       <div class="flex-1 overflow-y-auto">
         {props.children}
       </div>
+      {props.bottomContent && (
+        <div class="flex-shrink-0">
+          {props.bottomContent}
+        </div>
+      )}
     </div>
   );
 }
