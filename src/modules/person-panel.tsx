@@ -7,12 +7,11 @@ export const PersonPanel = () => {
   const navigate = useNavigate();
 
   return (
-    <div class="w-24 bg-slate-800/80 text-sm backdrop-blur-sm">
+    <div class="w-24  text-sm backdrop-blur-sm">
       <div
-        class="relative flex size-24 cursor-pointer bg-slate-700/80 transition-colors hover:bg-slate-600/80 overflow-hidden"
+        class="relative flex size-24 cursor-pointer bg-slate-700/80 transition-colors hover:bg-slate-600/80 overflow-hidden group"
         onClick={() => navigate('/person')}
       >
-        {/* Градиентная обводка */}
         <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
         <div class="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" />
         
@@ -20,20 +19,26 @@ export const PersonPanel = () => {
         <div class="absolute top-1 left-1 rounded-md bg-black/70 px-1.5 py-0.5 z-20 backdrop-blur-sm border border-white/10 text-yellow-100 font-medium shadow-lg text-xs">
           {accountState.level}
         </div>
+
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
-      <PointsProgressBar
-        points={() => accountState.stamina_points}
-        label="SP"
-        icon="🔋"
-        color="bg-orange-500"
-      />
-      <PointsProgressBar
-        points={() => accountState.action_points}
-        label="AP"
-        icon="⚡"
-        color="bg-blue-500"
-      />
+      <div class="space-y-0.5 p-0.5">
+        <PointsProgressBar
+          points={() => accountState.stamina_points}
+          icon="🔋"
+          color="bg-gradient-to-r from-orange-600 to-orange-500"
+          labelClass="bg-orange-900/80"
+          showValue
+        />
+        <PointsProgressBar
+          points={() => accountState.action_points}
+          icon="⚡"
+          color="bg-gradient-to-r from-blue-600 to-blue-500"
+          labelClass="bg-blue-900/80"
+          showValue
+        />
+      </div>
     </div>
   );
 };

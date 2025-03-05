@@ -6,26 +6,51 @@ type Props = {
   color: string;
   icon: string;
   max?: number;
+  labelClass?: string;
+  showValue?: boolean;
 };
 
 export const PointsProgressBar: Component<Props> = (oProps) => {
-  const props = mergeProps({ max: 120 }, oProps)
+  const props = mergeProps({ max: 120, showValue: false }, oProps);
 
   const progress = createMemo(() =>
     Math.min((props.points() / props.max) * 100, 100)
   );
 
+  const percentage = createMemo(() => Math.round(progress()));
+
   return (
-    <div class="relative flex h-6 w-full items-center bg-black">
+    <div class="group relative h-6 w-full bg-black/40 rounded overflow-hidden">
+      {/* Фоновая полоса */}
       <div
-        class={`absolute top-0 left-0 h-full opacity-30 transition-all duration-300 ${props.color}`}
+        class={`absolute top-0 left-0 h-full transition-all duration-300 ${props.color}`}
         style={{ width: `${progress()}%` }}
-      />
-      <div class="absolute top-1/2 left-1 -translate-y-1/2 text-xs font-medium text-white">
-        {props.icon}
+      >
+        {/* Блики */}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-white/20" />
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.15)_50%,transparent_100%)] animate-[shine_2s_ease-in-out_infinite]" />
       </div>
-      <div class="flex w-full items-center justify-end pr-1">
-        {props.points()} <span class="pl-1 text-xs text-white/50">/ {props.max}</span>
+
+      {/* Метка и значение */}
+      <div class="relative flex h-full items-center justify-between px-1">
+        <div class={`flex items-center gap-1 rounded px-1 ${props.labelClass || 'bg-black/60'}`}>
+          <span class="text-sm">{props.icon}</span>
+        </div>
+
+        {props.showValue && (
+          <div class="flex items-center gap-0.5 text-xs">
+            <span class="font-medium">{props.points()}</span>
+            <span class="text-white/30 text-xs">/</span>
+            <span class="text-white/50">{props.max}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Всплывающая подсказка */}
+      <div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 transition-opacity group-hover:opacity-100">
+        <div class="rounded bg-black/90 px-2 py-1 text-xs whitespace-nowrap">
+          {percentage()}% ({props.points()} / {props.max})
+        </div>
       </div>
     </div>
   );

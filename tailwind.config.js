@@ -19,7 +19,11 @@ export default {
         'pulse': {
           '0%, 100%': { opacity: 1 },
           '50%': { opacity: 0.5 }
-        }
+        },
+        'shine': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'slide-down': 'slide-down 0.3s ease-out',
