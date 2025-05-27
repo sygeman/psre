@@ -37,6 +37,7 @@
   "dependencies": {
     "@directus/sdk": "19.1.0",
     "@solidjs/router": "0.15.3",
+    "elysia": "1.2.25",
     "solid-heroicons": "3.2.4",
     "solid-js": "1.9.5"
   }

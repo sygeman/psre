@@ -18,8 +18,10 @@ const MiniGames: Component = () => {
                 🎰
               </div>
               <div class="p-6">
-                <h2 class="text-2xl font-bold mb-2 text-slate-100">Слоты</h2>
-                <p class="text-slate-400 mb-4">Испытайте удачу в захватывающей игре в слоты</p>
+                <h2 class="text-2xl font-bold mb-2 text-slate-100">Испытай удачу</h2>
+                <p class="text-slate-400 mb-4">
+                  Крутите барабаны и выигрывайте ценные ресурсы: 10,000 еды, древесины, стали или топлива, а также 100 алмазов!
+                </p>
               </div>
             </div>
           </div>

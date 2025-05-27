@@ -5,7 +5,7 @@ type BuildingButtonProps = {
   disabled?: boolean;
   color: string;
   icon: JSX.Element;
-  label: string;
+  label?: string;
   timer?: string;
   pulseAnimation?: boolean;
 };
@@ -41,7 +41,7 @@ export function BuildingButton(props: BuildingButtonProps) {
           )}
         </button>
       </div>
-      <span class="mt-1 text-xs text-white/60">{props.label}</span>
+      {props.label && <span class="mt-1 text-xs text-white/60">{props.label}</span>}
     </div>
   );
 }

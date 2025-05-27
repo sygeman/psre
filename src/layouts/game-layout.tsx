@@ -5,6 +5,8 @@ import { PowerPanel } from '@/modules/power-panel';
 import { ResourcesPanel } from '@/modules/resources-panel';
 import { MiniChat } from '@/components/mini-chat';
 import { ToastNotifications } from '@/components/toast-notifications';
+import { MiniGamesButton } from '@/components/mini-games-button';
+
 type GameLayoutProps = {
   children: JSX.Element;
 };
@@ -24,6 +26,9 @@ export function GameLayout(props: GameLayoutProps) {
       </div>
       <div class="absolute top-8 left-24 flex shrink-0 z-10">
         <PowerPanel />
+      </div>
+      <div class="absolute top-10 right-2 flex shrink-0 z-10">
+        <MiniGamesButton />
       </div>
       <div class="absolute bottom-16 w-full z-10">
         <MiniChat />
