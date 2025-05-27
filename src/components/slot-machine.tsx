@@ -18,6 +18,14 @@ const REWARDS = {
   [RESOURCES.DIAMOND.icon]: { amount: 100, name: 'алмазов' }
 };
 
+// Группы символов по вероятности
+const REGULAR_RESOURCES = [
+  RESOURCES.FOOD.icon,
+  RESOURCES.WOOD.icon,
+  RESOURCES.STEEL.icon,
+  RESOURCES.FUEL.icon
+];
+
 const SPIN_DURATION = 2000;
 const SYMBOL_HEIGHT = 96; // высота символа в пикселях
 
@@ -48,9 +56,41 @@ export function SlotMachine() {
     return reward;
   };
 
-  const spinReel = (reelIndex: number, finalIndex: number) => {
+  const determineOutcome = () => {
+    const chance = Math.random() * 100; // 0-100%
+    
+    if (chance < 50) { // 50% шанс проигрыша
+      // Генерируем случайную комбинацию без совпадений
+      const result = [];
+      for (let i = 0; i < 3; i++) {
+        let symbol;
+        do {
+          symbol = Math.random() < 0.8 
+            ? REGULAR_RESOURCES[Math.floor(Math.random() * REGULAR_RESOURCES.length)]
+            : RESOURCES.DIAMOND.icon;
+        } while (result.length > 0 && result.every(s => s === symbol));
+        result.push(symbol);
+      }
+      return result;
+    }
+    
+    // Для выигрыша определяем какой символ выпадет
+    const winChance = Math.random() * 50; // оставшиеся 50%
+    let winningSymbol;
+    
+    if (winChance < 30) { // 30% на обычные ресурсы
+      winningSymbol = REGULAR_RESOURCES[Math.floor(Math.random() * REGULAR_RESOURCES.length)];
+    } else { // 20% на алмазы
+      winningSymbol = RESOURCES.DIAMOND.icon;
+    }
+    
+    return [winningSymbol, winningSymbol, winningSymbol];
+  };
+
+  const spinReel = (reelIndex: number, finalSymbol: typeof SYMBOLS[number]) => {
     const startTime = Date.now();
-    const totalRotations = 10 + reelIndex * 2; // Количество полных оборотов + доп. обороты для каждого следующего барабана
+    const totalRotations = 10 + reelIndex * 2;
+    const finalIndex = SYMBOLS.indexOf(finalSymbol);
     const finalPosition = (totalRotations * SYMBOLS.length + finalIndex) * SYMBOL_HEIGHT;
     
     const animate = () => {
@@ -59,9 +99,8 @@ export function SlotMachine() {
       const duration = SPIN_DURATION + reelIndex * 500;
       
       if (elapsed < duration) {
-        // Нелинейная анимация с замедлением
         const progress = elapsed / duration;
-        const easeOut = 1 - Math.pow(1 - progress, 3); // Кубическая функция замедления
+        const easeOut = 1 - Math.pow(1 - progress, 3);
         const currentPosition = easeOut * finalPosition;
         
         setPositions(prev => {
@@ -72,7 +111,6 @@ export function SlotMachine() {
         
         requestAnimationFrame(animate);
       } else {
-        // Установка финальной позиции
         setPositions(prev => {
           const next = [...prev];
           next[reelIndex] = finalPosition;
@@ -81,11 +119,10 @@ export function SlotMachine() {
 
         if (reelIndex === 2) {
           const finalSymbols = [0, 1, 2].map(i => 
-            Math.floor((positions()[i] / SYMBOL_HEIGHT) % SYMBOLS.length)
+            SYMBOLS[Math.floor((positions()[i] / SYMBOL_HEIGHT) % SYMBOLS.length)]
           );
           if (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]) {
-            const winningSymbol = SYMBOLS[finalSymbols[0]];
-            const reward = addReward(winningSymbol);
+            const reward = addReward(finalSymbols[0]);
             setResult(`Победа! 🎉 Получено ${reward.amount} ${reward.name}`);
           } else {
             setResult('Попробуйте еще раз');
@@ -104,13 +141,11 @@ export function SlotMachine() {
     setIsSpinning(true);
     setResult('');
     
-    const finalPositions = Array.from({ length: 3 }, () => 
-      Math.floor(Math.random() * SYMBOLS.length)
-    );
+    const outcome = determineOutcome();
     
-    finalPositions.forEach((finalPos, index) => {
+    outcome.forEach((symbol, index) => {
       setTimeout(() => {
-        spinReel(index, finalPos);
+        spinReel(index, symbol);
       }, index * 200);
     });
   };
