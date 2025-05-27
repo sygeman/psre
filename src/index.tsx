@@ -14,6 +14,8 @@ import { QuestsPage } from '@/pages/quests';
 import { AlliancePage } from '@/pages/alliance';
 import { MailPage } from '@/pages/mail';
 import { ArmoryPage } from '@/pages/armory';
+import MiniGames from '@/pages/mini-games';
+import SlotsPage from '@/pages/slots';
 import { initializeApp } from '@/helpers/initialize-app';
 
 await initializeApp();
@@ -33,6 +35,10 @@ render(
       <Route path="/rank" component={RankPage} />
       <Route path="/quests" component={QuestsPage} />
       <Route path="/alliance" component={AlliancePage} />
+      <Route path="/mini-games">
+        <Route path="/" component={MiniGames} />
+        <Route path="/slots" component={SlotsPage} />
+      </Route>
     </Router>
   ),
   document.getElementById('root')
