@@ -123,7 +123,7 @@ export function SlotMachine() {
           );
           if (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]) {
             const reward = addReward(finalSymbols[0]);
-            setResult(`Победа! 🎉 Получено ${reward.amount} ${reward.name}`);
+            setResult(`Победа! 🎉 Получено ${reward.amount.toLocaleString('ru-RU')} ${reward.name}`);
           } else {
             setResult('Попробуйте еще раз');
           }
