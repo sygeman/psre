@@ -13,6 +13,7 @@ export function SlotMachine() {
   const [attempts, setAttempts] = createSignal<typeof ATTEMPTS.MAX>(ATTEMPTS.MAX);
   const [nextAttemptTime, setNextAttemptTime] = createSignal<number | null>(null);
   const [winningSymbol, setWinningSymbol] = createSignal<SlotSymbol | null>(null);
+  const [winningAmount, setWinningAmount] = createSignal<number | null>(null);
   const [timeLeft, setTimeLeft] = createSignal('');
   const [progress, setProgress] = createSignal(100);
 
@@ -41,7 +42,7 @@ export function SlotMachine() {
       setProgress(Math.min(100, Math.max(0, (elapsed * 100) / ATTEMPTS.RESTORE_TIME)));
 
       if (now >= time) {
-        setAttempts(ATTEMPTS.MAX);
+        setAttempts(prev => Math.min(prev + 1, ATTEMPTS.MAX));
         setNextAttemptTime(null);
       }
     };
@@ -51,26 +52,33 @@ export function SlotMachine() {
     onCleanup(() => clearInterval(interval));
   });
 
+  const getRandomAmount = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+
   const addReward = (symbol: string) => {
     const reward = REWARDS[symbol];
+    const amount = getRandomAmount(reward.range.min, reward.range.max);
+
     switch(symbol) {
       case SYMBOLS[0]: // FOOD
-        accountState.food += reward.amount;
+        accountState.food += amount;
         break;
       case SYMBOLS[1]: // WOOD
-        accountState.wood += reward.amount;
+        accountState.wood += amount;
         break;
       case SYMBOLS[2]: // STEEL
-        accountState.steel += reward.amount;
+        accountState.steel += amount;
         break;
       case SYMBOLS[3]: // FUEL
-        accountState.fuel += reward.amount;
+        accountState.fuel += amount;
         break;
       case SYMBOLS[4]: // DIAMOND
-        accountState.diamond += reward.amount;
+        accountState.diamond += amount;
         break;
     }
-    return reward;
+
+    return { ...reward, amount };
   };
 
   const determineOutcome = () => {
@@ -137,11 +145,13 @@ export function SlotMachine() {
             SYMBOLS[Math.floor((positions()[i] / ANIMATION.SYMBOL_HEIGHT) % SYMBOLS.length)]
           );
           if (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]) {
-            const reward = addReward(finalSymbols[0]);
+            const { amount } = addReward(finalSymbols[0]);
             setWinningSymbol(finalSymbols[0]);
+            setWinningAmount(amount);
             setResult('Победа');
           } else {
             setWinningSymbol(null);
+            setWinningAmount(null);
             setResult('Проигрыш');
           }
           setIsSpinning(false);
@@ -153,9 +163,17 @@ export function SlotMachine() {
   };
 
   const spin = () => {
-    if (isSpinning() || attempts() <= 0) return;
+    if (isSpinning()) return;
     
-    setAttempts(attempts() - 1 as typeof ATTEMPTS.MAX);
+    if (attempts() <= 0) {
+      if (accountState.diamond < 100) {
+        return;
+      }
+      accountState.diamond -= 100;
+    } else {
+      setAttempts(attempts() - 1 as typeof ATTEMPTS.MAX);
+    }
+    
     setIsSpinning(true);
     setResult('');
     setWinningSymbol(null);
@@ -182,64 +200,64 @@ export function SlotMachine() {
 
   return (
     <div class="flex h-full flex-col">
-      <div class="flex-1 flex flex-col justify-center items-center gap-6 p-4">
-        {/* Слот-машина */}
-        <div class="relative p-6 bg-slate-800/80 rounded-xl shadow-lg overflow-hidden">
-          {/* Градиентный фон */}
-          <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
-          <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)]" />
-          
-          {/* Светящиеся частицы */}
-          <div class="absolute inset-0 opacity-30">
-            <div class="absolute w-12 h-12 -left-6 -top-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite]" />
-            <div class="absolute w-12 h-12 -right-6 -bottom-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite_0.5s]" />
-          </div>
+      <div class="flex-1 flex flex-col p-4">
+        {/* Центральная часть с барабанами и результатом */}
+        <div class="flex-1 flex flex-col items-center justify-center gap-6">
+          {/* Слот-машина */}
+          <div class="relative p-6 bg-slate-800/80 rounded-xl shadow-lg overflow-hidden">
+            {/* Градиентный фон */}
+            <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)]" />
+            
+            {/* Светящиеся частицы */}
+            <div class="absolute inset-0 opacity-30">
+              <div class="absolute w-12 h-12 -left-6 -top-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite]" />
+              <div class="absolute w-12 h-12 -right-6 -bottom-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite_0.5s]" />
+            </div>
 
-          {/* Барабаны */}
-          <div class="relative flex gap-2">
-            <For each={positions()}>
-              {(position, index) => (
-                <div class="w-24 h-24 bg-slate-900/90 rounded-lg relative overflow-hidden backdrop-blur-sm shadow-lg">
-                  {/* Блики на барабане */}
-                  <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
-                  <div class="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" />
-                  
-                  <div 
-                    class="absolute left-0 w-full transition-transform"
-                    style={{
-                      "transform": `translateY(${-position % (ANIMATION.SYMBOL_HEIGHT * SYMBOLS.length)}px)`,
-                      "transition-duration": isSpinning() ? "0ms" : "500ms"
-                    }}
-                  >
-                    <Index each={[...SYMBOLS, ...SYMBOLS]}>
-                      {(symbol) => (
-                        <div class="relative w-full h-24 flex items-center justify-center text-4xl">
-                          {/* Фон ячейки */}
-                          <div class="absolute inset-0 bg-slate-800/80" />
-                          {/* Разделительная линия */}
-                          <div class="absolute bottom-0 left-0 right-0 h-px bg-slate-700/50" />
-                          {/* Внутреннее свечение */}
-                          <div class="absolute inset-1 bg-gradient-to-b from-white/5 to-transparent rounded-sm" />
-                          {/* Символ */}
-                          <div class="relative drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
-                            {symbol()}
+            {/* Барабаны */}
+            <div class="relative flex gap-2">
+              <For each={positions()}>
+                {(position, index) => (
+                  <div class="w-24 h-24 bg-slate-900/90 rounded-lg relative overflow-hidden backdrop-blur-sm shadow-lg">
+                    {/* Блики на барабане */}
+                    <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
+                    <div class="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" />
+                    
+                    <div 
+                      class="absolute left-0 w-full transition-transform"
+                      style={{
+                        "transform": `translateY(${-position % (ANIMATION.SYMBOL_HEIGHT * SYMBOLS.length)}px)`,
+                        "transition-duration": isSpinning() ? "0ms" : "500ms"
+                      }}
+                    >
+                      <Index each={[...SYMBOLS, ...SYMBOLS]}>
+                        {(symbol) => (
+                          <div class="relative w-full h-24 flex items-center justify-center text-4xl">
+                            {/* Фон ячейки */}
+                            <div class="absolute inset-0 bg-slate-800/80" />
+                            {/* Разделительная линия */}
+                            <div class="absolute bottom-0 left-0 right-0 h-px bg-slate-700/50" />
+                            {/* Внутреннее свечение */}
+                            <div class="absolute inset-1 bg-gradient-to-b from-white/5 to-transparent rounded-sm" />
+                            {/* Символ */}
+                            <div class="relative drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
+                              {symbol()}
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </Index>
-                  </div>
+                        )}
+                      </Index>
+                    </div>
 
-                  {/* Эффект затемнения сверху и снизу */}
-                  <div class="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-slate-900/90 to-transparent" />
-                  <div class="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-slate-900/90 to-transparent" />
-                </div>
-              )}
-            </For>
+                    {/* Эффект затемнения сверху и снизу */}
+                    <div class="absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-slate-900/90 to-transparent" />
+                    <div class="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-t from-slate-900/90 to-transparent" />
+                  </div>
+                )}
+              </For>
+            </div>
           </div>
-        </div>
-        
-        {/* Информация о попытках */}
-        <div class="h-[88px] flex flex-col items-center justify-start gap-3">
+
           {/* Результат */}
           <div class="h-[40px] flex items-center">
             {result() && result() !== '' && (
@@ -251,7 +269,7 @@ export function SlotMachine() {
                 {result() === 'Победа' && winningSymbol() ? (
                   <>
                     <span class="text-2xl">{winningSymbol()}</span>
-                    <span>+{REWARDS[winningSymbol()].amount.toLocaleString('ru-RU')}</span>
+                    <span>+{winningAmount()?.toLocaleString('ru-RU')}</span>
                   </>
                 ) : result() === 'Проигрыш' ? (
                   <span>Попробуйте еще раз</span>
@@ -259,36 +277,36 @@ export function SlotMachine() {
               </div>
             )}
           </div>
+        </div>
 
-          {/* Попытки и шкала */}
-          <div class="text-sm text-slate-400 flex flex-col items-center gap-1">
-            <div>
-              Осталось попыток: {attempts()}
-              {attempts() < ATTEMPTS.MAX && timeLeft() && ` • Следующая через ${timeLeft()}`}
-            </div>
-            {attempts() < ATTEMPTS.MAX && nextAttemptTime() && (
-              <div class="w-48 h-1.5 bg-slate-700 rounded-full overflow-hidden">
-                <div 
-                  class="h-full bg-blue-500 transition-all duration-100"
-                  style={{ width: `${progress()}%` }}
-                >
-                  {/* Блики на прогресс-баре */}
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-white/20" />
-                  <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.15)_50%,transparent_100%)] animate-[shine_2s_ease-in-out_infinite]" />
-                </div>
+        {/* Попытки и шкала внизу */}
+        <div class="h-[60px] text-sm text-slate-400 flex flex-col items-center gap-1 mt-auto">
+          <div>Осталось попыток: {attempts()}</div>
+          {attempts() < ATTEMPTS.MAX && nextAttemptTime() && (
+            <div class="relative w-48 h-6 bg-slate-700 rounded-full overflow-hidden">
+              <div 
+                class="h-full bg-blue-500 transition-all duration-100 flex items-center justify-center text-xs text-white/90 font-medium"
+                style={{ width: `${progress()}%` }}
+              >
+                {/* Блики на прогресс-баре */}
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-white/20" />
+                <div class="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.15)_50%,transparent_100%)] animate-[shine_2s_ease-in-out_infinite]" />
               </div>
-            )}
-          </div>
+              <div class="absolute inset-0 flex items-center justify-center text-xs font-medium text-white/90">
+                +1 попытка через {timeLeft()}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Кнопка внизу как в арсенале */}
+      {/* Кнопка внизу */}
       <div class="flex-shrink-0 p-4 border-t border-slate-700/25">
         <button
           onClick={spin}
-          disabled={isSpinning() || attempts() <= 0}
+          disabled={isSpinning() || (attempts() <= 0 && accountState.diamond < 100)}
           class={`relative w-full rounded-lg py-3 text-sm font-medium text-white transition-colors overflow-hidden ${
-            isSpinning() || attempts() <= 0
+            isSpinning() || (attempts() <= 0 && accountState.diamond < 100)
               ? 'bg-slate-600/50 cursor-not-allowed'
               : 'bg-blue-500 hover:bg-blue-600'
           }`}
@@ -302,7 +320,9 @@ export function SlotMachine() {
             {isSpinning() 
               ? 'Крутится...' 
               : attempts() <= 0 
-                ? 'Нет попыток' 
+                ? accountState.diamond < 100
+                  ? 'Недостаточно алмазов'
+                  : '100 💎 за прокрутку'
                 : 'Крутить'}
           </span>
         </button>
