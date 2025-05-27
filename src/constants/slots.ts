@@ -3,8 +3,11 @@ import { RESOURCES } from './resources';
 type SlotSymbol = typeof RESOURCES.FOOD.icon | typeof RESOURCES.WOOD.icon | typeof RESOURCES.STEEL.icon | typeof RESOURCES.FUEL.icon | typeof RESOURCES.DIAMOND.icon;
 
 type SlotReward = {
-  amount: number;
   name: string;
+  range: {
+    min: number;
+    max: number;
+  };
 };
 
 type SlotsConfig = {
@@ -15,7 +18,7 @@ type SlotsConfig = {
     DIAMOND: number;  // Шанс на алмазы
   };
   ATTEMPTS: {
-    MAX: 5;
+    MAX: number;
     RESTORE_TIME: number;
   };
   ANIMATION: {
@@ -36,23 +39,38 @@ export const SLOTS_CONFIG: SlotsConfig = {
   ],
 
   REWARDS: {
-    [RESOURCES.FOOD.icon]: { amount: 10000, name: 'еды' },
-    [RESOURCES.WOOD.icon]: { amount: 10000, name: 'древесины' },
-    [RESOURCES.STEEL.icon]: { amount: 10000, name: 'стали' },
-    [RESOURCES.FUEL.icon]: { amount: 10000, name: 'топлива' },
-    [RESOURCES.DIAMOND.icon]: { amount: 100, name: 'алмазов' }
+    [RESOURCES.FOOD.icon]: { 
+      name: 'еды',
+      range: { min: 5000, max: 50000 }
+    },
+    [RESOURCES.WOOD.icon]: { 
+      name: 'древесины',
+      range: { min: 5000, max: 50000 }
+    },
+    [RESOURCES.STEEL.icon]: { 
+      name: 'стали',
+      range: { min: 5000, max: 50000 }
+    },
+    [RESOURCES.FUEL.icon]: { 
+      name: 'топлива',
+      range: { min: 5000, max: 50000 }
+    },
+    [RESOURCES.DIAMOND.icon]: { 
+      name: 'алмазов',
+      range: { min: 100, max: 1000 }
+    }
   },
 
   // Шансы выпадения (в процентах)
   CHANCES: {
-    REGULAR: 20,     // Шанс на обычные ресурсы 
+    REGULAR: 40,     // Шанс на обычные ресурсы 
     DIAMOND: 5      // Шанс на алмазы
   },
 
   // Попытки
   ATTEMPTS: {
-    MAX: 5,
-    RESTORE_TIME: 30000 // 30 секунд в миллисекундах
+    MAX: 1,
+    RESTORE_TIME: 150000 // 150 секунд в миллисекундах
   },
 
   // Анимация
