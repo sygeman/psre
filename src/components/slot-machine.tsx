@@ -1,6 +1,6 @@
 import { createSignal, For, Index, createEffect, onCleanup } from 'solid-js';
 import { SLOTS_CONFIG } from '@/constants/slots';
-import { accountState } from '@/stores/state';
+import { accountState, setAccountState } from '@/stores/state';
 
 const { SYMBOLS, REWARDS, CHANCES, ATTEMPTS, ANIMATION } = SLOTS_CONFIG;
 
@@ -62,19 +62,19 @@ export function SlotMachine() {
 
     switch(symbol) {
       case SYMBOLS[0]: // FOOD
-        accountState.food += amount;
+        setAccountState('food', accountState.food + amount);
         break;
       case SYMBOLS[1]: // WOOD
-        accountState.wood += amount;
+        setAccountState('wood', accountState.wood + amount);
         break;
       case SYMBOLS[2]: // STEEL
-        accountState.steel += amount;
+        setAccountState('steel', accountState.steel + amount);
         break;
       case SYMBOLS[3]: // FUEL
-        accountState.fuel += amount;
+        setAccountState('fuel', accountState.fuel + amount);
         break;
       case SYMBOLS[4]: // DIAMOND
-        accountState.diamond += amount;
+        setAccountState('diamond', accountState.diamond + amount);
         break;
     }
 
@@ -169,7 +169,7 @@ export function SlotMachine() {
       if (accountState.diamond < 100) {
         return;
       }
-      accountState.diamond -= 100;
+      setAccountState('diamond', accountState.diamond - 100);
     } else {
       setAttempts(attempts() - 1 as typeof ATTEMPTS.MAX);
     }
