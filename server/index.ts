@@ -1,7 +1,27 @@
 import { Elysia } from 'elysia'
-import { Inngest } from 'inngest';
+import { Inngest } from 'inngest'
+import { serve } from "inngest/bun";
 
 const inngest = new Inngest({ id: 'psre' });
+
+const handleSignupFunction = inngest.createFunction(
+  { id: 'hello-world' },
+  { event: 'hello-world'},
+  async ({ event }) => {
+    console.log('Function called', event);
+  }
+);
+
+export const prepareWeeklyDigest = inngest.createFunction(
+    { id: "prepare-weekly-digest" },
+    { cron: "TZ=Europe/Moscow * * * * *" },
+    async ({ step }) => {
+      console.log('Prepare weekly digest');
+    }
+  );
+
+
+const functions = [handleSignupFunction, prepareWeeklyDigest];
 
 new Elysia()
     .get('/', async () => {
@@ -16,7 +36,8 @@ new Elysia()
             message: "Hello Elysia"
         }
     })
-    .listen(3333, async () => {
+    .all('/api/inngest', async ({ request }) => serve({ client: inngest, functions })(request)) 
+    .listen(4000, async () => {
         console.log("Server is running on http://localhost:3333");
     })
 
