@@ -1,10 +1,10 @@
 import { Handler } from "elysia";
-import { helloWorld } from "./functions/hello-world";
-import { prepareWeeklyDigest } from "./functions/prepare-weekly-digest";
 import { serve } from "inngest/bun";
 import { inngest } from "./client";
+import { loadFunctions } from "./utils/load-functions";
 
-export const functions = [helloWorld, prepareWeeklyDigest];
+// Загружаем функции
+export const functions = await loadFunctions();
 
 export const inngestHandler: Handler = ({ request }) => serve({
     client: inngest,
