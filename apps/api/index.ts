@@ -1,8 +1,66 @@
 import { Elysia } from 'elysia'
 import { inngestHandler, inngest } from './inngest';
+import TelegramBot from 'node-telegram-bot-api';
 import process from 'node:process';
 
 const PORT = Number(process.env.PORT) || 4000;
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
+const TELEGRAM_BOT_USERNAME = process.env.TELEGRAM_BOT_USERNAME || 'YourBotUsername';
+
+// Временное хранилище токенов авторизации (в продакшене использовать Redis или базу данных)
+const authTokens = new Map<string, { telegramId: number; username: string; timestamp: number }>();
+const pendingAuth = new Map<string, { token: string; timestamp: number }>();
+
+// Инициализация Telegram бота
+let bot: TelegramBot | null = null;
+if (TELEGRAM_BOT_TOKEN) {
+  bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
+  
+  bot.onText(/\/start (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const token = match?.[1];
+    
+    if (token && pendingAuth.has(token)) {
+      const authData = pendingAuth.get(token)!;
+      
+      // Проверяем что токен не истёк (5 минут)
+      if (Date.now() - authData.timestamp < 5 * 60 * 1000) {
+        // Генерируем авторизационный токен
+        const authToken = generateAuthToken();
+        authTokens.set(authToken, {
+          telegramId: chatId,
+          username: msg.from?.username || `user_${chatId}`,
+          timestamp: Date.now()
+        });
+        
+        pendingAuth.delete(token);
+        
+        bot?.sendMessage(chatId, `✅ Авторизация успешна!\n\nВаш токен авторизации:\n\`${authToken}\`\n\nСкопируйте этот токен и вставьте в админ-панель.\n\n⚠️ Токен действителен 24 часа.`, {
+          parse_mode: 'Markdown'
+        });
+      } else {
+        bot?.sendMessage(chatId, '❌ Токен авторизации истёк. Запросите новый в админ-панели.');
+        pendingAuth.delete(token);
+      }
+    } else {
+      bot?.sendMessage(chatId, '❌ Неверный или истёкший токен авторизации.');
+    }
+  });
+  
+  bot.on('message', (msg) => {
+    if (!msg.text?.startsWith('/start')) {
+      bot?.sendMessage(msg.chat.id, 'Для авторизации используйте ссылку из админ-панели PSRE.');
+    }
+  });
+}
+
+function generateAuthToken(): string {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
+
+function generateTempToken(): string {
+  return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+}
 
 new Elysia()
     .get('/', async () => {
@@ -16,6 +74,67 @@ new Elysia()
         return {
             message: "Hello Elysia"
         }
+    })
+    // API для получения ссылки авторизации через Telegram
+    .post('/api/auth/telegram/request', () => {
+        if (!TELEGRAM_BOT_TOKEN) {
+            return { 
+                success: false, 
+                error: 'Telegram бот не настроен' 
+            };
+        }
+        
+        const tempToken = generateTempToken();
+        pendingAuth.set(tempToken, {
+            token: tempToken,
+            timestamp: Date.now()
+        });
+        
+        // Создаём глубокую ссылку для Telegram
+        const telegramUrl = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${tempToken}`;
+        
+        return {
+            success: true,
+            telegramUrl,
+            tempToken,
+            expiresIn: 5 * 60 * 1000 // 5 минут
+        };
+    })
+    // API для проверки авторизации по токену
+    .post('/api/auth/telegram/verify', async ({ body }: { body: any }) => {
+        const { token } = body as { token: string };
+        
+        if (!token) {
+            return { 
+                success: false, 
+                error: 'Токен не предоставлен' 
+            };
+        }
+        
+        const authData = authTokens.get(token);
+        if (!authData) {
+            return { 
+                success: false, 
+                error: 'Неверный токен' 
+            };
+        }
+        
+        // Проверяем что токен не истёк (24 часа)
+        if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
+            authTokens.delete(token);
+            return { 
+                success: false, 
+                error: 'Токен истёк' 
+            };
+        }
+        
+        return {
+            success: true,
+            user: {
+                telegramId: authData.telegramId,
+                username: authData.username
+            }
+        };
     })
     .ws('/ws', {
         message(ws, message) {
@@ -44,4 +163,9 @@ new Elysia()
     .listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
         console.log(`WebSocket available at: ws://localhost:${PORT}/ws`);
+        if (bot) {
+            console.log('Telegram bot is running');
+        } else {
+            console.log('Telegram bot is not configured (missing TELEGRAM_BOT_TOKEN)');
+        }
     })
