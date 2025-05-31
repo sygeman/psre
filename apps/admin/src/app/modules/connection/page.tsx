@@ -18,7 +18,6 @@ export default function ConnectionPage() {
   const [authCode, setAuthCode] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [botUsername, setBotUsername] = useState('');
   const [userInfo, setUserInfo] = useState<{ telegramId: number; username: string; authToken: string } | null>(null);
 
   useEffect(() => {
@@ -34,22 +33,7 @@ export default function ConnectionPage() {
         localStorage.removeItem('connection_telegram_auth');
       }
     }
-
-    // Получаем информацию о боте
-    fetchBotInfo();
   }, []);
-
-  const fetchBotInfo = async () => {
-    try {
-      const response = await fetch('http://localhost:4000/api/auth/telegram/info');
-      const data = await response.json();
-      if (data.success && data.botUsername) {
-        setBotUsername(data.botUsername);
-      }
-    } catch (error) {
-      console.error('Ошибка получения информации о боте:', error);
-    }
-  };
 
   const verifyCode = async () => {
     if (!authCode.trim()) {
@@ -110,24 +94,19 @@ export default function ConnectionPage() {
                 Для доступа к модулю &ldquo;Соединение&rdquo; получите код авторизации в Telegram боте.
               </p>
 
-              {botUsername ? (
                 <div className="space-y-3">
                   <Button 
-                    onClick={() => window.open(`https://t.me/${botUsername}`, '_blank')}
+                    onClick={() => window.open(`https://t.me/sgmn_dev_bot`, '_blank')}
                     className="w-full"
                   >
-                    🚀 Открыть бота @{botUsername}
+                    🚀 Открыть бота @sgmn_dev_bot
                   </Button>
                   
                   <div className="text-center text-sm text-muted-foreground">
                     Отправьте боту команду /start для получения кода
                   </div>
                 </div>
-              ) : (
-                <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
-                  Telegram бот не настроен
-                </div>
-              )}
+          
 
               <div className="border-t pt-4">
                 <div className="space-y-3">

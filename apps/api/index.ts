@@ -1,9 +1,10 @@
 import { Elysia } from 'elysia'
+import { cors } from '@elysiajs/cors'
 import { inngestHandler, inngest } from './inngest';
 import { 
   initializeTelegramBot, 
-  createAuthCode, 
-  verifyAuthToken, 
+  generateAuthCode, 
+  verifyAuthCode, 
   getBotInfo, 
   isBotConfigured 
 } from './lib/telegram-bot';
@@ -15,6 +16,12 @@ const PORT = Number(process.env.PORT) || 4000;
 const bot = initializeTelegramBot();
 
 new Elysia()
+    .use(cors({
+        origin: true,
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    }))
     .get('/', async () => {
         await inngest.send({
             name: "hello-world",
@@ -36,17 +43,17 @@ new Elysia()
             };
         }
         
-        const result = createAuthCode();
+        const code = generateAuthCode();
         
         return {
             success: true,
-            ...result
+            code
         };
     })
     // API для проверки авторизации по токену
     .post('/api/auth/telegram/verify', async ({ body }: { body: any }) => {
-        const { token } = body as { token: string };
-        return verifyAuthToken(token);
+        const { code } = body as { code: string };
+        return verifyAuthCode(code);
     })
     // API для получения информации о боте (для диагностики)
     .get('/api/auth/telegram/info', () => {
