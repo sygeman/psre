@@ -1,116 +1,98 @@
-# PSRE
+# PSRE Монорепа
 
-Проект с использованием SolidJS, Elysia сервера и Inngest для фоновых задач.
+Монорепа проекта PSRE, построенная на [Turborepo](https://turbo.build/).
 
-## Технологии
+## Структура
 
-- **Frontend**: SolidJS + Vite + TailwindCSS
-- **Backend**: Elysia (TypeScript веб-фреймворк)
-- **Фоновые задачи**: Inngest
-- **Среда выполнения**: Bun
-- **Стили**: TailwindCSS
+```
+psre/
+├── apps/
+│   ├── web/          # SolidJS фронтенд приложение
+│   └── api/          # Elysia API сервер
+├── packages/
+│   └── shared/       # Общие типы и утилиты
+└── ...
+```
 
-## Установка
+## Приложения
+
+- **@psre/web** - Веб-приложение на SolidJS с Vite
+- **@psre/api** - API сервер на Elysia
+- **@psre/shared** - Общие типы и утилиты
+
+## Разработка
+
+### Установка зависимостей
 
 ```bash
-# Установка зависимостей
 bun install
 ```
 
-## Запуск
-
-### Локальная разработка
-
-1. **Запуск фронтенда**:
+### Запуск всех приложений в режиме разработки
 
 ```bash
-bun run dev
+bun dev
 ```
 
-Откроется на `http://localhost:5173`
-
-2. **Запуск сервера**:
+### Запуск конкретного приложения
 
 ```bash
-bun run server:watch
+# Веб-приложение
+bun dev --filter=@psre/web
+
+# API сервер
+bun dev --filter=@psre/api
 ```
 
-Сервер запустится на `http://localhost:3333`
-
-3. **Запуск Inngest worker**:
+### Сборка
 
 ```bash
-bun run worker:watch
+# Сборка всех приложений
+bun build
+
+# Сборка конкретного приложения
+bun build --filter=@psre/web
 ```
 
-Worker запустится на `http://localhost:3000`
-
-### Docker (Inngest Dev Server)
-
-Для использования локального dev-сервера Inngest:
+### Линтинг
 
 ```bash
-docker-compose up
+# Проверка всех приложений
+bun lint
+
+# Исправление ошибок линтинга
+bun lint:fix
 ```
 
-**Inngest Dashboard** будет доступен на `http://localhost:8288`
-
-## Inngest
-
-Inngest используется для управления фоновыми задачами и event-driven архитектуры.
-
-### Доступ к Inngest Dashboard
-
-После запуска `docker-compose up`, Inngest dev server будет доступен на:
-
-- **Dashboard**: `http://localhost:8288`
-- **API**: `http://localhost:8289`
-
-### Настроенные функции
-
-1. **hello-world** - обработчик события hello-world
-2. **prepare-weekly-digest** - cron-задача, выполняется каждую минуту (для тестирования)
-
-### Как это работает
-
-1. Основной сервер (Elysia) отправляет события в Inngest через `inngest.send()`
-2. Worker приложение (`worker.ts`) обрабатывает эти события через зарегистрированные функции
-3. Inngest dev server в Docker предоставляет UI для мониторинга и отладки
-
-## Структура проекта
-
-```
-├── src/                    # Frontend код (SolidJS)
-├── server.ts              # Основной Elysia сервер
-├── worker.ts              # Inngest worker с функциями
-├── docker-compose.yaml    # Inngest dev server
-└── package.json           # Зависимости и скрипты
-```
-
-## Полезные команды
+### Форматирование кода
 
 ```bash
+# Проверка форматирования
+bun format:check
+
 # Форматирование кода
-bun run format
-
-# Линтинг
-bun run lint
-
-# Сборка фронтенда
-bun run build
-
-# Превью продакшн сборки
-bun run serve
+bun format
 ```
 
-## Окружение
+## Технологии
 
-Проект использует:
+- **Turborepo** - Система сборки монорепы
+- **Bun** - Пакетный менеджер и рантайм
+- **SolidJS** - Фронтенд фреймворк
+- **Elysia** - Бэкенд фреймворк
+- **TypeScript** - Типизированный JavaScript
+- **Vite** - Сборщик для фронтенда
+- **TailwindCSS** - CSS фреймворк
 
-- Node.js альтернативу: **Bun**
-- Порты:
-  - 5173 - Vite dev server (фронтенд)
-  - 3333 - Elysia сервер
-  - 3000 - Inngest worker
-  - 8288 - Inngest dashboard
-  - 8289 - Inngest API
+## Команды
+
+| Команда            | Описание                                   |
+| ------------------ | ------------------------------------------ |
+| `bun dev`          | Запуск всех приложений в режиме разработки |
+| `bun build`        | Сборка всех приложений                     |
+| `bun lint`         | Проверка кода линтером                     |
+| `bun lint:fix`     | Исправление ошибок линтинга                |
+| `bun format`       | Форматирование кода                        |
+| `bun format:check` | Проверка форматирования                    |
+| `bun type-check`   | Проверка типов TypeScript                  |
+| `bun clean`        | Очистка кэша и временных файлов            |

@@ -1,5 +1,5 @@
 import { updateItem } from "@directus/sdk";
-import { directus } from "../../../src/lib/directus";
+import { directus } from "../../lib/directus";
 import { randomInt } from "../utils/random-int";
 import { inngest } from "../client";
 import { CronTime } from "cron-time-generator";

@@ -1,0 +1,25 @@
+{
+  "name": "@psre/shared",
+  "version": "0.0.0",
+  "description": "Общие типы и утилиты для PSRE",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "type": "module",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "9.23.0",
+    "@typescript-eslint/eslint-plugin": "8.29.0",
+    "@typescript-eslint/parser": "8.29.0",
+    "eslint": "9.23.0",
+    "globals": "16.0.0",
+    "typescript": "5.8.3"
+  }
+} 

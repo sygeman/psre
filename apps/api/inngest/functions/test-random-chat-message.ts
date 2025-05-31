@@ -1,5 +1,5 @@
 import { createItem } from "@directus/sdk";
-import { directus } from "../../../src/lib/directus";
+import { directus } from "../../lib/directus";
 import { inngest } from "../client";
 import { CronTime } from "cron-time-generator";
 import { allianceMessages, regionMessages } from "../mocks/messages";
