@@ -18,14 +18,43 @@ const modules = [
   }
 ];
 
+// Компонент для отображения настройки
+const SettingRow = ({ label, value, unit = '' }: { label: string; value: string | number; unit?: string }) => (
+  <div className="px-2 py-1.5 bg-slate-800/30 rounded">
+    <div className="flex justify-between items-center">
+      <Label className="text-xs">{label}</Label>
+      <span className="text-xs">{typeof value === 'number' ? value.toLocaleString() : value}{unit}</span>
+    </div>
+  </div>
+);
+
+// Компонент для отображения ресурса
+const ResourceRow = ({ icon, name, value }: { icon: string; name: string; value: number }) => (
+  <div className="flex items-center justify-between px-2 py-1.5 bg-slate-800/30 rounded">
+    <Label className="flex items-center gap-1.5 text-xs">
+      <span>{icon}</span>
+      <span>{name}</span>
+    </Label>
+    <span className="text-xs">{value.toLocaleString()}</span>
+  </div>
+);
+
+// Компонент для отображения награды
+const RewardRow = ({ icon, name, min, max }: { icon: string; name: string; min: number; max: number }) => (
+  <div className="flex justify-between items-center">
+    <Label className="text-xs">{icon} {name}</Label>
+    <span className="text-xs">{min.toLocaleString()}-{max.toLocaleString()}</span>
+  </div>
+);
+
 export function AdminLayout({ children }: AdminLayoutProps) {
   // Лог изменений состояния
   const activityLog = [
     "Алмазы: 500 → 600 (+100)",
-    "Еда: 45000 → 50000 (+5000)",
-    "Дерево: 30000 → 50000 (+20000)",
-    "Сталь: 25000 → 50000 (+25000)",
-    "Топливо: 40000 → 50000 (+10000)"
+    "Еда: 45,000 → 50,000 (+5,000)",
+    "Дерево: 30,000 → 50,000 (+20,000)",
+    "Сталь: 25,000 → 50,000 (+25,000)",
+    "Топливо: 40,000 → 50,000 (+10,000)"
   ];
 
   // Данные аккаунта (только для отображения)
@@ -49,6 +78,24 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     diamondMin: 100,
     diamondMax: 1000,
   };
+
+  // Данные ресурсов
+  const resources = [
+    { icon: '🌾', name: 'Еда', key: 'food' as keyof typeof accountData },
+    { icon: '🪵', name: 'Древесина', key: 'wood' as keyof typeof accountData },
+    { icon: '🔩', name: 'Сталь', key: 'steel' as keyof typeof accountData },
+    { icon: '🛢️', name: 'Топливо', key: 'fuel' as keyof typeof accountData },
+    { icon: '💎', name: 'Алмазы', key: 'diamond' as keyof typeof accountData },
+  ];
+
+  // Данные наград
+  const rewards = [
+    { icon: '🌾', name: 'Еда', min: moduleSettings.foodMin, max: moduleSettings.foodMax },
+    { icon: '🪵', name: 'Дерево', min: 5000, max: 50000 },
+    { icon: '🔩', name: 'Сталь', min: 5000, max: 50000 },
+    { icon: '🛢️', name: 'Топливо', min: 5000, max: 50000 },
+    { icon: '💎', name: 'Алмазы', min: moduleSettings.diamondMin, max: moduleSettings.diamondMax },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -120,64 +167,24 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   </h3>
                   
                   <div className="space-y-2">
-                    <div className="px-2 py-1.5 bg-slate-800/30 rounded">
-                      <div className="flex justify-between items-center">
-                        <Label className="text-xs">Шанс ресурсов</Label>
-                        <span className="text-xs font-mono">{moduleSettings.regularChance}%</span>
-                      </div>
-                    </div>
-                    
-                    <div className="px-2 py-1.5 bg-slate-800/30 rounded">
-                      <div className="flex justify-between items-center">
-                        <Label className="text-xs">Шанс алмазов</Label>
-                        <span className="text-xs font-mono">{moduleSettings.diamondChance}%</span>
-                      </div>
-                    </div>
-                    
-                    <div className="px-2 py-1.5 bg-slate-800/30 rounded">
-                      <div className="flex justify-between items-center">
-                        <Label className="text-xs">Макс. попыток</Label>
-                        <span className="text-xs font-mono">{moduleSettings.maxAttempts}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="px-2 py-1.5 bg-slate-800/30 rounded">
-                      <div className="flex justify-between items-center">
-                        <Label className="text-xs">Восстановление</Label>
-                        <span className="text-xs font-mono">{moduleSettings.restoreTime}с</span>
-                      </div>
-                    </div>
-                    
-                    <div className="px-2 py-1.5 bg-slate-800/30 rounded">
-                      <div className="flex justify-between items-center">
-                        <Label className="text-xs">Длительность</Label>
-                        <span className="text-xs font-mono">{moduleSettings.duration}мс</span>
-                      </div>
-                    </div>
+                    <SettingRow label="Шанс ресурсов" value={moduleSettings.regularChance} unit="%" />
+                    <SettingRow label="Шанс алмазов" value={moduleSettings.diamondChance} unit="%" />
+                    <SettingRow label="Макс. попыток" value={moduleSettings.maxAttempts} />
+                    <SettingRow label="Восстановление" value={moduleSettings.restoreTime} unit="с" />
+                    <SettingRow label="Длительность" value={moduleSettings.duration} unit="мс" />
                     
                     <div className="px-2 py-1.5 bg-slate-800/30 rounded">
                       <Label className="text-xs text-muted-foreground mb-1 block">Награды:</Label>
                       <div className="space-y-1">
-                        <div className="flex justify-between items-center">
-                          <Label className="text-xs">🌾 Еда</Label>
-                          <span className="text-xs font-mono">{moduleSettings.foodMin}-{moduleSettings.foodMax}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label className="text-xs">🪵 Дерево</Label>
-                          <span className="text-xs font-mono">5000-50000</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label className="text-xs">🔩 Сталь</Label>
-                          <span className="text-xs font-mono">5000-50000</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label className="text-xs">🛢️ Топливо</Label>
-                          <span className="text-xs font-mono">5000-50000</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label className="text-xs">💎 Алмазы</Label>
-                          <span className="text-xs font-mono">{moduleSettings.diamondMin}-{moduleSettings.diamondMax}</span>
-                        </div>
+                        {rewards.map((reward) => (
+                          <RewardRow 
+                            key={reward.name}
+                            icon={reward.icon}
+                            name={reward.name}
+                            min={reward.min}
+                            max={reward.max}
+                          />
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -193,7 +200,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   <div className="bg-slate-800/30 rounded p-2 h-32 overflow-y-auto">
                     <div className="space-y-1">
                       {activityLog.map((entry, index) => (
-                        <div key={index} className="text-xs text-slate-300 font-mono">
+                        <div key={index} className="text-xs text-slate-300">
                           {entry}
                         </div>
                       ))}
@@ -207,45 +214,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   </h3>
                   
                   <div className="space-y-2">
-                    <div className="flex items-center justify-between px-2 py-1.5 bg-slate-800/30 rounded">
-                      <Label className="flex items-center gap-1.5 text-xs">
-                        <span>🌾</span>
-                        <span>Еда</span>
-                      </Label>
-                      <span className="text-xs font-mono">{accountData.food.toLocaleString()}</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between px-2 py-1.5 bg-slate-800/30 rounded">
-                      <Label className="flex items-center gap-1.5 text-xs">
-                        <span>🪵</span>
-                        <span>Древесина</span>
-                      </Label>
-                      <span className="text-xs font-mono">{accountData.wood.toLocaleString()}</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between px-2 py-1.5 bg-slate-800/30 rounded">
-                      <Label className="flex items-center gap-1.5 text-xs">
-                        <span>🔩</span>
-                        <span>Сталь</span>
-                      </Label>
-                      <span className="text-xs font-mono">{accountData.steel.toLocaleString()}</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between px-2 py-1.5 bg-slate-800/30 rounded">
-                      <Label className="flex items-center gap-1.5 text-xs">
-                        <span>🛢️</span>
-                        <span>Топливо</span>
-                      </Label>
-                      <span className="text-xs font-mono">{accountData.fuel.toLocaleString()}</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between px-2 py-1.5 bg-slate-800/30 rounded">
-                      <Label className="flex items-center gap-1.5 text-xs">
-                        <span>💎</span>
-                        <span>Алмазы</span>
-                      </Label>
-                      <span className="text-xs font-mono">{accountData.diamond.toLocaleString()}</span>
-                    </div>
+                    {resources.map((resource) => (
+                      <ResourceRow
+                        key={resource.key}
+                        icon={resource.icon}
+                        name={resource.name}
+                        value={accountData[resource.key]}
+                      />
+                    ))}
                   </div>
                 </div>
               </TabsContent>
