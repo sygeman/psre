@@ -12,17 +12,17 @@ export default function AdminDashboard() {
         </p>
 
         <div className="max-w-md">
-          <Link href="/modules">
+          <Link href="/minigames">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <span className="text-2xl">🎮</span>
+                  <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <span className="text-2xl">🎰</span>
                   </div>
                   <div>
-                    <CardTitle className="text-lg">Игровые модули</CardTitle>
+                    <CardTitle className="text-lg">Мини-игры</CardTitle>
                     <CardDescription>
-                      Управление компонентами игры
+                      Управление казуальными играми
                     </CardDescription>
                   </div>
                 </div>

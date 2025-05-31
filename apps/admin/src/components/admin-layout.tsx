@@ -5,12 +5,12 @@ interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-const modules = [
-  { id: "heroes", name: "Система героев", href: "/modules/heroes" },
-  { id: "inventory", name: "Инвентарь", href: "/modules/inventory" },
-  { id: "quests", name: "Квесты", href: "/modules/quests" },
-  { id: "guilds", name: "Альянсы", href: "/modules/guilds" },
-  { id: "minigames", name: "Мини-игры", href: "/modules/minigames" },
+const minigames = [
+  { id: "slots", name: "Слоты", href: "/minigames/slots" },
+  { id: "roulette", name: "Рулетка", href: "/minigames/roulette" },
+  { id: "dice", name: "Кости", href: "/minigames/dice" },
+  { id: "wheel", name: "Колесо фортуны", href: "/minigames/wheel" },
+  { id: "crash", name: "Crash", href: "/minigames/crash" },
 ];
 
 export function AdminLayout({ children }: AdminLayoutProps) {
@@ -38,16 +38,16 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <aside className="w-64 border-r border-border bg-card min-h-[calc(100vh-4rem)]">
           <div className="p-4">
             <h3 className="text-sm font-semibold text-muted-foreground mb-4">
-              ИГРОВЫЕ МОДУЛИ
+              МИНИ-ИГРЫ
             </h3>
             <nav className="space-y-1">
-              {modules.map((module) => (
+              {minigames.map((game) => (
                 <Link
-                  key={module.id}
-                  href={module.href}
+                  key={game.id}
+                  href={game.href}
                   className="block px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
-                  {module.name}
+                  {game.name}
                 </Link>
               ))}
             </nav>
