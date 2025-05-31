@@ -14,6 +14,9 @@ const PORT = Number(process.env.PORT) || 4000;
 // Инициализация Telegram бота
 const bot = initializeTelegramBot();
 
+// Счетчик активных WebSocket соединений
+let activeConnections = 0;
+
 new Elysia()
     .use(cors({
         origin: true,
@@ -56,7 +59,8 @@ new Elysia()
             });
         },
         open(ws) {
-            console.log('WebSocket connection opened');
+            activeConnections++;
+            console.log(`📡 WebSocket connection opened (Active connections: ${activeConnections})`);
             
             const url = new URL(ws.data?.request?.url || '');
             let token = url.searchParams.get('token');
@@ -70,6 +74,8 @@ new Elysia()
                     timestamp: new Date().toISOString()
                 });
                 ws.close(1008, 'Токен авторизации не предоставлен');
+                activeConnections--;
+                console.log(`📊 Active connections: ${activeConnections}`);
                 return;
             }
             
@@ -87,6 +93,8 @@ new Elysia()
                     timestamp: new Date().toISOString()
                 });
                 ws.close(1008, authResult.error || 'Неверный токен авторизации');
+                activeConnections--;
+                console.log(`📊 Active connections: ${activeConnections}`);
                 return;
             }
             
@@ -96,7 +104,7 @@ new Elysia()
             // Сохраняем информацию о пользователе в контексте WebSocket
             (ws as any).user = authResult.user;
             
-            console.log(`WebSocket connection opened for user: ${authResult.user?.username} (ID: ${authResult.user?.telegramId})`);
+            console.log(`🔗 WebSocket connection established for user: ${authResult.user?.username} (ID: ${authResult.user?.telegramId})`);
             ws.send({
                 type: 'welcome',
                 message: `Добро пожаловать, ${authResult.user?.username}!`,
@@ -105,8 +113,10 @@ new Elysia()
             });
         },
         close(ws) {
+            activeConnections--;
             const user = (ws as any).user;
-            console.log(`WebSocket connection closed for user: ${user?.username || 'unknown'}`);
+            console.log(`🔌 WebSocket connection closed for user: ${user?.username || 'unknown'} (ID: ${user?.telegramId || 'unknown'})`);
+            console.log(`📊 Active connections: ${activeConnections}`);
         }
     })
     .all('/api/inngest', inngestHandler) 
