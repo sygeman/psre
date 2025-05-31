@@ -156,13 +156,13 @@ export function TelegramAuth({ onSuccess }: TelegramAuthProps) {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             <Label htmlFor="code">Код авторизации</Label>
             <InputOTP
               maxLength={6}
               value={code}
               onChange={(value) => setCode(value)}
-              className="w-full"
+              className="w-full mt-2"
             >
               <InputOTPGroup className="w-full justify-center">
                 <InputOTPSlot index={0} />
