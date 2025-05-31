@@ -162,6 +162,11 @@ export function TelegramAuth({ onSuccess }: TelegramAuthProps) {
               maxLength={6}
               value={code}
               onChange={(value) => setCode(value)}
+              onComplete={(value) => {
+                if (value.length === 6) {
+                  handleVerifyCode();
+                }
+              }}
               className="w-full mt-2"
             >
               <InputOTPGroup className="w-full justify-center">
@@ -173,16 +178,12 @@ export function TelegramAuth({ onSuccess }: TelegramAuthProps) {
                 <InputOTPSlot index={5} />
               </InputOTPGroup>
             </InputOTP>
+            {loading && (
+              <div className="text-center text-sm text-muted-foreground">
+                Проверка кода...
+              </div>
+            )}
           </div>
-
-          <Button 
-            onClick={handleVerifyCode} 
-            disabled={loading || !code.trim()}
-            className="w-full"
-            size="lg"
-          >
-            {loading ? 'Проверка...' : 'Войти'}
-          </Button>
 
           <Button 
             onClick={() => setStep('initial')}

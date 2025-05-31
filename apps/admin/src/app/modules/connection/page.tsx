@@ -194,6 +194,11 @@ export default function ConnectionPage() {
                       maxLength={6}
                       value={authCode}
                       onChange={(value) => setAuthCode(value)}
+                      onComplete={(value) => {
+                        if (value.length === 6) {
+                          verifyCode();
+                        }
+                      }}
                       className="w-full"
                     >
                       <InputOTPGroup className="w-full justify-center">
@@ -205,14 +210,12 @@ export default function ConnectionPage() {
                         <InputOTPSlot index={5} />
                       </InputOTPGroup>
                     </InputOTP>
+                    {isVerifying && (
+                      <div className="text-center text-sm text-muted-foreground">
+                        Проверка кода...
+                      </div>
+                    )}
                   </div>
-                  <Button 
-                    onClick={verifyCode} 
-                    className="w-full" 
-                    disabled={isVerifying || !authCode.trim()}
-                  >
-                    {isVerifying ? 'Проверка...' : '✅ Войти'}
-                  </Button>
                 </div>
               </div>
 
