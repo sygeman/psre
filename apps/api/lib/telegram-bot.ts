@@ -9,7 +9,7 @@ const AUTHORIZED_USERS = process.env.AUTHORIZED_TELEGRAM_USERS?.split(',').map(u
 
 // Временное хранилище токенов авторизации (в продакшене использовать Redis или базу данных)
 export const authTokens = new Map<string, { telegramId: number; username: string; timestamp: number }>();
-export const authCodes = new Map<string, { code: string; timestamp: number }>();
+export const authCodes = new Map<string, { code: string; chatId: number; username: string; timestamp: number }>();
 
 // Инициализация Grammy бота
 let bot: Bot | null = null;
@@ -18,8 +18,18 @@ function generateAuthToken(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
-export function generateAuthCode(): string {
-  return Math.floor(100000 + Math.random() * 900000).toString(); // 6-значный код
+export function generateAuthCode(chatId: number, username: string): string {
+  const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-значный код
+  
+  // Сохраняем код с информацией о пользователе
+  authCodes.set(code, {
+    code,
+    chatId,
+    username,
+    timestamp: Date.now()
+  });
+  
+  return code;
 }
 
 function isUserAuthorized(telegramId: number, username?: string): boolean {
@@ -67,11 +77,7 @@ export function initializeTelegramBot(): Bot | null {
     }
 
     // Генерируем код авторизации для пользователя
-    const authCode = generateAuthCode();
-    authCodes.set(authCode, {
-      code: authCode,
-      timestamp: Date.now()
-    });
+    const authCode = generateAuthCode(chatId, username);
 
     await ctx.reply(
       '🔐 Ваш код для входа в админ-панель PSRE:\n\n' +
@@ -101,11 +107,7 @@ export function initializeTelegramBot(): Bot | null {
     }
 
     // Генерируем новый код авторизации
-    const authCode = generateAuthCode();
-    authCodes.set(authCode, {
-      code: authCode,
-      timestamp: Date.now()
-    });
+    const authCode = generateAuthCode(chatId, username);
 
     await ctx.reply(
       '🔐 Новый код для входа в админ-панель:\n\n' +
@@ -196,8 +198,8 @@ export function verifyAuthCode(code: string): { success: boolean; user?: any; er
   return {
     success: true,
     user: {
-      telegramId: Date.now(), // Временный ID пока не знаем реального
-      username: 'authorized_user',
+      telegramId: codeData.chatId,
+      username: codeData.username,
       authToken
     }
   };
@@ -212,7 +214,14 @@ export function getBotInfo(): any {
     activeTokensCount: authTokens.size,
     authorizedUsersCount: AUTHORIZED_USERS.length,
     authorizedUsers: AUTHORIZED_USERS.length > 0 ? AUTHORIZED_USERS : 'Не настроено (доступ всем)',
-    securityWarning: AUTHORIZED_USERS.length === 0 ? 'ВНИМАНИЕ: whitelist пользователей не настроен!' : null
+    securityWarning: AUTHORIZED_USERS.length === 0 ? 'ВНИМАНИЕ: whitelist пользователей не настроен!' : null,
+    activeCodes: Array.from(authCodes.entries()).map(([code, data]) => ({
+      code,
+      chatId: data.chatId,
+      username: data.username,
+      timestamp: data.timestamp,
+      expiresAt: new Date(data.timestamp + 5 * 60 * 1000).toISOString()
+    }))
   };
 }
 

@@ -1,12 +1,9 @@
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
-import { inngestHandler, inngest } from './inngest';
+import { inngestHandler } from './inngest';
 import { 
   initializeTelegramBot, 
-  generateAuthCode, 
   verifyAuthCode, 
-  getBotInfo, 
-  isBotConfigured 
 } from './lib/telegram-bot';
 import process from 'node:process';
 
@@ -22,49 +19,9 @@ new Elysia()
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
     }))
-    .get('/', async () => {
-        await inngest.send({
-            name: "hello-world",
-            data: {
-                message: "Hello Elysia"
-            }
-        })
-        
-        return {
-            message: "Hello Elysia"
-        }
-    })
-    // API для получения кода авторизации
-    .post('/api/auth/telegram/request', () => {
-        if (!isBotConfigured()) {
-            return { 
-                success: false, 
-                error: 'Telegram бот не настроен' 
-            };
-        }
-        
-        const code = generateAuthCode();
-        
-        return {
-            success: true,
-            code
-        };
-    })
     // API для проверки авторизации по токену
-    .post('/api/auth/telegram/verify', async ({ body }: { body: any }) => {
-        const { code } = body as { code: string };
+    .post('/api/auth/telegram/verify', async ({ body: { code } }: { body: { code: string } }) => {
         return verifyAuthCode(code);
-    })
-    // API для получения информации о боте (для диагностики)
-    .get('/api/auth/telegram/info', () => {
-        if (!bot) {
-            return {
-                success: false,
-                error: 'Telegram бот не настроен'
-            };
-        }
-        
-        return getBotInfo();
     })
     .ws('/ws', {
         message(ws, message) {
