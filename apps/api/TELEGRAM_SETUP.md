@@ -1,0 +1,49 @@
+# Настройка Telegram бота для авторизации
+
+## 1. Создание бота
+
+1. Найдите в Telegram бота @BotFather
+2. Отправьте команду `/newbot`
+3. Введите название бота (например: "PSRE Admin Auth Bot")
+4. Введите username бота (например: "psre_admin_auth_bot")
+5. Скопируйте полученный токен
+
+## 2. Настройка переменных окружения
+
+Создайте файл `.env` в папке `apps/api/` и добавьте:
+
+```env
+# Telegram Bot Configuration
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_BOT_USERNAME=your_bot_username_here
+```
+
+## 3. Пример конфигурации
+
+```env
+TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
+TELEGRAM_BOT_USERNAME=psre_admin_auth_bot
+```
+
+## 4. Запуск
+
+```bash
+cd apps/api
+bun run dev
+```
+
+## 5. Проверка работы
+
+Бот должен:
+
+- Отвечать на команду `/start`
+- Обрабатывать ссылки авторизации
+- Генерировать токены авторизации
+
+## 6. Диагностика
+
+Проверить статус бота можно через API:
+
+```
+GET http://localhost:4000/api/auth/telegram/info
+```
