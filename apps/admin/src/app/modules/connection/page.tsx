@@ -21,6 +21,7 @@ export default function ConnectionPage() {
   const [authCode, setAuthCode] = useState('');
   const [botUsername, setBotUsername] = useState('');
   const [userInfo, setUserInfo] = useState<{ telegramId: number; username: string } | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
     // Проверяем авторизацию из localStorage при загрузке
@@ -106,7 +107,8 @@ export default function ConnectionPage() {
   const copyCodeToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(authCode);
-      // Можно добавить уведомление об успешном копировании
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000); // Убираем уведомление через 2 секунды
     } catch {
       // Fallback для старых браузеров
       const textArea = document.createElement('textarea');
@@ -115,6 +117,8 @@ export default function ConnectionPage() {
       textArea.select();
       document.execCommand('copy');
       document.body.removeChild(textArea);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
     }
   };
 
@@ -126,6 +130,7 @@ export default function ConnectionPage() {
     setBotUsername('');
     setUserInfo(null);
     setAuthError('');
+    setCopySuccess(false);
   };
 
   if (!isAuthorized) {
@@ -159,17 +164,21 @@ export default function ConnectionPage() {
                     <p className="text-sm text-muted-foreground">
                       2. Отправьте боту следующий код:
                     </p>
-                    <div className="p-4 bg-muted rounded-lg text-center">
-                      <div className="text-2xl font-mono font-bold tracking-wider">
-                        {authCode}
+                    <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-lg text-center border-2 border-dashed border-slate-300 dark:border-slate-600">
+                      <div className="mb-3">
+                        <div className="text-sm text-muted-foreground mb-2">Код авторизации:</div>
+                        <div className="text-4xl font-mono font-bold tracking-[0.3em] text-blue-600 dark:text-blue-400 select-all">
+                          {authCode.slice(0, 3)}<span className="text-slate-400 mx-1">-</span>{authCode.slice(3, 6)}
+                        </div>
                       </div>
                       <Button 
                         onClick={copyCodeToClipboard}
-                        variant="ghost"
+                        variant={copySuccess ? "default" : "outline"}
                         size="sm"
                         className="mt-2"
+                        disabled={copySuccess}
                       >
-                        📋 Скопировать код
+                        {copySuccess ? '✅ Скопировано!' : '📋 Скопировать код'}
                       </Button>
                     </div>
                     <Button 
@@ -213,6 +222,7 @@ export default function ConnectionPage() {
                         setAuthCode('');
                         setBotUsername('');
                         setAuthToken('');
+                        setCopySuccess(false);
                       }}
                       variant="ghost"
                       size="sm"
