@@ -18,7 +18,8 @@ export default function ConnectionPage() {
   const [authToken, setAuthToken] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [telegramUrl, setTelegramUrl] = useState('');
+  const [authCode, setAuthCode] = useState('');
+  const [botUsername, setBotUsername] = useState('');
   const [userInfo, setUserInfo] = useState<{ telegramId: number; username: string } | null>(null);
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function ConnectionPage() {
     }
   }, []);
 
-  const requestTelegramAuth = async () => {
+  const requestAuthCode = async () => {
     setIsLoading(true);
     setAuthError('');
 
@@ -51,9 +52,10 @@ export default function ConnectionPage() {
       const data = await response.json();
 
       if (data.success) {
-        setTelegramUrl(data.telegramUrl);
+        setAuthCode(data.authCode);
+        setBotUsername(data.botUsername);
       } else {
-        setAuthError(data.error || 'Ошибка при запросе авторизации');
+        setAuthError(data.error || 'Ошибка при запросе кода авторизации');
       }
     } catch {
       setAuthError('Ошибка соединения с сервером');
@@ -101,11 +103,27 @@ export default function ConnectionPage() {
     setIsLoading(false);
   };
 
+  const copyCodeToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(authCode);
+      // Можно добавить уведомление об успешном копировании
+    } catch {
+      // Fallback для старых браузеров
+      const textArea = document.createElement('textarea');
+      textArea.value = authCode;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('connection_telegram_auth');
     setIsAuthorized(false);
     setAuthToken('');
-    setTelegramUrl('');
+    setAuthCode('');
+    setBotUsername('');
     setUserInfo(null);
     setAuthError('');
   };
@@ -119,47 +137,53 @@ export default function ConnectionPage() {
               <CardTitle>Авторизация через Telegram</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {!telegramUrl ? (
+              {!authCode ? (
                 <>
                   <p className="text-sm text-muted-foreground">
                     Для доступа к модулю &ldquo;Соединение&rdquo; требуется авторизация через Telegram бота.
                   </p>
                   <Button 
-                    onClick={requestTelegramAuth} 
+                    onClick={requestAuthCode} 
                     className="w-full" 
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Генерация ссылки...' : '📱 Авторизоваться через Telegram'}
+                    {isLoading ? 'Генерация кода...' : '🔐 Получить код авторизации'}
                   </Button>
                 </>
               ) : (
                 <>
                   <div className="space-y-3">
                     <p className="text-sm text-muted-foreground">
-                      1. Перейдите по ссылке для авторизации в Telegram:
+                      1. Откройте бота @{botUsername} в Telegram
                     </p>
-                    <div className="p-3 bg-muted rounded-lg">
-                      <a 
-                        href={telegramUrl} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 break-all text-sm"
+                    <p className="text-sm text-muted-foreground">
+                      2. Отправьте боту следующий код:
+                    </p>
+                    <div className="p-4 bg-muted rounded-lg text-center">
+                      <div className="text-2xl font-mono font-bold tracking-wider">
+                        {authCode}
+                      </div>
+                      <Button 
+                        onClick={copyCodeToClipboard}
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2"
                       >
-                        {telegramUrl}
-                      </a>
+                        📋 Скопировать код
+                      </Button>
                     </div>
                     <Button 
-                      onClick={() => window.open(telegramUrl, '_blank')}
+                      onClick={() => window.open(`https://t.me/${botUsername}`, '_blank')}
                       variant="outline"
                       className="w-full"
                     >
-                      🚀 Открыть Telegram
+                      🚀 Открыть бота в Telegram
                     </Button>
                   </div>
 
                   <div className="border-t pt-4">
                     <p className="text-sm text-muted-foreground mb-3">
-                      2. После авторизации в боте, введите полученный токен:
+                      3. После отправки кода боту, введите полученный токен:
                     </p>
                     <div className="space-y-3">
                       <div>
@@ -186,14 +210,15 @@ export default function ConnectionPage() {
                   <div className="border-t pt-4">
                     <Button 
                       onClick={() => {
-                        setTelegramUrl('');
+                        setAuthCode('');
+                        setBotUsername('');
                         setAuthToken('');
                       }}
                       variant="ghost"
                       size="sm"
                       className="w-full"
                     >
-                      ← Запросить новую ссылку
+                      ← Получить новый код
                     </Button>
                   </div>
                 </>

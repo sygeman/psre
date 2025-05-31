@@ -9,24 +9,43 @@ const TELEGRAM_BOT_USERNAME = process.env.TELEGRAM_BOT_USERNAME || 'YourBotUsern
 
 // Временное хранилище токенов авторизации (в продакшене использовать Redis или базу данных)
 const authTokens = new Map<string, { telegramId: number; username: string; timestamp: number }>();
-const pendingAuth = new Map<string, { token: string; timestamp: number }>();
+const authCodes = new Map<string, { code: string; timestamp: number }>();
 
 // Инициализация Grammy бота
 let bot: Bot | null = null;
 if (TELEGRAM_BOT_TOKEN) {
   bot = new Bot(TELEGRAM_BOT_TOKEN);
   
-  // Обработка команды /start с токеном
+  // Обработка команды /start
   bot.command('start', async (ctx) => {
-    const token = ctx.match;
+    await ctx.reply(
+      '👋 *Добро пожаловать в бота авторизации PSRE!*\n\n' +
+      '🔐 Для авторизации в админ\\-панели:\n' +
+      '1\\. Запросите код авторизации в админ\\-панели\n' +
+      '2\\. Отправьте полученный код сюда\n' +
+      '3\\. Получите токен для входа\n\n' +
+      '💡 Просто отправьте мне ваш код авторизации\\.',
+      { parse_mode: 'MarkdownV2' }
+    );
+  });
+  
+  // Обработка текстовых сообщений (кодов авторизации)
+  bot.on('message:text', async (ctx) => {
+    const messageText = ctx.message.text.trim();
     const chatId = ctx.chat.id;
     const username = ctx.from?.username || `user_${chatId}`;
     
-    if (token && pendingAuth.has(token)) {
-      const authData = pendingAuth.get(token)!;
+    // Пропускаем команды
+    if (messageText.startsWith('/')) {
+      return;
+    }
+    
+    // Проверяем, является ли сообщение кодом авторизации
+    if (authCodes.has(messageText)) {
+      const codeData = authCodes.get(messageText)!;
       
-      // Проверяем что токен не истёк (5 минут)
-      if (Date.now() - authData.timestamp < 5 * 60 * 1000) {
+      // Проверяем что код не истёк (5 минут)
+      if (Date.now() - codeData.timestamp < 5 * 60 * 1000) {
         // Генерируем авторизационный токен
         const authToken = generateAuthToken();
         authTokens.set(authToken, {
@@ -35,36 +54,25 @@ if (TELEGRAM_BOT_TOKEN) {
           timestamp: Date.now()
         });
         
-        pendingAuth.delete(token);
+        authCodes.delete(messageText);
         
         await ctx.reply(
           `✅ *Авторизация успешна!*\n\n` +
           `Ваш токен авторизации:\n` +
           `\`${authToken}\`\n\n` +
-          `Скопируйте этот токен и вставьте в админ-панель\\.\n\n` +
+          `Скопируйте этот токен и вставьте в админ\\-панель\\.\n\n` +
           `⚠️ Токен действителен 24 часа\\.`,
           { parse_mode: 'MarkdownV2' }
         );
       } else {
-        pendingAuth.delete(token);
-        await ctx.reply('❌ Токен авторизации истёк. Запросите новый в админ-панели.');
+        authCodes.delete(messageText);
+        await ctx.reply('❌ Код авторизации истёк. Запросите новый в админ-панели.');
       }
-    } else if (token) {
-      await ctx.reply('❌ Неверный или истёкший токен авторизации.');
     } else {
       await ctx.reply(
-        '👋 Добро пожаловать в бота для авторизации в админ-панели PSRE!\n\n' +
-        'Для авторизации используйте ссылку из админ-панели.'
-      );
-    }
-  });
-  
-  // Обработка всех остальных сообщений
-  bot.on('message', async (ctx) => {
-    if (!ctx.message.text?.startsWith('/start')) {
-      await ctx.reply(
-        'Для авторизации используйте ссылку из админ-панели PSRE.\n\n' +
-        'Если у вас есть ссылка авторизации, просто перейдите по ней.'
+        '❓ Неверный код авторизации.\n\n' +
+        '🔄 Проверьте правильность кода или запросите новый в админ-панели.\n\n' +
+        '💡 Код должен состоять из 6 цифр.'
       );
     }
   });
@@ -86,8 +94,8 @@ function generateAuthToken(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
-function generateTempToken(): string {
-  return Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2);
+function generateAuthCode(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString(); // 6-значный код
 }
 
 new Elysia()
@@ -103,7 +111,7 @@ new Elysia()
             message: "Hello Elysia"
         }
     })
-    // API для получения ссылки авторизации через Telegram
+    // API для получения кода авторизации
     .post('/api/auth/telegram/request', () => {
         if (!TELEGRAM_BOT_TOKEN) {
             return { 
@@ -112,19 +120,16 @@ new Elysia()
             };
         }
         
-        const tempToken = generateTempToken();
-        pendingAuth.set(tempToken, {
-            token: tempToken,
+        const authCode = generateAuthCode();
+        authCodes.set(authCode, {
+            code: authCode,
             timestamp: Date.now()
         });
         
-        // Создаём глубокую ссылку для Telegram
-        const telegramUrl = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=${tempToken}`;
-        
         return {
             success: true,
-            telegramUrl,
-            tempToken,
+            authCode,
+            botUsername: TELEGRAM_BOT_USERNAME,
             expiresIn: 5 * 60 * 1000 // 5 минут
         };
     })
@@ -177,7 +182,7 @@ new Elysia()
             success: true,
             botConfigured: !!TELEGRAM_BOT_TOKEN,
             botUsername: TELEGRAM_BOT_USERNAME,
-            pendingAuthCount: pendingAuth.size,
+            pendingCodesCount: authCodes.size,
             activeTokensCount: authTokens.size
         };
     })
