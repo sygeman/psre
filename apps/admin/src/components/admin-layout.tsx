@@ -5,12 +5,17 @@ interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-const minigames = [
-  { id: "slots", name: "Слоты", href: "/minigames/slots" },
-  { id: "roulette", name: "Рулетка", href: "/minigames/roulette" },
-  { id: "dice", name: "Кости", href: "/minigames/dice" },
-  { id: "wheel", name: "Колесо фортуны", href: "/minigames/wheel" },
-  { id: "crash", name: "Crash", href: "/minigames/crash" },
+const modules = [
+  {
+    title: "Мини-игры",
+    items: [
+      { id: "slots", name: "Слоты", href: "/modules/minigames/slots" },
+      { id: "roulette", name: "Рулетка", href: "/modules/minigames/roulette" },
+      { id: "dice", name: "Кости", href: "/modules/minigames/dice" },
+      { id: "wheel", name: "Колесо фортуны", href: "/modules/minigames/wheel" },
+      { id: "crash", name: "Crash", href: "/modules/minigames/crash" },
+    ]
+  }
 ];
 
 export function AdminLayout({ children }: AdminLayoutProps) {
@@ -38,17 +43,26 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <aside className="w-64 border-r border-border bg-card min-h-[calc(100vh-4rem)]">
           <div className="p-4">
             <h3 className="text-sm font-semibold text-muted-foreground mb-4">
-              МИНИ-ИГРЫ
+              МОДУЛИ
             </h3>
-            <nav className="space-y-1">
-              {minigames.map((game) => (
-                <Link
-                  key={game.id}
-                  href={game.href}
-                  className="block px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  {game.name}
-                </Link>
+            <nav className="space-y-4">
+              {modules.map((module) => (
+                <div key={module.title}>
+                  <h4 className="text-xs font-medium text-muted-foreground mb-2 uppercase">
+                    {module.title}
+                  </h4>
+                  <div className="space-y-1">
+                    {module.items.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.href}
+                        className="block px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               ))}
             </nav>
           </div>
