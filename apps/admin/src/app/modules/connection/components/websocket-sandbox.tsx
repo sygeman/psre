@@ -16,18 +16,59 @@ export function WebSocketSandbox() {
   const [isConnected, setIsConnected] = useState(false);
   const [messages, setMessages] = useState<WebSocketMessage[]>([]);
   const [connectionStatus, setConnectionStatus] = useState<string>('Отключен');
+  const [authError, setAuthError] = useState<string>('');
   
   const wsRef = useRef<WebSocket | null>(null);
   const messageCounterRef = useRef(0);
-  const WS_URL = 'ws://localhost:4000/ws';
 
   const connect = () => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       return;
     }
 
+    // Получаем токен из localStorage
+    const storedAuth = localStorage.getItem('connection_telegram_auth');
+    if (!storedAuth) {
+      setAuthError('Токен авторизации не найден. Пожалуйста, авторизуйтесь заново.');
+      setConnectionStatus('Ошибка: нет токена');
+      return;
+    }
+
+    let authToken;
+    try {
+      const { user, timestamp } = JSON.parse(storedAuth);
+      
+      console.log('WebSocket connection debug:');
+      console.log('- Stored auth:', storedAuth);
+      console.log('- Parsed user:', user);
+      console.log('- Timestamp:', timestamp);
+      console.log('- Token from user:', user.authToken);
+      
+      // Проверяем, что токен не истек (24 часа)
+      if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+        setAuthError('Токен авторизации истек. Пожалуйста, авторизуйтесь заново.');
+        setConnectionStatus('Ошибка: токен истек');
+        localStorage.removeItem('connection_telegram_auth');
+        return;
+      }
+      
+      authToken = user.authToken;
+      console.log('- Final token to use:', authToken);
+    } catch {
+      setAuthError('Ошибка при чтении токена. Пожалуйста, авторизуйтесь заново.');
+      setConnectionStatus('Ошибка: некорректный токен');
+      localStorage.removeItem('connection_telegram_auth');
+      return;
+    }
+
+    // Формируем URL с токеном
+    const WS_URL = `ws://localhost:4000/ws?token=${encodeURIComponent(authToken)}`;
+    
+    console.log('- WebSocket URL:', WS_URL);
+
     try {
       setConnectionStatus('Подключение...');
+      setAuthError('');
       wsRef.current = new WebSocket(WS_URL);
 
       wsRef.current.onopen = () => {
@@ -37,18 +78,44 @@ export function WebSocketSandbox() {
       };
 
       wsRef.current.onmessage = (event) => {
-        addMessage(event.data, 'received');
+        let messageData;
+        try {
+          // Пытаемся распарсить JSON
+          messageData = JSON.parse(event.data);
+          
+          // Проверяем тип сообщения
+          if (messageData.type === 'error') {
+            setAuthError(messageData.message || 'Ошибка авторизации');
+            setConnectionStatus('Ошибка авторизации');
+            addMessage(`Ошибка: ${messageData.message}`, 'received');
+          } else if (messageData.type === 'welcome') {
+            addMessage(`Добро пожаловать, ${messageData.user?.username}!`, 'received');
+          } else {
+            addMessage(JSON.stringify(messageData, null, 2), 'received');
+          }
+        } catch {
+          // Если не JSON, показываем как есть
+          addMessage(event.data, 'received');
+        }
       };
 
-      wsRef.current.onclose = () => {
+      wsRef.current.onclose = (event) => {
         setIsConnected(false);
-        setConnectionStatus('Отключен');
-        addMessage('Соединение закрыто', 'received');
+        
+        if (event.code === 1008) {
+          // Код 1008 означает ошибку авторизации
+          setAuthError('Ошибка авторизации. Токен недействителен или истек.');
+          setConnectionStatus('Ошибка авторизации');
+          addMessage(`Соединение закрыто: ${event.reason}`, 'received');
+        } else {
+          setConnectionStatus('Отключен');
+          addMessage('Соединение закрыто', 'received');
+        }
       };
 
-      wsRef.current.onerror = (error) => {
+      wsRef.current.onerror = () => {
         setConnectionStatus('Ошибка подключения');
-        addMessage(`Ошибка: ${error}`, 'received');
+        addMessage('Ошибка подключения к серверу', 'received');
       };
     } catch (error) {
       setConnectionStatus('Ошибка подключения');
@@ -102,6 +169,12 @@ export function WebSocketSandbox() {
           <CardTitle>Подключение к серверу</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {authError && (
+            <div className="px-3 py-2 rounded-md bg-red-100 text-red-800 text-sm">
+              {authError}
+            </div>
+          )}
+          
           <div className={`px-3 py-2 rounded-md text-center text-sm font-medium ${
             isConnected 
               ? 'bg-green-100 text-green-800' 

@@ -164,6 +164,41 @@ export function initializeTelegramBot(): Bot | null {
   return bot;
 }
 
+export function verifyAuthToken(token: string): { success: boolean; user?: any; error?: string } {
+  if (!token) {
+    return { 
+      success: false, 
+      error: 'Токен не предоставлен' 
+    };
+  }
+  
+  const tokenData = authTokens.get(token);
+  if (!tokenData) {
+    return { 
+      success: false, 
+      error: 'Неверный токен авторизации' 
+    };
+  }
+  
+  // Проверяем что токен не истёк (24 часа)
+  if (Date.now() - tokenData.timestamp > 24 * 60 * 60 * 1000) {
+    authTokens.delete(token);
+    return { 
+      success: false, 
+      error: 'Токен авторизации истёк' 
+    };
+  }
+  
+  return {
+    success: true,
+    user: {
+      telegramId: tokenData.telegramId,
+      username: tokenData.username,
+      authToken: token
+    }
+  };
+}
+
 export function verifyAuthCode(code: string): { success: boolean; user?: any; error?: string } {
   if (!code) {
     return { 
@@ -194,6 +229,13 @@ export function verifyAuthCode(code: string): { success: boolean; user?: any; er
   
   // Создаем сессию для пользователя
   const authToken = generateAuthToken();
+  
+  // Сохраняем токен в authTokens
+  authTokens.set(authToken, {
+    telegramId: codeData.chatId,
+    username: codeData.username,
+    timestamp: Date.now()
+  });
   
   return {
     success: true,
