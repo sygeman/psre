@@ -41,8 +41,8 @@ new Elysia()
         return verifyAuthCode(code);
     })
     // API для проверки валидности токена
-    .post('/api/auth/telegram/check', async ({ body: { token } }: { body: { token: string } }) => {
-        return verifyAuthToken(token);
+    .post('/api/auth/telegram/check', async ({ body: { token, userId } }: { body: { token: string; userId?: number } }) => {
+        return verifyAuthToken(token, userId);
     })
     .ws('/ws', {
         message(ws, message) {

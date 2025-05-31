@@ -164,7 +164,7 @@ export function initializeTelegramBot(): Bot | null {
   return bot;
 }
 
-export function verifyAuthToken(token: string): { success: boolean; user?: any; error?: string } {
+export function verifyAuthToken(token: string, userId?: number): { success: boolean; user?: any; error?: string } {
   if (!token) {
     return { 
       success: false, 
@@ -177,6 +177,14 @@ export function verifyAuthToken(token: string): { success: boolean; user?: any; 
     return { 
       success: false, 
       error: 'Неверный токен авторизации' 
+    };
+  }
+  
+  // Дополнительная проверка ID пользователя, если он предоставлен
+  if (userId !== undefined && tokenData.telegramId !== userId) {
+    return { 
+      success: false, 
+      error: 'Токен не соответствует пользователю' 
     };
   }
   

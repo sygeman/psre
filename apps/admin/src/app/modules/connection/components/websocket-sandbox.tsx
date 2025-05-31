@@ -96,7 +96,10 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: authToken }),
+        body: JSON.stringify({ 
+          token: authToken,
+          userId: userId 
+        }),
       });
 
       const tokenCheckResult = await tokenCheckResponse.json();

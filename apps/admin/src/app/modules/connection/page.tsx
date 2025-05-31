@@ -57,7 +57,10 @@ export default function ConnectionPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: user.authToken }),
+        body: JSON.stringify({ 
+          token: user.authToken,
+          userId: user.telegramId 
+        }),
       });
 
       const result = await response.json();
