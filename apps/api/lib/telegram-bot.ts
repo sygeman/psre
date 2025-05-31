@@ -80,9 +80,9 @@ export function initializeTelegramBot(): Bot | null {
     const authCode = generateAuthCode(chatId, username);
 
     await ctx.reply(
-      '🔐 Ваш код для входа в админ-панель PSRE:\n\n' +
+      '🔐 Ваш код для входа:\n\n' +
       `\`${authCode}\`\n\n` +
-      '📋 Скопируйте этот код и введите в админ-панели.\n\n' +
+      '📋 Скопируйте этот код и введите в форме входа.\n\n' +
       '⏰ Код действителен 5 минут.\n\n' +
       '🔄 Для получения нового кода отправьте /auth',
       { parse_mode: 'Markdown' }
@@ -110,9 +110,9 @@ export function initializeTelegramBot(): Bot | null {
     const authCode = generateAuthCode(chatId, username);
 
     await ctx.reply(
-      '🔐 Новый код для входа в админ-панель:\n\n' +
+      '🔐 Новый код для входа:\n\n' +
       `\`${authCode}\`\n\n` +
-      '📋 Скопируйте этот код и введите в админ-панели.\n\n' +
+      '📋 Скопируйте этот код и введите в форме входа.\n\n' +
       '⏰ Код действителен 5 минут.',
       { parse_mode: 'Markdown' }
     );
