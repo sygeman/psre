@@ -185,7 +185,7 @@ export default function ConnectionPage() {
               <div className="border-t pt-4">
                 <div className="space-y-3">
                   <div className="space-y-2">
-                    <Label htmlFor="code">Код авторизации из Telegram</Label>
+                    <Label htmlFor="code" className="text-center block">Код авторизации из Telegram</Label>
                     <InputOTP
                       maxLength={6}
                       value={authCode}
