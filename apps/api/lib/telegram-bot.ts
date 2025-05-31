@@ -4,6 +4,9 @@ import process from 'node:process';
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_BOT_USERNAME = process.env.TELEGRAM_BOT_USERNAME || 'YourBotUsername';
 
+// Whitelist авторизованных пользователей (Telegram ID или username)
+const AUTHORIZED_USERS = process.env.AUTHORIZED_TELEGRAM_USERS?.split(',').map(u => u.trim()) || [];
+
 // Временное хранилище токенов авторизации (в продакшене использовать Redis или базу данных)
 export const authTokens = new Map<string, { telegramId: number; username: string; timestamp: number }>();
 export const authCodes = new Map<string, { code: string; timestamp: number }>();
@@ -19,6 +22,25 @@ export function generateAuthCode(): string {
   return Math.floor(100000 + Math.random() * 900000).toString(); // 6-значный код
 }
 
+function isUserAuthorized(telegramId: number, username?: string): boolean {
+  // Если whitelist пуст, разрешаем всем (для разработки)
+  if (AUTHORIZED_USERS.length === 0) {
+    console.warn('⚠️ AUTHORIZED_TELEGRAM_USERS не настроен - разрешен доступ всем пользователям!');
+    return true;
+  }
+
+  // Проверяем по ID и username
+  const userIdString = telegramId.toString();
+  const userUsername = username?.toLowerCase();
+
+  return AUTHORIZED_USERS.some(authorized => {
+    const auth = authorized.toLowerCase();
+    return auth === userIdString || 
+           auth === userUsername ||
+           auth === `@${userUsername}`;
+  });
+}
+
 export function initializeTelegramBot(): Bot | null {
   if (!TELEGRAM_BOT_TOKEN) {
     console.log('Telegram bot is not configured (missing TELEGRAM_BOT_TOKEN)');
@@ -29,62 +51,100 @@ export function initializeTelegramBot(): Bot | null {
   
   // Обработка команды /start
   bot.command('start', async (ctx) => {
+    const chatId = ctx.chat.id;
+    const username = ctx.from?.username || `user_${chatId}`;
+
+    // Проверяем авторизацию пользователя
+    if (!isUserAuthorized(chatId, ctx.from?.username)) {
+      await ctx.reply(
+        '🚫 Доступ запрещен.\n\n' +
+        '❌ Вы не авторизованы для использования этого бота.\n\n' +
+        '📞 Обратитесь к администратору системы для получения доступа.\n\n' +
+        `👤 Ваш ID: ${chatId}\n` +
+        `📝 Username: ${ctx.from?.username || 'не указан'}`
+      );
+      return;
+    }
+
+    // Генерируем код авторизации для пользователя
+    const authCode = generateAuthCode();
+    authCodes.set(authCode, {
+      code: authCode,
+      timestamp: Date.now()
+    });
+
     await ctx.reply(
-      '👋 Добро пожаловать в бота авторизации PSRE!\n\n' +
-      '🔐 Для авторизации в админ-панели:\n' +
-      '1. Запросите код авторизации в админ-панели\n' +
-      '2. Отправьте полученный код сюда\n' +
-      '3. Получите токен для входа\n\n' +
-      '💡 Просто отправьте мне ваш код авторизации.'
+      '🔐 Ваш код для входа в админ-панель PSRE:\n\n' +
+      `\`${authCode}\`\n\n` +
+      '📋 Скопируйте этот код и введите в админ-панели.\n\n' +
+      '⏰ Код действителен 5 минут.\n\n' +
+      '🔄 Для получения нового кода отправьте /auth',
+      { parse_mode: 'Markdown' }
     );
   });
   
-  // Обработка текстовых сообщений (кодов авторизации)
+  // Команда для получения нового кода
+  bot.command('auth', async (ctx) => {
+    const chatId = ctx.chat.id;
+    const username = ctx.from?.username || `user_${chatId}`;
+
+    // Проверяем авторизацию пользователя
+    if (!isUserAuthorized(chatId, ctx.from?.username)) {
+      await ctx.reply(
+        '🚫 Доступ запрещен.\n\n' +
+        '❌ Вы не авторизованы для использования этого бота.\n\n' +
+        '📞 Обратитесь к администратору системы для получения доступа.\n\n' +
+        `👤 Ваш ID: ${chatId}\n` +
+        `📝 Username: ${ctx.from?.username || 'не указан'}`
+      );
+      return;
+    }
+
+    // Генерируем новый код авторизации
+    const authCode = generateAuthCode();
+    authCodes.set(authCode, {
+      code: authCode,
+      timestamp: Date.now()
+    });
+
+    await ctx.reply(
+      '🔐 Новый код для входа в админ-панель:\n\n' +
+      `\`${authCode}\`\n\n` +
+      '📋 Скопируйте этот код и введите в админ-панели.\n\n' +
+      '⏰ Код действителен 5 минут.',
+      { parse_mode: 'Markdown' }
+    );
+  });
+  
+  // Обработка текстовых сообщений
   bot.on('message:text', async (ctx) => {
     const messageText = ctx.message.text.trim();
     const chatId = ctx.chat.id;
-    const username = ctx.from?.username || `user_${chatId}`;
     
     // Пропускаем команды
     if (messageText.startsWith('/')) {
       return;
     }
-    
-    // Проверяем, является ли сообщение кодом авторизации
-    if (authCodes.has(messageText)) {
-      const codeData = authCodes.get(messageText)!;
-      
-      // Проверяем что код не истёк (5 минут)
-      if (Date.now() - codeData.timestamp < 5 * 60 * 1000) {
-        // Генерируем авторизационный токен
-        const authToken = generateAuthToken();
-        authTokens.set(authToken, {
-          telegramId: chatId,
-          username,
-          timestamp: Date.now()
-        });
-        
-        authCodes.delete(messageText);
-        
-        await ctx.reply(
-          `✅ Авторизация успешна!\n\n` +
-          `Ваш токен авторизации:\n` +
-          `\`${authToken}\`\n\n` +
-          `Скопируйте этот токен и вставьте в админ-панель.\n\n` +
-          `⚠️ Токен действителен 24 часа.`,
-          { parse_mode: 'Markdown' }
-        );
-      } else {
-        authCodes.delete(messageText);
-        await ctx.reply('❌ Код авторизации истёк. Запросите новый в админ-панели.');
-      }
-    } else {
+
+    // Проверяем авторизацию пользователя
+    if (!isUserAuthorized(chatId, ctx.from?.username)) {
       await ctx.reply(
-        '❓ Неверный код авторизации.\n\n' +
-        '🔄 Проверьте правильность кода или запросите новый в админ-панели.\n\n' +
-        '💡 Код должен состоять из 6 цифр.'
+        '🚫 Доступ запрещен.\n\n' +
+        '❌ Вы не авторизованы для использования этого бота.\n\n' +
+        '📞 Обратитесь к администратору системы для получения доступа.\n\n' +
+        `👤 Ваш ID: ${chatId}\n` +
+        `📝 Username: ${ctx.from?.username || 'не указан'}`
       );
+      return;
     }
+    
+    // Подсказка пользователю
+    await ctx.reply(
+      '💡 Используйте команды:\n\n' +
+      '🔐 /start - получить код авторизации\n' +
+      '🔄 /auth - получить новый код\n\n' +
+      '📋 Скопируйте полученный код и введите в админ-панели.'
+    );
   });
   
   // Обработка ошибок
@@ -102,50 +162,43 @@ export function initializeTelegramBot(): Bot | null {
   return bot;
 }
 
-export function createAuthCode(): { authCode: string; botUsername: string; expiresIn: number } {
-  const authCode = generateAuthCode();
-  authCodes.set(authCode, {
-    code: authCode,
-    timestamp: Date.now()
-  });
-  
-  return {
-    authCode,
-    botUsername: TELEGRAM_BOT_USERNAME,
-    expiresIn: 5 * 60 * 1000 // 5 минут
-  };
-}
-
-export function verifyAuthToken(token: string): { success: boolean; user?: any; error?: string } {
-  if (!token) {
+export function verifyAuthCode(code: string): { success: boolean; user?: any; error?: string } {
+  if (!code) {
     return { 
       success: false, 
-      error: 'Токен не предоставлен' 
+      error: 'Код не предоставлен' 
     };
   }
   
-  const authData = authTokens.get(token);
-  if (!authData) {
+  const codeData = authCodes.get(code);
+  if (!codeData) {
     return { 
       success: false, 
-      error: 'Неверный токен' 
+      error: 'Неверный код авторизации' 
     };
   }
   
-  // Проверяем что токен не истёк (24 часа)
-  if (Date.now() - authData.timestamp > 24 * 60 * 60 * 1000) {
-    authTokens.delete(token);
+  // Проверяем что код не истёк (5 минут)
+  if (Date.now() - codeData.timestamp > 5 * 60 * 1000) {
+    authCodes.delete(code);
     return { 
       success: false, 
-      error: 'Токен истёк' 
+      error: 'Код авторизации истёк' 
     };
   }
+  
+  // Удаляем использованный код
+  authCodes.delete(code);
+  
+  // Создаем сессию для пользователя
+  const authToken = generateAuthToken();
   
   return {
     success: true,
     user: {
-      telegramId: authData.telegramId,
-      username: authData.username
+      telegramId: Date.now(), // Временный ID пока не знаем реального
+      username: 'authorized_user',
+      authToken
     }
   };
 }
@@ -156,7 +209,10 @@ export function getBotInfo(): any {
     botConfigured: !!TELEGRAM_BOT_TOKEN,
     botUsername: TELEGRAM_BOT_USERNAME,
     pendingCodesCount: authCodes.size,
-    activeTokensCount: authTokens.size
+    activeTokensCount: authTokens.size,
+    authorizedUsersCount: AUTHORIZED_USERS.length,
+    authorizedUsers: AUTHORIZED_USERS.length > 0 ? AUTHORIZED_USERS : 'Не настроено (доступ всем)',
+    securityWarning: AUTHORIZED_USERS.length === 0 ? 'ВНИМАНИЕ: whitelist пользователей не настроен!' : null
   };
 }
 

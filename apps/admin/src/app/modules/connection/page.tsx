@@ -15,13 +15,11 @@ const WebSocketSandbox = dynamic(() => import('./components/websocket-sandbox').
 
 export default function ConnectionPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [authToken, setAuthToken] = useState('');
+  const [authCode, setAuthCode] = useState('');
   const [authError, setAuthError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [authCode, setAuthCode] = useState('');
   const [botUsername, setBotUsername] = useState('');
-  const [userInfo, setUserInfo] = useState<{ telegramId: number; username: string } | null>(null);
-  const [copySuccess, setCopySuccess] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ telegramId: number; username: string; authToken: string } | null>(null);
 
   useEffect(() => {
     // Проверяем авторизацию из localStorage при загрузке
@@ -36,38 +34,26 @@ export default function ConnectionPage() {
         localStorage.removeItem('connection_telegram_auth');
       }
     }
+
+    // Получаем информацию о боте
+    fetchBotInfo();
   }, []);
 
-  const requestAuthCode = async () => {
-    setIsLoading(true);
-    setAuthError('');
-
+  const fetchBotInfo = async () => {
     try {
-      const response = await fetch('http://localhost:4000/api/auth/telegram/request', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
+      const response = await fetch('http://localhost:4000/api/auth/telegram/info');
       const data = await response.json();
-
-      if (data.success) {
-        setAuthCode(data.authCode);
+      if (data.success && data.botUsername) {
         setBotUsername(data.botUsername);
-      } else {
-        setAuthError(data.error || 'Ошибка при запросе кода авторизации');
       }
-    } catch {
-      setAuthError('Ошибка соединения с сервером');
+    } catch (error) {
+      console.error('Ошибка получения информации о боте:', error);
     }
-
-    setIsLoading(false);
   };
 
-  const verifyToken = async () => {
-    if (!authToken.trim()) {
-      setAuthError('Введите токен авторизации');
+  const verifyCode = async () => {
+    if (!authCode.trim()) {
+      setAuthError('Введите код авторизации');
       return;
     }
 
@@ -80,14 +66,13 @@ export default function ConnectionPage() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token: authToken.trim() })
+        body: JSON.stringify({ code: authCode.trim() })
       });
 
       const data = await response.json();
 
       if (data.success) {
         const authInfo = {
-          token: authToken.trim(),
           user: data.user,
           timestamp: Date.now()
         };
@@ -95,7 +80,7 @@ export default function ConnectionPage() {
         setIsAuthorized(true);
         setUserInfo(data.user);
       } else {
-        setAuthError(data.error || 'Неверный токен авторизации');
+        setAuthError(data.error || 'Неверный код авторизации');
       }
     } catch {
       setAuthError('Ошибка соединения с сервером');
@@ -104,33 +89,12 @@ export default function ConnectionPage() {
     setIsLoading(false);
   };
 
-  const copyCodeToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(authCode);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000); // Убираем уведомление через 2 секунды
-    } catch {
-      // Fallback для старых браузеров
-      const textArea = document.createElement('textarea');
-      textArea.value = authCode;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    }
-  };
-
   const handleLogout = () => {
     localStorage.removeItem('connection_telegram_auth');
     setIsAuthorized(false);
-    setAuthToken('');
     setAuthCode('');
-    setBotUsername('');
     setUserInfo(null);
     setAuthError('');
-    setCopySuccess(false);
   };
 
   if (!isAuthorized) {
@@ -142,97 +106,52 @@ export default function ConnectionPage() {
               <CardTitle>Авторизация через Telegram</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {!authCode ? (
-                <>
-                  <p className="text-sm text-muted-foreground">
-                    Для доступа к модулю &ldquo;Соединение&rdquo; требуется авторизация через Telegram бота.
-                  </p>
+              <p className="text-sm text-muted-foreground">
+                Для доступа к модулю &ldquo;Соединение&rdquo; получите код авторизации в Telegram боте.
+              </p>
+
+              {botUsername ? (
+                <div className="space-y-3">
                   <Button 
-                    onClick={requestAuthCode} 
-                    className="w-full" 
-                    disabled={isLoading}
+                    onClick={() => window.open(`https://t.me/${botUsername}`, '_blank')}
+                    className="w-full"
                   >
-                    {isLoading ? 'Генерация кода...' : '🔐 Получить код авторизации'}
+                    🚀 Открыть бота @{botUsername}
                   </Button>
-                </>
+                  
+                  <div className="text-center text-sm text-muted-foreground">
+                    Отправьте боту команду /start для получения кода
+                  </div>
+                </div>
               ) : (
-                <>
-                  <div className="space-y-3">
-                    <p className="text-sm text-muted-foreground">
-                      1. Откройте бота @{botUsername} в Telegram
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      2. Отправьте боту следующий код:
-                    </p>
-                    <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-lg text-center border-2 border-dashed border-slate-300 dark:border-slate-600">
-                      <div className="mb-3">
-                        <div className="text-sm text-muted-foreground mb-2">Код авторизации:</div>
-                        <div className="text-4xl font-mono font-bold tracking-[0.3em] text-blue-600 dark:text-blue-400 select-all">
-                          {authCode.slice(0, 3)}<span className="text-slate-400 mx-1">-</span>{authCode.slice(3, 6)}
-                        </div>
-                      </div>
-                      <Button 
-                        onClick={copyCodeToClipboard}
-                        variant={copySuccess ? "default" : "outline"}
-                        size="sm"
-                        className="mt-2"
-                        disabled={copySuccess}
-                      >
-                        {copySuccess ? '✅ Скопировано!' : '📋 Скопировать код'}
-                      </Button>
-                    </div>
-                    <Button 
-                      onClick={() => window.open(`https://t.me/${botUsername}`, '_blank')}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      🚀 Открыть бота в Telegram
-                    </Button>
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <p className="text-sm text-muted-foreground mb-3">
-                      3. После отправки кода боту, введите полученный токен:
-                    </p>
-                    <div className="space-y-3">
-                      <div>
-                        <Label htmlFor="token">Токен авторизации</Label>
-                        <Input
-                          id="token"
-                          type="text"
-                          value={authToken}
-                          onChange={(e) => setAuthToken(e.target.value)}
-                          placeholder="Вставьте токен из Telegram"
-                          required
-                        />
-                      </div>
-                      <Button 
-                        onClick={verifyToken} 
-                        className="w-full" 
-                        disabled={isLoading || !authToken.trim()}
-                      >
-                        {isLoading ? 'Проверка...' : 'Подтвердить токен'}
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="border-t pt-4">
-                    <Button 
-                      onClick={() => {
-                        setAuthCode('');
-                        setBotUsername('');
-                        setAuthToken('');
-                        setCopySuccess(false);
-                      }}
-                      variant="ghost"
-                      size="sm"
-                      className="w-full"
-                    >
-                      ← Получить новый код
-                    </Button>
-                  </div>
-                </>
+                <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
+                  Telegram бот не настроен
+                </div>
               )}
+
+              <div className="border-t pt-4">
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="code">Код авторизации из Telegram</Label>
+                    <Input
+                      id="code"
+                      type="text"
+                      value={authCode}
+                      onChange={(e) => setAuthCode(e.target.value)}
+                      placeholder="Введите 6-значный код"
+                      maxLength={6}
+                      required
+                    />
+                  </div>
+                  <Button 
+                    onClick={verifyCode} 
+                    className="w-full" 
+                    disabled={isLoading || !authCode.trim()}
+                  >
+                    {isLoading ? 'Проверка...' : '✅ Войти'}
+                  </Button>
+                </div>
+              </div>
 
               {authError && (
                 <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">
