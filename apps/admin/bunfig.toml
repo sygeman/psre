@@ -1,0 +1,10 @@
+[install]
+exact = true
+
+[run]
+# Автоматически очищать консоль при перезапуске в dev режиме
+clearScreen = true
+
+[build]
+# Включить source maps для лучшей отладки
+sourcemap = "external" 
