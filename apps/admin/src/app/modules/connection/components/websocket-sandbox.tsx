@@ -153,6 +153,17 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
         hasConnectedRef.current = true;
         isInitializingRef.current = false;
         addMessage('Подключение установлено', 'received');
+        
+        const echoMessage = {
+          type: 'echo_test',
+          message: 'Hello from client!',
+          timestamp: new Date().toISOString(),
+          userId: userId
+        };
+        
+        console.log('📤 Sending echo message on connection:', echoMessage);
+        wsRef.current?.send(JSON.stringify(echoMessage));
+        addMessage(`Отправлено эхо сообщение: ${JSON.stringify(echoMessage, null, 2)}`, 'sent');
       };
 
       wsRef.current.onmessage = (event) => {
@@ -222,6 +233,25 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
     }
     isInitializingRef.current = false;
     hasConnectedRef.current = false;
+  };
+
+  const sendEchoMessage = () => {
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+      console.log('❌ WebSocket not connected, cannot send message');
+      addMessage('Ошибка: WebSocket не подключен', 'received');
+      return;
+    }
+
+    const echoMessage = {
+      type: 'manual_echo',
+      message: `Test message at ${new Date().toLocaleTimeString()}`,
+      timestamp: new Date().toISOString(),
+      random: Math.random().toString(36).substring(7)
+    };
+
+    console.log('📤 Sending manual echo message:', echoMessage);
+    wsRef.current.send(JSON.stringify(echoMessage));
+    addMessage(`Отправлено: ${JSON.stringify(echoMessage, null, 2)}`, 'sent');
   };
 
   const addMessage = (data: string, type: 'sent' | 'received') => {
@@ -305,6 +335,14 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
               className="flex-1"
             >
               Отключиться
+            </Button>
+            <Button 
+              onClick={sendEchoMessage} 
+              disabled={!isConnected}
+              variant="outline"
+              className="flex-1"
+            >
+              📤 Эхо
             </Button>
           </div>
         </CardContent>
