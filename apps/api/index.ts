@@ -40,6 +40,10 @@ new Elysia()
     .post('/api/auth/telegram/verify', async ({ body: { code } }: { body: { code: string } }) => {
         return verifyAuthCode(code);
     })
+    // API для проверки валидности токена
+    .post('/api/auth/telegram/check', async ({ body: { token } }: { body: { token: string } }) => {
+        return verifyAuthToken(token);
+    })
     .ws('/ws', {
         message(ws, message) {
             console.log('Received message:', message);

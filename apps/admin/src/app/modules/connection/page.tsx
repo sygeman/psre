@@ -15,25 +15,69 @@ const WebSocketSandbox = dynamic(() => import('./components/websocket-sandbox').
 
 export default function ConnectionPage() {
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [authCode, setAuthCode] = useState('');
   const [authError, setAuthError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const [userInfo, setUserInfo] = useState<{ telegramId: number; username: string; authToken: string } | null>(null);
 
   useEffect(() => {
-    // Проверяем авторизацию из localStorage при загрузке
-    const storedAuth = localStorage.getItem('connection_telegram_auth');
-    if (storedAuth) {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    setIsLoading(true);
+    
+    try {
+      // Проверяем авторизацию из localStorage при загрузке
+      const storedAuth = localStorage.getItem('connection_telegram_auth');
+      if (!storedAuth) {
+        console.log('🔍 No stored auth found');
+        setIsAuthorized(false);
+        setIsLoading(false);
+        return;
+      }
+
       const { user, timestamp } = JSON.parse(storedAuth);
+      
       // Сессия действительна 24 часа
-      if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+      if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+        console.log('🔍 Stored auth expired');
+        localStorage.removeItem('connection_telegram_auth');
+        setIsAuthorized(false);
+        setIsLoading(false);
+        return;
+      }
+
+      // Проверяем токен через HTTP API
+      console.log('🔍 Checking stored token via HTTP');
+      const response = await fetch('http://localhost:4000/api/auth/telegram/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: user.authToken }),
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        console.log('✅ Stored token is valid');
         setIsAuthorized(true);
         setUserInfo(user);
       } else {
+        console.log('❌ Stored token is invalid, removing');
         localStorage.removeItem('connection_telegram_auth');
+        setIsAuthorized(false);
       }
+    } catch (error) {
+      console.log('❌ Error checking auth status:', error);
+      localStorage.removeItem('connection_telegram_auth');
+      setIsAuthorized(false);
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
+  };
 
   const verifyCode = async () => {
     if (!authCode.trim()) {
@@ -41,7 +85,7 @@ export default function ConnectionPage() {
       return;
     }
 
-    setIsLoading(true);
+    setIsVerifying(true);
     setAuthError('');
 
     try {
@@ -70,7 +114,7 @@ export default function ConnectionPage() {
       setAuthError('Ошибка соединения с сервером');
     }
 
-    setIsLoading(false);
+    setIsVerifying(false);
   };
 
   const handleLogout = () => {
@@ -80,6 +124,29 @@ export default function ConnectionPage() {
     setUserInfo(null);
     setAuthError('');
   };
+
+  const handleAuthReset = () => {
+    console.log('🔄 Auth reset requested from WebSocket component');
+    handleLogout();
+  };
+
+  // Показываем лоадер при загрузке
+  if (isLoading) {
+    return (
+      <AdminLayout>
+        <div className="h-[calc(100vh-4rem)] flex items-center justify-center p-6">
+          <Card className="w-full max-w-md">
+            <CardContent className="flex items-center justify-center p-8">
+              <div className="text-center space-y-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                <p className="text-sm text-muted-foreground">Проверка авторизации...</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   if (!isAuthorized) {
     return (
@@ -125,9 +192,9 @@ export default function ConnectionPage() {
                   <Button 
                     onClick={verifyCode} 
                     className="w-full" 
-                    disabled={isLoading || !authCode.trim()}
+                    disabled={isVerifying || !authCode.trim()}
                   >
-                    {isLoading ? 'Проверка...' : '✅ Войти'}
+                    {isVerifying ? 'Проверка...' : '✅ Войти'}
                   </Button>
                 </div>
               </div>
@@ -160,7 +227,7 @@ export default function ConnectionPage() {
             Выйти из модуля
           </Button>
         </div>
-        <WebSocketSandbox />
+        <WebSocketSandbox onAuthReset={handleAuthReset} />
       </div>
     </AdminLayout>
   );
