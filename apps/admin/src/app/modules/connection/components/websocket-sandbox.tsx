@@ -32,6 +32,9 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
 
     // Получаем токен из localStorage
     const storedAuth = localStorage.getItem('connection_telegram_auth');
+    // Также получаем отдельно сохраненный ID пользователя
+    const storedUserId = localStorage.getItem('connection_user_id');
+    
     if (!storedAuth) {
       setAuthError('Токен авторизации не найден. Пожалуйста, авторизуйтесь заново.');
       setConnectionStatus('Ошибка: нет токена');
@@ -44,20 +47,24 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
     }
 
     let authToken;
+    let userId;
     try {
       const { user, timestamp } = JSON.parse(storedAuth);
       
       console.log('WebSocket connection debug:');
       console.log('- Stored auth:', storedAuth);
+      console.log('- Stored user ID:', storedUserId);
       console.log('- Parsed user:', user);
       console.log('- Timestamp:', timestamp);
       console.log('- Token from user:', user.authToken);
+      console.log('- User ID from user:', user.telegramId);
       
       // Проверяем, что токен не истек (24 часа)
       if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
         setAuthError('Токен авторизации истек. Пожалуйста, авторизуйтесь заново.');
         setConnectionStatus('Ошибка: токен истек');
         localStorage.removeItem('connection_telegram_auth');
+        localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
         
         // Сбрасываем авторизацию и показываем форму входа
         if (onAuthReset) {
@@ -67,11 +74,14 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       }
       
       authToken = user.authToken;
+      userId = user.telegramId;
       console.log('- Final token to use:', authToken);
+      console.log('- Final user ID to use:', userId);
     } catch {
       setAuthError('Ошибка при чтении токена. Пожалуйста, авторизуйтесь заново.');
       setConnectionStatus('Ошибка: некорректный токен');
       localStorage.removeItem('connection_telegram_auth');
+      localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
       
       // Сбрасываем авторизацию и показываем форму входа
       if (onAuthReset) {
@@ -84,6 +94,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
     try {
       setConnectionStatus('Проверка токена...');
       console.log('🔍 Checking token via HTTP before WebSocket connection');
+      console.log('🆔 User ID for this session:', userId);
       
       const tokenCheckResponse = await fetch('http://localhost:4000/api/auth/telegram/check', {
         method: 'POST',
@@ -101,6 +112,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
         setAuthError(`Токен недействителен: ${tokenCheckResult.error}`);
         setConnectionStatus('Ошибка: недействительный токен');
         localStorage.removeItem('connection_telegram_auth');
+        localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
         
         // Сбрасываем авторизацию и показываем форму входа
         if (onAuthReset) {
@@ -110,6 +122,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       }
 
       console.log('✅ Token is valid, proceeding with WebSocket connection');
+      console.log('👤 Verified user ID:', userId);
     } catch (error) {
       console.log('❌ Failed to check token:', error);
       setAuthError('Ошибка при проверке токена');
@@ -121,6 +134,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
     const WS_URL = `ws://localhost:4000/ws?token=${encodeURIComponent(authToken)}`;
     
     console.log('- WebSocket URL:', WS_URL);
+    console.log('🚀 Connecting with user ID:', userId);
 
     try {
       setConnectionStatus('Подключение...');
@@ -151,9 +165,10 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
                 errorMessage.includes('авторизации') || errorMessage.includes('Авторизации')) {
               console.log('🗑️ Removing invalid token from localStorage');
               localStorage.removeItem('connection_telegram_auth');
+              localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
             }
           } else if (messageData.type === 'welcome') {
-            addMessage(`Добро пожаловать, ${messageData.user?.username}!`, 'received');
+            addMessage(`Добро пожаловать, ${messageData.user?.username}! (ID: ${userId})`, 'received');
           } else {
             addMessage(JSON.stringify(messageData, null, 2), 'received');
           }
@@ -176,6 +191,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
           // Удаляем невалидный токен из localStorage
           console.log('🗑️ Removing invalid token from localStorage (close code 1008)');
           localStorage.removeItem('connection_telegram_auth');
+          localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
         } else {
           setConnectionStatus('Отключен');
           addMessage('Соединение закрыто', 'received');

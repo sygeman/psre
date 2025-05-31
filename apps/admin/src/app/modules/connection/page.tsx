@@ -31,6 +31,9 @@ export default function ConnectionPage() {
     try {
       // Проверяем авторизацию из localStorage при загрузке
       const storedAuth = localStorage.getItem('connection_telegram_auth');
+      // Также проверяем отдельно сохраненный ID пользователя
+      const storedUserId = localStorage.getItem('connection_user_id');
+      
       if (!storedAuth) {
         console.log('🔍 No stored auth found');
         setIsAuthorized(false);
@@ -44,6 +47,7 @@ export default function ConnectionPage() {
       if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
         console.log('🔍 Stored auth expired');
         localStorage.removeItem('connection_telegram_auth');
+        localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
         setIsAuthorized(false);
         setIsLoading(false);
         return;
@@ -63,16 +67,19 @@ export default function ConnectionPage() {
       
       if (result.success) {
         console.log('✅ Stored token is valid');
+        console.log('📋 Stored user ID:', storedUserId);
         setIsAuthorized(true);
         setUserInfo(user);
       } else {
         console.log('❌ Stored token is invalid, removing');
         localStorage.removeItem('connection_telegram_auth');
+        localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
         setIsAuthorized(false);
       }
     } catch (error) {
       console.log('❌ Error checking auth status:', error);
       localStorage.removeItem('connection_telegram_auth');
+      localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
       setIsAuthorized(false);
     } finally {
       setIsLoading(false);
@@ -104,7 +111,14 @@ export default function ConnectionPage() {
           user: data.user,
           timestamp: Date.now()
         };
+        
+        // Сохраняем авторизационные данные
         localStorage.setItem('connection_telegram_auth', JSON.stringify(authInfo));
+        // Отдельно сохраняем ID пользователя для удобного доступа
+        localStorage.setItem('connection_user_id', data.user.telegramId.toString());
+        
+        console.log('💾 Saved auth data and user ID:', data.user.telegramId);
+        
         setIsAuthorized(true);
         setUserInfo(data.user);
       } else {
@@ -119,10 +133,12 @@ export default function ConnectionPage() {
 
   const handleLogout = () => {
     localStorage.removeItem('connection_telegram_auth');
+    localStorage.removeItem('connection_user_id'); // Удаляем и ID пользователя
     setIsAuthorized(false);
     setAuthCode('');
     setUserInfo(null);
     setAuthError('');
+    console.log('🗑️ Cleared auth data and user ID');
   };
 
   const handleAuthReset = () => {

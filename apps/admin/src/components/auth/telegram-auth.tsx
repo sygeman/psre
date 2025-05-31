@@ -74,6 +74,10 @@ export function TelegramAuth({ onSuccess }: TelegramAuthProps) {
         // Сохраняем токен в localStorage
         localStorage.setItem('authToken', result.user.authToken);
         localStorage.setItem('user', JSON.stringify(result.user));
+        // Отдельно сохраняем ID пользователя для удобного доступа
+        localStorage.setItem('userId', result.user.telegramId.toString());
+        
+        console.log('💾 Saved auth data and user ID:', result.user.telegramId);
         
         onSuccess(result.user);
       } else {
