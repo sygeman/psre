@@ -24,22 +24,30 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
   
   const wsRef = useRef<WebSocket | null>(null);
   const messageCounterRef = useRef(0);
+  const isInitializingRef = useRef(false);
+  const hasConnectedRef = useRef(false);
 
   const connect = async () => {
-    // Предотвращаем множественные подключения
+    if (isInitializingRef.current) {
+      console.log('🚫 Connection already initializing, aborting duplicate attempt');
+      return;
+    }
+    
     if (wsRef.current?.readyState === WebSocket.OPEN || wsRef.current?.readyState === WebSocket.CONNECTING) {
       console.log('🔄 WebSocket already connecting/connected, skipping duplicate connection attempt');
       return;
     }
 
-    // Получаем токен из localStorage
+    isInitializingRef.current = true;
+    console.log('🔄 Starting WebSocket connection process...');
+
     const storedAuth = localStorage.getItem('connection_telegram_auth');
     
     if (!storedAuth) {
       setAuthError('Токен авторизации не найден. Пожалуйста, авторизуйтесь заново.');
       setConnectionStatus('Ошибка: нет токена');
+      isInitializingRef.current = false;
       
-      // Сбрасываем авторизацию и показываем форму входа
       if (onAuthReset) {
         onAuthReset();
       }
@@ -58,13 +66,12 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       console.log('- Token from user:', user.authToken);
       console.log('- User ID from user:', user.telegramId);
       
-      // Проверяем, что токен не истек (24 часа)
       if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
         setAuthError('Токен авторизации истек. Пожалуйста, авторизуйтесь заново.');
         setConnectionStatus('Ошибка: токен истек');
         localStorage.removeItem('connection_telegram_auth');
+        isInitializingRef.current = false;
         
-        // Сбрасываем авторизацию и показываем форму входа
         if (onAuthReset) {
           onAuthReset();
         }
@@ -79,15 +86,14 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       setAuthError('Ошибка при чтении токена. Пожалуйста, авторизуйтесь заново.');
       setConnectionStatus('Ошибка: некорректный токен');
       localStorage.removeItem('connection_telegram_auth');
+      isInitializingRef.current = false;
       
-      // Сбрасываем авторизацию и показываем форму входа
       if (onAuthReset) {
         onAuthReset();
       }
       return;
     }
 
-    // Сначала проверяем токен по HTTP
     try {
       setConnectionStatus('Проверка токена...');
       console.log('🔍 Checking token via HTTP before WebSocket connection');
@@ -112,8 +118,8 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
         setAuthError(`Токен недействителен: ${tokenCheckResult.error}`);
         setConnectionStatus('Ошибка: недействительный токен');
         localStorage.removeItem('connection_telegram_auth');
+        isInitializingRef.current = false;
         
-        // Сбрасываем авторизацию и показываем форму входа
         if (onAuthReset) {
           onAuthReset();
         }
@@ -126,10 +132,10 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       console.log('❌ Failed to check token:', error);
       setAuthError('Ошибка при проверке токена');
       setConnectionStatus('Ошибка: проверка токена');
+      isInitializingRef.current = false;
       return;
     }
 
-    // Формируем URL с токеном и userId
     const WS_URL = `ws://localhost:4000/ws?token=${encodeURIComponent(authToken)}&userId=${encodeURIComponent(userId)}`;
     
     console.log('- WebSocket URL:', WS_URL);
@@ -141,25 +147,25 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       wsRef.current = new WebSocket(WS_URL);
 
       wsRef.current.onopen = () => {
+        console.log('✅ WebSocket connection opened successfully');
         setIsConnected(true);
         setConnectionStatus('Подключен');
+        hasConnectedRef.current = true;
+        isInitializingRef.current = false;
         addMessage('Подключение установлено', 'received');
       };
 
       wsRef.current.onmessage = (event) => {
         let messageData;
         try {
-          // Пытаемся распарсить JSON
           messageData = JSON.parse(event.data);
           
-          // Проверяем тип сообщения
           if (messageData.type === 'error') {
             const errorMessage = messageData.message || 'Ошибка авторизации';
             setAuthError(errorMessage);
             setConnectionStatus('Ошибка авторизации');
             addMessage(`Ошибка: ${errorMessage}`, 'received');
             
-            // Если ошибка связана с токеном, удаляем его из localStorage
             if (errorMessage.includes('токен') || errorMessage.includes('Токен') || 
                 errorMessage.includes('авторизации') || errorMessage.includes('Авторизации')) {
               console.log('🗑️ Removing invalid token from localStorage');
@@ -171,22 +177,21 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
             addMessage(JSON.stringify(messageData, null, 2), 'received');
           }
         } catch {
-          // Если не JSON, показываем как есть
           addMessage(event.data, 'received');
         }
       };
 
       wsRef.current.onclose = (event) => {
+        console.log('🔌 WebSocket connection closed');
         setIsConnected(false);
+        isInitializingRef.current = false;
         
         if (event.code === 1008) {
-          // Код 1008 означает ошибку авторизации
           const reason = event.reason || 'Ошибка авторизации';
           setAuthError(`Ошибка авторизации: ${reason}`);
           setConnectionStatus('Ошибка авторизации');
           addMessage(`Соединение закрыто: ${reason}`, 'received');
           
-          // Удаляем невалидный токен из localStorage
           console.log('🗑️ Removing invalid token from localStorage (close code 1008)');
           localStorage.removeItem('connection_telegram_auth');
         } else {
@@ -196,20 +201,27 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       };
 
       wsRef.current.onerror = () => {
+        console.log('❌ WebSocket connection error');
         setConnectionStatus('Ошибка подключения');
         addMessage('Ошибка подключения к серверу', 'received');
+        isInitializingRef.current = false;
       };
     } catch (error) {
+      console.log('❌ WebSocket creation failed:', error);
       setConnectionStatus('Ошибка подключения');
       addMessage(`Ошибка подключения: ${error}`, 'received');
+      isInitializingRef.current = false;
     }
   };
 
   const disconnect = () => {
+    console.log('🔌 Manual disconnect requested');
     if (wsRef.current) {
       wsRef.current.close();
       wsRef.current = null;
     }
+    isInitializingRef.current = false;
+    hasConnectedRef.current = false;
   };
 
   const addMessage = (data: string, type: 'sent' | 'received') => {
@@ -230,7 +242,11 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
   };
 
   useEffect(() => {
-    // Предотвращаем автоматическое подключение если уже есть активное соединение
+    if (hasConnectedRef.current || isInitializingRef.current) {
+      console.log('🔄 Skipping connection - already initialized or connecting');
+      return;
+    }
+
     if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
       console.log('🔌 Initializing WebSocket connection on component mount');
       connect();
@@ -244,6 +260,8 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
         wsRef.current.close();
         wsRef.current = null;
       }
+      isInitializingRef.current = false;
+      hasConnectedRef.current = false;
     };
   }, []);
 
