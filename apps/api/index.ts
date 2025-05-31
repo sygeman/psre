@@ -60,6 +60,7 @@ new Elysia()
             
             const url = new URL(ws.data?.request?.url || '');
             let token = url.searchParams.get('token');
+            let userId = url.searchParams.get('userId');
 
             if (!token) {
                 console.log('❌ No token provided');
@@ -72,9 +73,11 @@ new Elysia()
                 return;
             }
             
-            // Проверяем валидность токена
-            const authResult = verifyAuthToken(token);
+            // Проверяем валидность токена с userId
+            const userIdNumber = userId ? parseInt(userId, 10) : undefined;
+            const authResult = verifyAuthToken(token, userIdNumber);
             console.log('Token verification result:', authResult);
+            console.log('Provided userId:', userIdNumber);
             
             if (!authResult.success) {
                 console.log('❌ Token verification failed:', authResult.error);
@@ -88,11 +91,12 @@ new Elysia()
             }
             
             console.log('✅ Token verified for user:', authResult.user?.username);
+            console.log('✅ User ID verified:', authResult.user?.telegramId);
             
             // Сохраняем информацию о пользователе в контексте WebSocket
             (ws as any).user = authResult.user;
             
-            console.log(`WebSocket connection opened for user: ${authResult.user?.username}`);
+            console.log(`WebSocket connection opened for user: ${authResult.user?.username} (ID: ${authResult.user?.telegramId})`);
             ws.send({
                 type: 'welcome',
                 message: `Добро пожаловать, ${authResult.user?.username}!`,

@@ -127,8 +127,8 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       return;
     }
 
-    // Формируем URL с токеном
-    const WS_URL = `ws://localhost:4000/ws?token=${encodeURIComponent(authToken)}`;
+    // Формируем URL с токеном и userId
+    const WS_URL = `ws://localhost:4000/ws?token=${encodeURIComponent(authToken)}&userId=${encodeURIComponent(userId)}`;
     
     console.log('- WebSocket URL:', WS_URL);
     console.log('🚀 Connecting with user ID:', userId);
