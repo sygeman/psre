@@ -16,6 +16,8 @@ const bot = initializeTelegramBot();
 
 // Счетчик активных WebSocket соединений
 let activeConnections = 0;
+// Карта активных соединений по пользователям (telegramId -> WebSocket)
+const activeUserConnections = new Map<number, any>();
 
 new Elysia()
     .use(cors({
@@ -74,7 +76,7 @@ new Elysia()
                     timestamp: new Date().toISOString()
                 });
                 ws.close(1008, 'Токен авторизации не предоставлен');
-                activeConnections--;
+                activeConnections--; // Уменьшаем счетчик при неудачном подключении
                 console.log(`📊 Active connections: ${activeConnections}`);
                 return;
             }
@@ -93,7 +95,7 @@ new Elysia()
                     timestamp: new Date().toISOString()
                 });
                 ws.close(1008, authResult.error || 'Неверный токен авторизации');
-                activeConnections--;
+                activeConnections--; // Уменьшаем счетчик при неудачном подключении
                 console.log(`📊 Active connections: ${activeConnections}`);
                 return;
             }
@@ -101,10 +103,25 @@ new Elysia()
             console.log('✅ Token verified for user:', authResult.user?.username);
             console.log('✅ User ID verified:', authResult.user?.telegramId);
             
+            const telegramId = authResult.user?.telegramId;
+            
+            // Проверяем, есть ли уже активное соединение от этого пользователя
+            if (activeUserConnections.has(telegramId)) {
+                const existingWs = activeUserConnections.get(telegramId);
+                if (existingWs && existingWs.readyState === WebSocket.OPEN) {
+                    console.log(`🔄 Closing previous connection for user ${authResult.user?.username} (ID: ${telegramId})`);
+                    existingWs.close(1000, 'Новое соединение от того же пользователя');
+                }
+            }
+            
             // Сохраняем информацию о пользователе в контексте WebSocket
             (ws as any).user = authResult.user;
             
+            // Регистрируем новое соединение пользователя
+            activeUserConnections.set(telegramId, ws);
+            
             console.log(`🔗 WebSocket connection established for user: ${authResult.user?.username} (ID: ${authResult.user?.telegramId})`);
+            console.log(`👥 Unique users connected: ${activeUserConnections.size}`);
             ws.send({
                 type: 'welcome',
                 message: `Добро пожаловать, ${authResult.user?.username}!`,
@@ -115,8 +132,16 @@ new Elysia()
         close(ws) {
             activeConnections--;
             const user = (ws as any).user;
+            const telegramId = user?.telegramId;
+            
+            // Удаляем соединение пользователя из карты, если это именно это соединение
+            if (telegramId && activeUserConnections.get(telegramId) === ws) {
+                activeUserConnections.delete(telegramId);
+                console.log(`🗑️ Removed user ${user?.username} (ID: ${telegramId}) from active connections`);
+            }
+            
             console.log(`🔌 WebSocket connection closed for user: ${user?.username || 'unknown'} (ID: ${user?.telegramId || 'unknown'})`);
-            console.log(`📊 Active connections: ${activeConnections}`);
+            console.log(`📊 Active connections: ${activeConnections}, Unique users: ${activeUserConnections.size}`);
         }
     })
     .all('/api/inngest', inngestHandler) 

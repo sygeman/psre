@@ -26,7 +26,9 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
   const messageCounterRef = useRef(0);
 
   const connect = async () => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
+    // Предотвращаем множественные подключения
+    if (wsRef.current?.readyState === WebSocket.OPEN || wsRef.current?.readyState === WebSocket.CONNECTING) {
+      console.log('🔄 WebSocket already connecting/connected, skipping duplicate connection attempt');
       return;
     }
 
@@ -228,12 +230,19 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
   };
 
   useEffect(() => {
-    // Автоматическое подключение при загрузке компонента
-    connect();
+    // Предотвращаем автоматическое подключение если уже есть активное соединение
+    if (!wsRef.current || wsRef.current.readyState === WebSocket.CLOSED) {
+      console.log('🔌 Initializing WebSocket connection on component mount');
+      connect();
+    } else {
+      console.log('🔄 WebSocket already exists on component mount, skipping connection');
+    }
     
     return () => {
-      if (wsRef.current) {
+      console.log('🧹 Cleaning up WebSocket connection on component unmount');
+      if (wsRef.current && wsRef.current.readyState !== WebSocket.CLOSED) {
         wsRef.current.close();
+        wsRef.current = null;
       }
     };
   }, []);
