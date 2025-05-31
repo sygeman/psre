@@ -238,7 +238,10 @@ export default function ConnectionPage() {
             Выйти из модуля
           </Button>
         </div>
-        <WebSocketSandbox onAuthReset={handleAuthReset} />
+        <WebSocketSandbox 
+          key={userInfo?.telegramId} 
+          onAuthReset={handleAuthReset} 
+        />
       </div>
     </AdminLayout>
   );
