@@ -296,11 +296,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
   }, []);
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex flex-col p-6 space-y-6">
-      <div className="flex items-center justify-between flex-shrink-0">
-        <h1 className="text-3xl font-bold">Connection</h1>
-      </div>
-
+    <div className="h-[calc(100vh-10rem)] flex flex-col p-6 space-y-6">
       <Card className="flex-shrink-0">
         <CardHeader>
           <CardTitle>Подключение к серверу</CardTitle>

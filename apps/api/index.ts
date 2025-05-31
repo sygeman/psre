@@ -105,14 +105,14 @@ new Elysia()
             
             const telegramId = authResult.user?.telegramId;
             
-            // Проверяем, есть ли уже активное соединение от этого пользователя
-            if (activeUserConnections.has(telegramId)) {
-                const existingWs = activeUserConnections.get(telegramId);
-                if (existingWs && existingWs.readyState === WebSocket.OPEN) {
-                    console.log(`🔄 Closing previous connection for user ${authResult.user?.username} (ID: ${telegramId})`);
-                    existingWs.close(1000, 'Новое соединение от того же пользователя');
-                }
-            }
+            // // Проверяем, есть ли уже активное соединение от этого пользователя
+            // if (activeUserConnections.has(telegramId)) {
+            //     const existingWs = activeUserConnections.get(telegramId);
+            //     if (existingWs && existingWs.readyState === WebSocket.OPEN) {
+            //         console.log(`🔄 Closing previous connection for user ${authResult.user?.username} (ID: ${telegramId})`);
+            //         existingWs.close(1000, 'Новое соединение от того же пользователя');
+            //     }
+            // }
             
             // Сохраняем информацию о пользователе в контексте WebSocket
             (ws as any).user = authResult.user;
