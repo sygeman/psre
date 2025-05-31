@@ -190,22 +190,21 @@ export default function ConnectionPage() {
                 <div className="space-y-3">
                   <div>
                     <Label htmlFor="code">Код авторизации из Telegram</Label>
-                    <div className="flex justify-center">
-                      <InputOTP
-                        maxLength={6}
-                        value={authCode}
-                        onChange={(value) => setAuthCode(value)}
-                      >
-                        <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
-                        </InputOTPGroup>
-                      </InputOTP>
-                    </div>
+                    <InputOTP
+                      maxLength={6}
+                      value={authCode}
+                      onChange={(value) => setAuthCode(value)}
+                      className="w-full"
+                    >
+                      <InputOTPGroup className="w-full justify-center">
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
                   </div>
                   <Button 
                     onClick={verifyCode} 
