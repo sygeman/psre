@@ -168,22 +168,18 @@ export default function ConnectionPage() {
               <CardTitle>Авторизация через Telegram</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Для доступа к модулю &ldquo;Соединение&rdquo; получите код авторизации в Telegram боте.
-              </p>
-
-                <div className="space-y-3">
-                  <Button 
-                    onClick={() => window.open(`https://t.me/sgmn_dev_bot`, '_blank')}
-                    className="w-full"
-                  >
-                    🚀 Открыть бота @sgmn_dev_bot
-                  </Button>
-                  
-                  <div className="text-center text-sm text-muted-foreground">
-                    Отправьте боту команду /start для получения кода
-                  </div>
+              <div className="space-y-3">
+                <Button 
+                  onClick={() => window.open(`https://t.me/sgmn_dev_bot`, '_blank')}
+                  className="w-full"
+                >
+                  🚀 Открыть бота @sgmn_dev_bot
+                </Button>
+                
+                <div className="text-center text-sm text-muted-foreground">
+                  Отправьте боту команду /start для получения кода
                 </div>
+              </div>
           
 
               <div className="border-t pt-4">
