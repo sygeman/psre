@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Label } from '@/components/ui/label';
 
 interface User {
@@ -158,15 +158,22 @@ export function TelegramAuth({ onSuccess }: TelegramAuthProps) {
 
           <div className="space-y-2">
             <Label htmlFor="code">Код авторизации</Label>
-            <Input
-              id="code"
-              type="text"
-              placeholder="Введите 6-значный код"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              maxLength={6}
-              className="text-center text-lg tracking-widest"
-            />
+            <div className="flex justify-center">
+              <InputOTP
+                maxLength={6}
+                value={code}
+                onChange={(value) => setCode(value)}
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+            </div>
           </div>
 
           <Button 

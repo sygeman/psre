@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 
 const WebSocketSandbox = dynamic(() => import('./components/websocket-sandbox').then(mod => ({ default: mod.WebSocketSandbox })), {
   ssr: false,
@@ -190,15 +190,22 @@ export default function ConnectionPage() {
                 <div className="space-y-3">
                   <div>
                     <Label htmlFor="code">Код авторизации из Telegram</Label>
-                    <Input
-                      id="code"
-                      type="text"
-                      value={authCode}
-                      onChange={(e) => setAuthCode(e.target.value)}
-                      placeholder="Введите 6-значный код"
-                      maxLength={6}
-                      required
-                    />
+                    <div className="flex justify-center">
+                      <InputOTP
+                        maxLength={6}
+                        value={authCode}
+                        onChange={(value) => setAuthCode(value)}
+                      >
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+                    </div>
                   </div>
                   <Button 
                     onClick={verifyCode} 
