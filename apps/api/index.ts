@@ -57,32 +57,10 @@ new Elysia()
         },
         open(ws) {
             console.log('WebSocket connection opened');
-            console.log('- WS data:', ws.data);
-            console.log('- WS raw data:', JSON.stringify(ws.data, null, 2));
             
-            // Пытаемся разными способами получить токен
-            let token = null;
-            
-            // Способ 1: из ws.data
-            if (ws.data?.query?.token) {
-                token = ws.data.query.token;
-                console.log('Token found in ws.data.query:', token);
-            }
-            
-            // Способ 2: из URL если есть
-            try {
-                const url = new URL(ws.data?.request?.url || '');
-                const urlToken = url.searchParams.get('token');
-                if (urlToken) {
-                    token = urlToken;
-                    console.log('Token found in URL:', token);
-                }
-            } catch (e) {
-                console.log('Failed to parse URL:', e);
-            }
-            
-            console.log('Final token:', token);
-            
+            const url = new URL(ws.data?.request?.url || '');
+            let token = url.searchParams.get('token');
+
             if (!token) {
                 console.log('❌ No token provided');
                 ws.send({
