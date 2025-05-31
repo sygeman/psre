@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,6 +15,12 @@ const modules = [
     title: "Игры",
     items: [
       { id: "slots", name: "Слоты", href: "/modules/slots" },
+    ]
+  },
+  {
+    title: "Песочница",
+    items: [
+      { id: "connection", name: "Соединение", href: "/modules/connection" },
     ]
   }
 ];
@@ -48,6 +55,9 @@ const RewardRow = ({ icon, name, min, max }: { icon: string; name: string; min: 
 );
 
 export function AdminLayout({ children }: AdminLayoutProps) {
+  const pathname = usePathname();
+  const showRightPanel = pathname?.includes('/modules/slots');
+
   // Лог изменений состояния
   const activityLog = [
     "Алмазы: 500 → 600 (+100)",
@@ -134,7 +144,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                       <Link
                         key={item.id}
                         href={item.href}
-                        className="block px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                        className={`block px-3 py-2 text-sm rounded-md transition-colors ${
+                          pathname === item.href
+                            ? 'bg-accent text-accent-foreground font-medium'
+                            : 'hover:bg-accent hover:text-accent-foreground'
+                        }`}
                       >
                         {item.name}
                       </Link>
@@ -152,82 +166,84 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         </main>
 
         {/* Right Panel */}
-        <aside className="w-72 border-l border-border bg-card min-h-[calc(100vh-4rem)]">
-          <div className="p-3">
-            <Tabs defaultValue="module" className="h-full">
-              <TabsList className="grid w-full grid-cols-2 mb-4">
-                <TabsTrigger value="module" className="text-xs">Модуль</TabsTrigger>
-                <TabsTrigger value="account" className="text-xs">Аккаунт</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="module" className="space-y-4">
-                <div>
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-3">
-                    СЛОТЫ
-                  </h3>
-                  
-                  <div className="space-y-2">
-                    <SettingRow label="Шанс ресурсов" value={moduleSettings.regularChance} unit="%" />
-                    <SettingRow label="Шанс алмазов" value={moduleSettings.diamondChance} unit="%" />
-                    <SettingRow label="Макс. попыток" value={moduleSettings.maxAttempts} />
-                    <SettingRow label="Восстановление" value={moduleSettings.restoreTime} unit="с" />
-                    <SettingRow label="Длительность" value={moduleSettings.duration} unit="мс" />
+        {showRightPanel && (
+          <aside className="w-72 border-l border-border bg-card min-h-[calc(100vh-4rem)]">
+            <div className="p-3">
+              <Tabs defaultValue="module" className="h-full">
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="module" className="text-xs">Модуль</TabsTrigger>
+                  <TabsTrigger value="account" className="text-xs">Аккаунт</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="module" className="space-y-4">
+                  <div>
+                    <h3 className="text-xs font-semibold text-muted-foreground mb-3">
+                      СЛОТЫ
+                    </h3>
                     
-                    <div className="px-2 py-1.5 bg-slate-800/30 rounded">
-                      <Label className="text-xs text-muted-foreground mb-1 block">Награды:</Label>
+                    <div className="space-y-2">
+                      <SettingRow label="Шанс ресурсов" value={moduleSettings.regularChance} unit="%" />
+                      <SettingRow label="Шанс алмазов" value={moduleSettings.diamondChance} unit="%" />
+                      <SettingRow label="Макс. попыток" value={moduleSettings.maxAttempts} />
+                      <SettingRow label="Восстановление" value={moduleSettings.restoreTime} unit="с" />
+                      <SettingRow label="Длительность" value={moduleSettings.duration} unit="мс" />
+                      
+                      <div className="px-2 py-1.5 bg-slate-800/30 rounded">
+                        <Label className="text-xs text-muted-foreground mb-1 block">Награды:</Label>
+                        <div className="space-y-1">
+                          {rewards.map((reward) => (
+                            <RewardRow 
+                              key={reward.name}
+                              icon={reward.icon}
+                              name={reward.name}
+                              min={reward.min}
+                              max={reward.max}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="account" className="space-y-4">
+                  {/* Лог активности */}
+                  <div>
+                    <h3 className="text-xs font-semibold text-muted-foreground mb-3">
+                      ИЗМЕНЕНИЯ СОСТОЯНИЯ
+                    </h3>
+                    <div className="bg-slate-800/30 rounded p-2 h-32 overflow-y-auto">
                       <div className="space-y-1">
-                        {rewards.map((reward) => (
-                          <RewardRow 
-                            key={reward.name}
-                            icon={reward.icon}
-                            name={reward.name}
-                            min={reward.min}
-                            max={reward.max}
-                          />
+                        {activityLog.map((entry, index) => (
+                          <div key={index} className="text-xs text-slate-300">
+                            {entry}
+                          </div>
                         ))}
                       </div>
                     </div>
                   </div>
-                </div>
-              </TabsContent>
 
-              <TabsContent value="account" className="space-y-4">
-                {/* Лог активности */}
-                <div>
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-3">
-                    ИЗМЕНЕНИЯ СОСТОЯНИЯ
-                  </h3>
-                  <div className="bg-slate-800/30 rounded p-2 h-32 overflow-y-auto">
-                    <div className="space-y-1">
-                      {activityLog.map((entry, index) => (
-                        <div key={index} className="text-xs text-slate-300">
-                          {entry}
-                        </div>
+                  <div>
+                    <h3 className="text-xs font-semibold text-muted-foreground mb-3">
+                      РЕСУРСЫ
+                    </h3>
+                    
+                    <div className="space-y-2">
+                      {resources.map((resource) => (
+                        <ResourceRow
+                          key={resource.key}
+                          icon={resource.icon}
+                          name={resource.name}
+                          value={accountData[resource.key]}
+                        />
                       ))}
                     </div>
                   </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xs font-semibold text-muted-foreground mb-3">
-                    РЕСУРСЫ
-                  </h3>
-                  
-                  <div className="space-y-2">
-                    {resources.map((resource) => (
-                      <ResourceRow
-                        key={resource.key}
-                        icon={resource.icon}
-                        name={resource.name}
-                        value={accountData[resource.key]}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </aside>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </aside>
+        )}
       </div>
     </div>
   );
