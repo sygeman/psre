@@ -187,11 +187,11 @@ export default function ConnectionPage() {
                   <div className="space-y-2">
                     <Label htmlFor="code" className="text-center block">Код авторизации из Telegram</Label>
                     <InputOTP
-                      maxLength={6}
+                      maxLength={8}
                       value={authCode}
                       onChange={(value) => setAuthCode(value)}
                       onComplete={(value) => {
-                        if (value.length === 6) {
+                        if (value.length === 8) {
                           verifyCode();
                         }
                       }}
@@ -204,6 +204,8 @@ export default function ConnectionPage() {
                         <InputOTPSlot index={3} />
                         <InputOTPSlot index={4} />
                         <InputOTPSlot index={5} />
+                        <InputOTPSlot index={6} />
+                        <InputOTPSlot index={7} />
                       </InputOTPGroup>
                     </InputOTP>
                     {isVerifying && (
