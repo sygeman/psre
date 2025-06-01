@@ -1,10 +1,10 @@
-import { readItems, updateItem } from "@directus/sdk";
+import { createItem, readItems, updateItem } from "@directus/sdk";
 import { directus } from "../directus";
 
 type VerifyAuthCodeResponse = { 
     success: boolean;
     user?: {
-        telegramId: number;
+        userId: string;
         authToken: string;
     };
     error?: string;
@@ -35,16 +35,31 @@ export async function verifyAuthCode(code: string): Promise<VerifyAuthCodeRespon
     }
 
     // Аккаунт подтвержден, создаем пользователя, если нет
+    const usersData = await directus.request(readItems('psre_users', {
+        filter: {
+            telegram_id: { _eq: tokenData.telegramId },
+        },
+    }));
+
+    let userData = usersData[0];
+
+    if (!userData) {
+        userData = await directus.request(createItem('psre_users', {
+            telegram_id: tokenData.telegramId,
+        }));
+    }
+
     await directus.request(updateItem('psre_auth_tokens', tokenData.id, {
         code: null,
         verify: true,
+        user: userData.id,
     }));
 
 
     return {
         success: true,
         user: {
-            telegramId: tokenData.telegramId,
+            userId: userData.id,
             authToken: tokenData.id,
         }
     };

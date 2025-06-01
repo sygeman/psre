@@ -64,7 +64,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       console.log('- Parsed user:', user);
       console.log('- Timestamp:', timestamp);
       console.log('- Token from user:', user.authToken);
-      console.log('- User ID from user:', user.telegramId);
+      console.log('- User ID from user:', user.userId);
       
       if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
         setAuthError('Токен авторизации истек. Пожалуйста, авторизуйтесь заново.');
@@ -79,7 +79,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
       }
       
       authToken = user.authToken;
-      userId = user.telegramId;
+      userId = user.userId;
       console.log('- Final token to use:', authToken);
       console.log('- Final user ID to use:', userId);
     } catch {

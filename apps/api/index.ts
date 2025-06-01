@@ -23,7 +23,7 @@ new Elysia()
         return verifyAuthCode(code);
     })
     // API для проверки валидности токена
-    .post('/api/auth/telegram/check', async ({ body: { token, userId } }: { body: { token: string; userId: number } }) => {
+    .post('/api/auth/telegram/check', async ({ body: { token, userId } }: { body: { token: string; userId: string } }) => {
         return checkAuthToken(token, userId);
     })
     .ws('/ws', {
@@ -40,7 +40,7 @@ new Elysia()
         async open(ws) {
             const url = new URL(ws.data?.request?.url || '');
             let token = url.searchParams.get('token');
-            let userId = Number(url.searchParams.get('userId'));
+            let userId = url.searchParams.get('userId');
 
             if (!token || !userId) {
                 console.log('❌ No token or userId provided');
@@ -66,14 +66,14 @@ new Elysia()
                 return;
             }
             
-            console.log('✅ User ID verified:', authResult.user?.telegramId);
+            console.log('✅ User ID verified:', authResult.user?.userId);
                         
             // Сохраняем информацию о пользователе в контексте WebSocket
             (ws as any).user = authResult.user;
             
             // Регистрируем новое соединение пользователя
             
-            console.log(`🔗 WebSocket connection established for user: (ID: ${authResult.user?.telegramId})`);
+            console.log(`🔗 WebSocket connection established for user: (ID: ${authResult.user?.userId})`);
             ws.send({
                 type: 'welcome',
                 message: `Добро пожаловать!`,

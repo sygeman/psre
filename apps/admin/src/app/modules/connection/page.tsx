@@ -19,7 +19,7 @@ export default function ConnectionPage() {
   const [authCode, setAuthCode] = useState('');
   const [authError, setAuthError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
-  const [userInfo, setUserInfo] = useState<{ telegramId: number; authToken: string } | null>(null);
+  const [userInfo, setUserInfo] = useState<{ userId: string; authToken: string } | null>(null);
 
   useEffect(() => {
     checkAuthStatus();
@@ -59,7 +59,7 @@ export default function ConnectionPage() {
         },
         body: JSON.stringify({ 
           token: user.authToken,
-          userId: user.telegramId 
+          userId: user.userId 
         }),
       });
 
@@ -67,7 +67,7 @@ export default function ConnectionPage() {
       
       if (result.success) {
         console.log('✅ Stored token is valid');
-        console.log('📋 User ID:', user.telegramId);
+        console.log('📋 User ID:', user.userId);
         setIsAuthorized(true);
         setUserInfo(user);
       } else {
@@ -113,7 +113,7 @@ export default function ConnectionPage() {
         // Сохраняем авторизационные данные
         localStorage.setItem('connection_telegram_auth', JSON.stringify(authInfo));
         
-        console.log('💾 Saved auth data for user ID:', data.user.telegramId);
+        console.log('💾 Saved auth data for user ID:', data.user.userId);
         
         setIsAuthorized(true);
         setUserInfo(data.user);
@@ -237,7 +237,7 @@ export default function ConnectionPage() {
             <h2 className="text-lg font-semibold">Модуль соединения</h2>
             {userInfo && (
               <p className="text-sm text-muted-foreground">
-                Авторизован как: (ID: {userInfo.telegramId})
+                Авторизован как: (ID: {userInfo.userId})
               </p>
             )}
           </div>
@@ -246,7 +246,7 @@ export default function ConnectionPage() {
           </Button>
         </div>
         <WebSocketSandbox 
-          key={userInfo?.telegramId} 
+          key={userInfo?.userId} 
           onAuthReset={handleAuthReset} 
         />
       </div>

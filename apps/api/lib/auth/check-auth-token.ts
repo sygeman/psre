@@ -4,16 +4,14 @@ import { directus } from "../directus";
 type CheckAuthTokenResponse = {
     success: boolean;
     user?: {
-        telegramId: number;
+        userId: string;
         authToken: string;
     };
     error?: string;
 }
 
-export async function checkAuthToken(token: string, userId: number): Promise<CheckAuthTokenResponse> {
-    const telegramId = Number(userId);
-
-    if (!token || !telegramId) {
+export async function checkAuthToken(token: string, userId: string): Promise<CheckAuthTokenResponse> {
+    if (!token || !userId) {
         return { 
             success: false, 
             error: 'Токен или ID пользователя не предоставлен' 
@@ -23,7 +21,7 @@ export async function checkAuthToken(token: string, userId: number): Promise<Che
     const tokensData = await directus.request(readItems('psre_auth_tokens', {
         filter: {
             id: { _eq: token },
-            telegramId: { _eq: telegramId },
+            user: { _eq: userId },
             verify: { _eq: true },
         },
     }));
@@ -40,7 +38,7 @@ export async function checkAuthToken(token: string, userId: number): Promise<Che
     return {
         success: true,
         user: {
-            telegramId: tokenData.telegramId,
+            userId: tokenData.user,
             authToken: tokenData.id,
         }
     };
