@@ -19,7 +19,7 @@ export default function ConnectionPage() {
   const [authCode, setAuthCode] = useState('');
   const [authError, setAuthError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
-  const [userInfo, setUserInfo] = useState<{ telegramId: number; username: string; authToken: string } | null>(null);
+  const [userInfo, setUserInfo] = useState<{ telegramId: number; authToken: string } | null>(null);
 
   useEffect(() => {
     checkAuthStatus();
@@ -237,7 +237,7 @@ export default function ConnectionPage() {
             <h2 className="text-lg font-semibold">Модуль соединения</h2>
             {userInfo && (
               <p className="text-sm text-muted-foreground">
-                Авторизован как: @{userInfo.username} (ID: {userInfo.telegramId})
+                Авторизован как: (ID: {userInfo.telegramId})
               </p>
             )}
           </div>

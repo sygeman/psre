@@ -66,7 +66,6 @@ new Elysia()
                 return;
             }
             
-            console.log('✅ Token verified for user:', authResult.user?.username);
             console.log('✅ User ID verified:', authResult.user?.telegramId);
                         
             // Сохраняем информацию о пользователе в контексте WebSocket
@@ -74,10 +73,10 @@ new Elysia()
             
             // Регистрируем новое соединение пользователя
             
-            console.log(`🔗 WebSocket connection established for user: ${authResult.user?.username} (ID: ${authResult.user?.telegramId})`);
+            console.log(`🔗 WebSocket connection established for user: (ID: ${authResult.user?.telegramId})`);
             ws.send({
                 type: 'welcome',
-                message: `Добро пожаловать, ${authResult.user?.username}!`,
+                message: `Добро пожаловать!`,
                 user: authResult.user,
                 timestamp: new Date().toISOString()
             });
@@ -85,7 +84,7 @@ new Elysia()
         close(ws) {
             const user = (ws as any).user;
             
-            console.log(`🔌 WebSocket connection closed for user: ${user?.username || 'unknown'} (ID: ${user?.telegramId || 'unknown'})`);
+            console.log(`🔌 WebSocket connection closed for user: (ID: ${user?.telegramId || 'unknown'})`);
         }
     })
     .all('/api/inngest', inngestHandler) 

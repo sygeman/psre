@@ -5,7 +5,6 @@ type VerifyAuthCodeResponse = {
     success: boolean;
     user?: {
         telegramId: number;
-        username: string;
         authToken: string;
     };
     error?: string;
@@ -35,6 +34,7 @@ export async function verifyAuthCode(code: string): Promise<VerifyAuthCodeRespon
         };
     }
 
+    // Аккаунт подтвержден, создаем пользователя, если нет
     await directus.request(updateItem('psre_auth_tokens', tokenData.id, {
         code: null,
         verify: true,
@@ -45,7 +45,6 @@ export async function verifyAuthCode(code: string): Promise<VerifyAuthCodeRespon
         success: true,
         user: {
             telegramId: tokenData.telegramId,
-            username: tokenData.username,
             authToken: tokenData.id,
         }
     };

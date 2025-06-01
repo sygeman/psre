@@ -24,18 +24,16 @@ export function initializeTelegramBot(): Bot | null {
   // Обработка команды /start
   bot.command('start', async (ctx) => {
     const chatId = ctx.chat.id;
-    const username = ctx.from?.username || `user_${chatId}`;
 
-    const authCode = await generateAuthToken(chatId, username);
+    const authCode = await generateAuthToken(chatId);
     await ctx.reply(authCodeReply(authCode), { parse_mode: 'Markdown' });
   });
   
   // Команда для получения нового кода
   bot.command('auth', async (ctx) => {
     const chatId = ctx.chat.id;
-    const username = ctx.from?.username || `user_${chatId}`;
 
-    const authCode = await generateAuthToken(chatId, username);
+    const authCode = await generateAuthToken(chatId);
     await ctx.reply(authCodeReply(authCode), { parse_mode: 'Markdown' });
   });
   

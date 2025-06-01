@@ -183,7 +183,7 @@ export function WebSocketSandbox({ onAuthReset }: WebSocketSandboxProps) {
               localStorage.removeItem('connection_telegram_auth');
             }
           } else if (messageData.type === 'welcome') {
-            addMessage(`Добро пожаловать, ${messageData.user?.username}! (ID: ${userId})`, 'received');
+            addMessage(`Добро пожаловать! (ID: ${userId})`, 'received');
           } else {
             addMessage(JSON.stringify(messageData, null, 2), 'received');
           }

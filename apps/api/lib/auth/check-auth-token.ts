@@ -5,7 +5,6 @@ type CheckAuthTokenResponse = {
     success: boolean;
     user?: {
         telegramId: number;
-        username: string;
         authToken: string;
     };
     error?: string;
@@ -42,7 +41,6 @@ export async function checkAuthToken(token: string, userId: number): Promise<Che
         success: true,
         user: {
             telegramId: tokenData.telegramId,
-            username: tokenData.username,
             authToken: tokenData.id,
         }
     };
