@@ -8,7 +8,7 @@ let bot: Bot | null = null;
 const authCodeReply = (code: string) => '🔐 Ваш код для входа:\n\n' +
       `\`${code}\`\n\n` +
       '📋 Скопируйте этот код и введите в форме входа.\n\n' +
-      '⏰ Код действителен 5 минут.\n\n' +
+      '⏰ Код действителен 1 минуту.\n\n' +
       '🔄 Для получения нового кода отправьте /auth'
 
 export function initializeTelegramBot(): Bot | null {
