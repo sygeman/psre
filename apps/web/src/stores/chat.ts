@@ -1,4 +1,6 @@
 import { createStore } from "solid-js/store";
+import { createSignal } from 'solid-js';
+import { CURRENT_ACCOUNT_ID } from '@/constants/app';
 
 export type ChatChannel = 'region' | 'alliance';
 
@@ -12,7 +14,10 @@ export interface Message {
   channel: ChatChannel;
 }
 
-const currentAccountId = 'ba12e291-2e9c-452e-ae06-81c1a885390e';
+const [isOpen, setIsOpen] = createSignal(false);
+const [currentMessage, setCurrentMessage] = createSignal('');
+
+const currentAccountId = CURRENT_ACCOUNT_ID;
 
 const transformMessages = (messages: any[], channel: ChatChannel): Message[] => {
   return messages.map((msg) => ({

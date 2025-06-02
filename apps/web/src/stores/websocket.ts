@@ -1,6 +1,7 @@
 import { createStore } from 'solid-js/store';
 import { createEffect, onCleanup } from 'solid-js';
 import { authStore } from './auth';
+import { API_BASE_URL, WS_BASE_URL, WS_RECONNECT_DELAY } from '@/constants/app';
 
 export interface WebSocketMessage {
   id: string;
@@ -31,8 +32,6 @@ let messageCounter = 0;
 let isInitializing = false;
 let hasConnected = false;
 let reconnectTimeout: number | undefined;
-
-const WS_BASE_URL = 'ws://localhost:4000/ws';
 
 // Функция добавления сообщения в лог
 const addMessage = (data: string, type: 'sent' | 'received') => {
@@ -91,7 +90,7 @@ const connect = async (): Promise<boolean> => {
     setWsState('connectionStatus', 'Проверка токена...');
     console.log('🔍 Checking token via HTTP before WebSocket connection');
     
-    const tokenCheckResponse = await fetch('http://localhost:4000/api/auth/telegram/check', {
+    const tokenCheckResponse = await fetch(`${API_BASE_URL}/auth/telegram/check`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -206,12 +205,12 @@ const connect = async (): Promise<boolean> => {
         
         // Автоматическое переподключение если было соединение
         if (hasConnected && authStore.isAuthorized) {
-          console.log('🔄 Scheduling reconnection in 3 seconds...');
+          console.log(`🔄 Scheduling reconnection in ${WS_RECONNECT_DELAY / 1000} seconds...`);
           reconnectTimeout = window.setTimeout(() => {
             if (authStore.isAuthorized) {
               connect();
             }
-          }, 3000);
+          }, WS_RECONNECT_DELAY);
         }
       }
     };
@@ -227,10 +226,10 @@ const connect = async (): Promise<boolean> => {
 
     return true;
   } catch (error) {
-    console.error('❌ Failed to create WebSocket connection:', error);
+    console.error('🚨 Error creating WebSocket connection:', error);
     setWsState({
-      connectionError: 'Не удалось создать WebSocket соединение',
-      connectionStatus: 'Ошибка: создание соединения',
+      connectionError: 'Ошибка создания соединения WebSocket',
+      connectionStatus: 'Ошибка создания соединения',
     });
     isInitializing = false;
     return false;

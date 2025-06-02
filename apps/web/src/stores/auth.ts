@@ -1,4 +1,5 @@
 import { createStore } from 'solid-js/store';
+import { API_BASE_URL, AUTH_STORAGE_KEY } from '@/constants/app';
 
 export interface TelegramUser {
   userId: string;
@@ -23,11 +24,6 @@ const [authState, setAuthState] = createStore<AuthState>({
   userInfo: null,
 });
 
-// Константы
-const AUTH_STORAGE_KEY = 'connection_telegram_auth';
-const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 часа
-const API_BASE = 'http://localhost:4000/api';
-
 // Функция проверки статуса авторизации
 const checkAuthStatus = async (): Promise<boolean> => {
   setAuthState('isLoading', true);
@@ -44,17 +40,9 @@ const checkAuthStatus = async (): Promise<boolean> => {
 
     const authData: AuthData = JSON.parse(storedAuth);
     
-    // Проверяем срок действия сессии
-    if (Date.now() - authData.timestamp > SESSION_DURATION) {
-      console.log('🔍 Stored auth expired');
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-      setAuthState('isAuthorized', false);
-      return false;
-    }
-
     // Проверяем токен через HTTP API
     console.log('🔍 Checking stored token via HTTP');
-    const response = await fetch(`${API_BASE}/auth/telegram/check`, {
+    const response = await fetch(`${API_BASE_URL}/auth/telegram/check`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -98,7 +86,7 @@ const verifyCode = async (code: string): Promise<{ success: boolean; error?: str
   }
 
   try {
-    const response = await fetch(`${API_BASE}/auth/telegram/verify`, {
+    const response = await fetch(`${API_BASE_URL}/auth/telegram/verify`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
