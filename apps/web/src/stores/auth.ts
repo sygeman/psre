@@ -82,18 +82,18 @@ const verifyCode = async (code: string): Promise<{ success: boolean; error?: str
 
     if (result.success && result.data) {
       const authInfo: AuthData = {
-        user: result.data.user,
+        user: result.data,
         timestamp: Date.now()
       };
       
       // Сохраняем авторизационные данные
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authInfo));
       
-      console.log('💾 Saved auth data for user ID:', result.data.user.userId);
+      console.log('💾 Saved auth data for user ID:', result.data.userId);
       
       setAuthState({
         isAuthorized: true,
-        userInfo: result.data.user,
+        userInfo: result.data,
       });
       return { success: true };
     } else {

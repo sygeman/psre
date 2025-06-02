@@ -3,7 +3,7 @@ import { directus } from "../directus";
 
 type CheckAuthTokenResponse = {
     success: boolean;
-    user?: {
+    data?: {
         userId: string;
         authToken: string;
     };
@@ -37,7 +37,7 @@ export async function checkAuthToken(token: string, userId: string): Promise<Che
 
     return {
         success: true,
-        user: {
+        data: {
             userId: tokenData.user,
             authToken: tokenData.id,
         }

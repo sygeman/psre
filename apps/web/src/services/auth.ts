@@ -1,8 +1,8 @@
 import { apiClient, ApiResponse } from './api';
-import { TelegramUser } from '@/stores/auth';
 
 export interface AuthVerifyResponse {
-  user: TelegramUser;
+  authToken: string;
+  userId: string;
 }
 
 export interface AuthCheckRequest {

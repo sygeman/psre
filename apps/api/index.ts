@@ -66,18 +66,18 @@ new Elysia()
                 return;
             }
             
-            console.log('✅ User ID verified:', authResult.user?.userId);
+            console.log('✅ User ID verified:', authResult.data?.userId);
                         
             // Сохраняем информацию о пользователе в контексте WebSocket
-            (ws as any).user = authResult.user;
+            (ws as any).user = authResult.data;
             
             // Регистрируем новое соединение пользователя
             
-            console.log(`🔗 WebSocket connection established for user: (ID: ${authResult.user?.userId})`);
+            console.log(`🔗 WebSocket connection established for user: (ID: ${authResult.data?.userId})`);
             ws.send({
                 type: 'welcome',
                 message: `Добро пожаловать!`,
-                user: authResult.user,
+                user: authResult.data,
                 timestamp: new Date().toISOString()
             });
         },

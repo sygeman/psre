@@ -5,12 +5,7 @@ import { chatStore } from '@/stores/chat';
 import { accountStateSubscription } from '@/subscriptions/account-state';
 import { chatSubscription } from '@/subscriptions/chat';
 import { initAllianceHelp } from '@/stores/alliance';
-import { websocketStore } from '@/stores/websocket';
 import { authStore } from '@/stores/auth';
-
-export const sendWebSocketMessage = (message: any) => {
-  return websocketStore.sendMessage(message);
-};
 
 export const initializeApp = async () => {
   authStore.initAuthStore();
@@ -45,10 +40,6 @@ export const initializeApp = async () => {
 
     // Инициализация увеличения помощи альянса
     initAllianceHelp();
-
-    // WebSocket будет автоматически подключаться при авторизации через authStore/websocketStore
-    console.log('✅ App initialized successfully');
-    console.log('🔗 WebSocket connection will be managed by auth system');
 
     return true;
   } catch (error) {

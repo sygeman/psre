@@ -24,7 +24,6 @@ import ConnectionOverlay from '@/components/connection-overlay';
 
 const App = () => {
   onMount(() => {
-    // Инициализируем auth store при загрузке приложения
     initializeApp();
   });
 

@@ -3,7 +3,7 @@ import { directus } from "../directus";
 
 type VerifyAuthCodeResponse = { 
     success: boolean;
-    user?: {
+    data?: {
         userId: string;
         authToken: string;
     };
@@ -58,7 +58,7 @@ export async function verifyAuthCode(code: string): Promise<VerifyAuthCodeRespon
 
     return {
         success: true,
-        user: {
+        data: {
             userId: userData.id,
             authToken: tokenData.id,
         }
