@@ -29,27 +29,43 @@ const App = () => {
 
   return (
     <Show
-      when={authStore.isAuthorized}
-      fallback={<TelegramAuth />}
+      when={authStore.isLoading}
+      fallback={
+        <Show
+          when={authStore.isAuthorized}
+          fallback={<TelegramAuth />}
+        >
+          <Router>
+            <Route path="/" component={HomePage} />
+            <Route path="/armory" component={ArmoryPage} />
+            <Route path="/region" component={RegionPage} />
+            <Route path="/heroes" component={HeroesPage} />
+            <Route path="/mail" component={MailPage} />
+            <Route path="/vip" component={VipPage} />
+            <Route path="/shop" component={ShopPage} />
+            <Route path="/person" component={PersonPage} />
+            <Route path="/chat" component={ChatPage} />
+            <Route path="/rank" component={RankPage} />
+            <Route path="/quests" component={QuestsPage} />
+            <Route path="/alliance" component={AlliancePage} />
+            <Route path="/mini-games">
+              <Route path="/" component={MiniGames} />
+              <Route path="/slots" component={SlotsPage} />
+            </Route>
+          </Router>
+        </Show>
+      }
     >
-      <Router>
-        <Route path="/" component={HomePage} />
-        <Route path="/armory" component={ArmoryPage} />
-        <Route path="/region" component={RegionPage} />
-        <Route path="/heroes" component={HeroesPage} />
-        <Route path="/mail" component={MailPage} />
-        <Route path="/vip" component={VipPage} />
-        <Route path="/shop" component={ShopPage} />
-        <Route path="/person" component={PersonPage} />
-        <Route path="/chat" component={ChatPage} />
-        <Route path="/rank" component={RankPage} />
-        <Route path="/quests" component={QuestsPage} />
-        <Route path="/alliance" component={AlliancePage} />
-        <Route path="/mini-games">
-          <Route path="/" component={MiniGames} />
-          <Route path="/slots" component={SlotsPage} />
-        </Route>
-      </Router>
+      {/* Лоадер при проверке авторизации */}
+      <div class="min-h-screen flex items-center justify-center bg-gray-50">
+        <div class="text-center space-y-4">
+          <div class="flex justify-center">
+            <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+          </div>
+          <h2 class="text-xl font-semibold text-gray-700">Загрузка приложения</h2>
+          <p class="text-gray-500">Проверка авторизации...</p>
+        </div>
+      </div>
     </Show>
   );
 };
