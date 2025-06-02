@@ -1,5 +1,4 @@
 import { createStore } from "solid-js/store";
-import { createSignal } from 'solid-js';
 import { CURRENT_ACCOUNT_ID } from '@/constants/app';
 
 export type ChatChannel = 'region' | 'alliance';
@@ -13,9 +12,6 @@ export interface Message {
   avatar: string;
   channel: ChatChannel;
 }
-
-const [isOpen, setIsOpen] = createSignal(false);
-const [currentMessage, setCurrentMessage] = createSignal('');
 
 const currentAccountId = CURRENT_ACCOUNT_ID;
 
