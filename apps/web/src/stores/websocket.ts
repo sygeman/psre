@@ -1,50 +1,33 @@
 import { createStore } from 'solid-js/store';
 import { createEffect, onCleanup } from 'solid-js';
 import { authStore } from './auth';
-import { API_BASE_URL, WS_BASE_URL, WS_RECONNECT_DELAY } from '@/constants/app';
+import { WS_BASE_URL, WS_RECONNECT_DELAY } from '@/constants/app';
+import { authService } from '@/services/auth';
 
-export interface WebSocketMessage {
-  id: string;
-  timestamp: string;
-  timestampMs: number;
-  type: 'sent' | 'received';
-  data: string;
+export enum WebSocketStatus {
+  Disconnected = 'disconnected',
+  Connecting = 'connecting',
+  Connected = 'connected',
+  Error = 'error',
+  Reconnecting = 'reconnecting',
 }
 
 interface WebSocketState {
-  isConnected: boolean;
-  connectionStatus: string;
-  messages: WebSocketMessage[];
-  connectionError: string;
+  status: WebSocketStatus;
+  errorMessage: string;
 }
 
 // Создаем store
 const [wsState, setWsState] = createStore<WebSocketState>({
-  isConnected: false,
-  connectionStatus: 'Отключен',
-  messages: [],
-  connectionError: '',
+  status: WebSocketStatus.Disconnected,
+  errorMessage: '',
 });
 
 // Приватные переменные
 let ws: WebSocket | null = null;
-let messageCounter = 0;
 let isInitializing = false;
 let hasConnected = false;
 let reconnectTimeout: number | undefined;
-
-// Функция добавления сообщения в лог
-const addMessage = (data: string, type: 'sent' | 'received') => {
-  const message: WebSocketMessage = {
-    id: `msg-${++messageCounter}`,
-    timestamp: new Date().toISOString(),
-    timestampMs: Date.now(),
-    type,
-    data
-  };
-  
-  setWsState('messages', prev => [...prev, message]);
-};
 
 // Функция подключения WebSocket
 const connect = async (): Promise<boolean> => {
@@ -59,14 +42,18 @@ const connect = async (): Promise<boolean> => {
   }
 
   isInitializing = true;
+  setWsState({
+    status: WebSocketStatus.Connecting,
+    errorMessage: '',
+  });
   console.log('🔄 Starting WebSocket connection process...');
 
   // Проверяем авторизацию
   if (!authStore.isAuthorized) {
     console.log('❌ Not authorized, cannot connect WebSocket');
     setWsState({
-      connectionError: 'Необходима авторизация для подключения',
-      connectionStatus: 'Ошибка: нет авторизации',
+      status: WebSocketStatus.Error,
+      errorMessage: 'Необходима авторизация для подключения',
     });
     isInitializing = false;
     return false;
@@ -78,36 +65,24 @@ const connect = async (): Promise<boolean> => {
   if (!authToken || !userId) {
     console.log('❌ Missing auth data');
     setWsState({
-      connectionError: 'Отсутствуют данные авторизации',
-      connectionStatus: 'Ошибка: нет токена',
+      status: WebSocketStatus.Error,
+      errorMessage: 'Отсутствуют данные авторизации',
     });
     isInitializing = false;
     return false;
   }
 
   try {
-    // Проверяем токен перед подключением
-    setWsState('connectionStatus', 'Проверка токена...');
+    // Проверяем токен перед подключением через сервис
     console.log('🔍 Checking token via HTTP before WebSocket connection');
     
-    const tokenCheckResponse = await fetch(`${API_BASE_URL}/auth/telegram/check`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        token: authToken,
-        userId: userId 
-      }),
-    });
-
-    const tokenCheckResult = await tokenCheckResponse.json();
+    const tokenCheckResult = await authService.checkToken(authToken, userId);
 
     if (!tokenCheckResult.success) {
       console.log('❌ Token is invalid');
       setWsState({
-        connectionError: `Токен недействителен: ${tokenCheckResult.error}`,
-        connectionStatus: 'Ошибка: недействительный токен',
+        status: WebSocketStatus.Error,
+        errorMessage: `Токен недействителен: ${tokenCheckResult.error || 'неизвестная ошибка'}`,
       });
       isInitializing = false;
       authStore.logout(); // Выходим если токен недействителен
@@ -118,8 +93,8 @@ const connect = async (): Promise<boolean> => {
   } catch (error) {
     console.log('❌ Failed to check token:', error);
     setWsState({
-      connectionError: 'Ошибка при проверке токена',
-      connectionStatus: 'Ошибка: проверка токена',
+      status: WebSocketStatus.Error,
+      errorMessage: 'Ошибка при проверке токена: ' + (error instanceof Error ? error.message : 'неизвестная ошибка'),
     });
     isInitializing = false;
     return false;
@@ -130,22 +105,16 @@ const connect = async (): Promise<boolean> => {
   console.log('🚀 Connecting WebSocket with user ID:', userId);
 
   try {
-    setWsState({
-      connectionStatus: 'Подключение...',
-      connectionError: '',
-    });
     ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
       console.log('✅ WebSocket connection opened successfully');
       setWsState({
-        isConnected: true,
-        connectionStatus: 'Подключен',
-        connectionError: '',
+        status: WebSocketStatus.Connected,
+        errorMessage: '',
       });
       hasConnected = true;
       isInitializing = false;
-      addMessage('Подключение установлено', 'received');
       
       // Отправляем эхо-сообщение
       const echoMessage = {
@@ -157,7 +126,6 @@ const connect = async (): Promise<boolean> => {
       
       console.log('📤 Sending echo message on connection:', echoMessage);
       ws?.send(JSON.stringify(echoMessage));
-      addMessage(`Отправлено эхо сообщение: ${JSON.stringify(echoMessage, null, 2)}`, 'sent');
     };
 
     ws.onmessage = (event) => {
@@ -166,11 +134,11 @@ const connect = async (): Promise<boolean> => {
         
         if (messageData.type === 'error') {
           const errorMessage = messageData.message || 'Ошибка авторизации';
+          console.log(`❌ WebSocket error: ${errorMessage}`);
           setWsState({
-            connectionError: errorMessage,
-            connectionStatus: 'Ошибка авторизации',
+            status: WebSocketStatus.Error,
+            errorMessage: errorMessage,
           });
-          addMessage(`Ошибка: ${errorMessage}`, 'received');
           
           if (errorMessage.includes('токен') || errorMessage.includes('Токен') || 
               errorMessage.includes('авторизации') || errorMessage.includes('Авторизации')) {
@@ -178,39 +146,46 @@ const connect = async (): Promise<boolean> => {
             authStore.logout();
           }
         } else if (messageData.type === 'welcome') {
-          addMessage(`Добро пожаловать! (ID: ${userId})`, 'received');
+          console.log(`✅ Welcome message received for user ID: ${userId}`);
         } else {
-          addMessage(JSON.stringify(messageData, null, 2), 'received');
+          console.log('📥 WebSocket message received:', messageData);
         }
       } catch {
-        addMessage(event.data, 'received');
+        console.log('📥 WebSocket raw message:', event.data);
       }
     };
 
     ws.onclose = (event) => {
       console.log('🔌 WebSocket connection closed', event.code, event.reason);
-      setWsState('isConnected', false);
       isInitializing = false;
       
       if (event.code === 1008) {
+        console.log('❌ WebSocket authorization error');
         setWsState({
-          connectionError: 'Ошибка авторизации WebSocket',
-          connectionStatus: 'Ошибка: авторизация WebSocket',
+          status: WebSocketStatus.Error,
+          errorMessage: 'Ошибка авторизации WebSocket (код: 1008)',
         });
-        addMessage('Ошибка авторизации WebSocket', 'received');
         authStore.logout();
       } else {
-        setWsState('connectionStatus', 'Отключен');
-        addMessage('Соединение закрыто', 'received');
+        console.log('🔌 WebSocket connection closed normally');
         
         // Автоматическое переподключение если было соединение
         if (hasConnected && authStore.isAuthorized) {
+          setWsState({
+            status: WebSocketStatus.Reconnecting,
+            errorMessage: '',
+          });
           console.log(`🔄 Scheduling reconnection in ${WS_RECONNECT_DELAY / 1000} seconds...`);
           reconnectTimeout = window.setTimeout(() => {
             if (authStore.isAuthorized) {
               connect();
             }
           }, WS_RECONNECT_DELAY);
+        } else {
+          setWsState({
+            status: WebSocketStatus.Disconnected,
+            errorMessage: event.reason || 'Соединение закрыто',
+          });
         }
       }
     };
@@ -218,8 +193,8 @@ const connect = async (): Promise<boolean> => {
     ws.onerror = (error) => {
       console.error('🚨 WebSocket error:', error);
       setWsState({
-        connectionError: 'Ошибка соединения WebSocket',
-        connectionStatus: 'Ошибка соединения',
+        status: WebSocketStatus.Error,
+        errorMessage: 'Ошибка соединения WebSocket',
       });
       isInitializing = false;
     };
@@ -228,8 +203,8 @@ const connect = async (): Promise<boolean> => {
   } catch (error) {
     console.error('🚨 Error creating WebSocket connection:', error);
     setWsState({
-      connectionError: 'Ошибка создания соединения WebSocket',
-      connectionStatus: 'Ошибка создания соединения',
+      status: WebSocketStatus.Error,
+      errorMessage: 'Ошибка создания соединения: ' + (error instanceof Error ? error.message : 'неизвестная ошибка'),
     });
     isInitializing = false;
     return false;
@@ -249,8 +224,8 @@ const disconnect = () => {
   }
   
   setWsState({
-    isConnected: false,
-    connectionStatus: 'Отключен',
+    status: WebSocketStatus.Disconnected,
+    errorMessage: '',
   });
   isInitializing = false;
   hasConnected = false;
@@ -267,7 +242,6 @@ const sendMessage = (message: any): boolean => {
   try {
     const messageStr = typeof message === 'string' ? message : JSON.stringify(message);
     ws.send(messageStr);
-    addMessage(messageStr, 'sent');
     console.log('📤 Message sent:', message);
     return true;
   } catch (error) {
@@ -291,18 +265,12 @@ const sendEchoMessage = () => {
   return sendMessage(echoMessage);
 };
 
-// Функция очистки сообщений
-const clearMessages = () => {
-  setWsState('messages', []);
-  messageCounter = 0;
-};
-
 // Автоматическое подключение при авторизации
 createEffect(() => {
-  if (authStore.isAuthorized && !wsState.isConnected && !isInitializing) {
+  if (authStore.isAuthorized && wsState.status === WebSocketStatus.Disconnected && !isInitializing) {
     console.log('🔄 Auto-connecting WebSocket after authorization');
     connect();
-  } else if (!authStore.isAuthorized && wsState.isConnected) {
+  } else if (!authStore.isAuthorized && wsState.status !== WebSocketStatus.Disconnected) {
     console.log('🔄 Auto-disconnecting WebSocket after logout');
     disconnect();
   }
@@ -315,15 +283,17 @@ onCleanup(() => {
 
 export const websocketStore = {
   // Store для доступа к состоянию
-  get isConnected() { return wsState.isConnected; },
-  get connectionStatus() { return wsState.connectionStatus; },
-  get messages() { return wsState.messages; },
-  get connectionError() { return wsState.connectionError; },
+  get status() { return wsState.status; },
+  get errorMessage() { return wsState.errorMessage; },
+  get isConnected() { return wsState.status === WebSocketStatus.Connected; },
+  get isConnecting() { return wsState.status === WebSocketStatus.Connecting; },
+  get isReconnecting() { return wsState.status === WebSocketStatus.Reconnecting; },
+  get isDisconnected() { return wsState.status === WebSocketStatus.Disconnected; },
+  get hasError() { return wsState.status === WebSocketStatus.Error; },
   
   // Функции
   connect,
   disconnect,
   sendMessage,
   sendEchoMessage,
-  clearMessages,
 }; 

@@ -20,6 +20,7 @@ import SlotsPage from '@/pages/slots';
 import { initializeApp } from '@/helpers/initialize-app';
 import { authStore } from '@/stores/auth';
 import TelegramAuth from '@/components/telegram-auth';
+import ConnectionOverlay from '@/components/connection-overlay';
 
 const App = () => {
   onMount(() => {
@@ -28,43 +29,48 @@ const App = () => {
   });
 
   return (
-    <Show
-      when={authStore.isLoading}
-      fallback={
-        <Show
-          when={authStore.isAuthorized}
-          fallback={<TelegramAuth />}
-        >
-          <Router>
-            <Route path="/" component={HomePage} />
-            <Route path="/armory" component={ArmoryPage} />
-            <Route path="/region" component={RegionPage} />
-            <Route path="/heroes" component={HeroesPage} />
-            <Route path="/mail" component={MailPage} />
-            <Route path="/vip" component={VipPage} />
-            <Route path="/shop" component={ShopPage} />
-            <Route path="/person" component={PersonPage} />
-            <Route path="/chat" component={ChatPage} />
-            <Route path="/rank" component={RankPage} />
-            <Route path="/quests" component={QuestsPage} />
-            <Route path="/alliance" component={AlliancePage} />
-            <Route path="/mini-games">
-              <Route path="/" component={MiniGames} />
-              <Route path="/slots" component={SlotsPage} />
-            </Route>
-          </Router>
-        </Show>
-      }
-    >
-      {/* Лоадер при проверке авторизации */}
-      <div class="min-h-screen flex items-center justify-center bg-black">
-        <div class="text-center space-y-6">
-          <div class="flex justify-center">
-            <div class="w-16 h-16 border-4 border-slate-800 border-t-blue-500 rounded-full animate-spin" />
+    <>
+      <Show
+        when={authStore.isLoading}
+        fallback={
+          <Show
+            when={authStore.isAuthorized}
+            fallback={<TelegramAuth />}
+          >
+            <Router>
+              <Route path="/" component={HomePage} />
+              <Route path="/armory" component={ArmoryPage} />
+              <Route path="/region" component={RegionPage} />
+              <Route path="/heroes" component={HeroesPage} />
+              <Route path="/mail" component={MailPage} />
+              <Route path="/vip" component={VipPage} />
+              <Route path="/shop" component={ShopPage} />
+              <Route path="/person" component={PersonPage} />
+              <Route path="/chat" component={ChatPage} />
+              <Route path="/rank" component={RankPage} />
+              <Route path="/quests" component={QuestsPage} />
+              <Route path="/alliance" component={AlliancePage} />
+              <Route path="/mini-games">
+                <Route path="/" component={MiniGames} />
+                <Route path="/slots" component={SlotsPage} />
+              </Route>
+            </Router>
+          </Show>
+        }
+      >
+        {/* Лоадер при проверке авторизации */}
+        <div class="min-h-screen flex items-center justify-center bg-black">
+          <div class="text-center space-y-6">
+            <div class="flex justify-center">
+              <div class="w-16 h-16 border-4 border-slate-800 border-t-blue-500 rounded-full animate-spin" />
+            </div>
           </div>
         </div>
-      </div>
-    </Show>
+      </Show>
+      
+      {/* Глобальный оверлей статуса соединения */}
+      <ConnectionOverlay />
+    </>
   );
 };
 

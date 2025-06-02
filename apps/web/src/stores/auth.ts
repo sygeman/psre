@@ -1,5 +1,6 @@
 import { createStore } from 'solid-js/store';
-import { API_BASE_URL, AUTH_STORAGE_KEY } from '@/constants/app';
+import { AUTH_STORAGE_KEY } from '@/constants/app';
+import { authService } from '@/services/auth';
 
 export interface TelegramUser {
   userId: string;
@@ -39,21 +40,12 @@ const checkAuthStatus = async (): Promise<boolean> => {
     }
 
     const authData: AuthData = JSON.parse(storedAuth);
-    
-    // Проверяем токен через HTTP API
-    console.log('🔍 Checking stored token via HTTP');
-    const response = await fetch(`${API_BASE_URL}/auth/telegram/check`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ 
-        token: authData.user.authToken,
-        userId: authData.user.userId 
-      }),
-    });
 
-    const result = await response.json();
+    // Проверяем токен через сервис
+    const result = await authService.checkToken(
+      authData.user.authToken,
+      authData.user.userId
+    );
     
     if (result.success) {
       console.log('✅ Stored token is valid');
@@ -86,34 +78,26 @@ const verifyCode = async (code: string): Promise<{ success: boolean; error?: str
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/telegram/verify`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ code: code.trim() })
-    });
+    const result = await authService.verifyCode(code.trim());
 
-    const data = await response.json();
-
-    if (data.success) {
+    if (result.success && result.data) {
       const authInfo: AuthData = {
-        user: data.user,
+        user: result.data.user,
         timestamp: Date.now()
       };
       
       // Сохраняем авторизационные данные
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authInfo));
       
-      console.log('💾 Saved auth data for user ID:', data.user.userId);
+      console.log('💾 Saved auth data for user ID:', result.data.user.userId);
       
       setAuthState({
         isAuthorized: true,
-        userInfo: data.user,
+        userInfo: result.data.user,
       });
       return { success: true };
     } else {
-      return { success: false, error: data.error || 'Неверный код авторизации' };
+      return { success: false, error: result.error || 'Неверный код авторизации' };
     }
   } catch (error) {
     console.error('Ошибка верификации:', error);
