@@ -5,70 +5,18 @@ import { chatStore } from '@/stores/chat';
 import { accountStateSubscription } from '@/subscriptions/account-state';
 import { chatSubscription } from '@/subscriptions/chat';
 import { initAllianceHelp } from '@/stores/alliance';
-
-// WebSocket соединение
-let ws: WebSocket | null = null;
-
-const initWebSocket = () => {
-  const wsUrl = `ws://localhost:4000/ws`;
-  
-  try {
-    ws = new WebSocket(wsUrl);
-    
-    ws.onopen = () => {
-      console.log('WebSocket соединение установлено');
-    };
-    
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        console.log('WebSocket сообщение получено:', data);
-        
-        // Обработка разных типов сообщений
-        switch (data.type) {
-          case 'welcome':
-            console.log('Добро пожаловать в WebSocket');
-            break;
-          case 'echo':
-            console.log('Echo ответ:', data.data);
-            break;
-          default:
-            console.log('Неизвестный тип сообщения:', data);
-        }
-      } catch (error) {
-        console.error('Ошибка парсинга WebSocket сообщения:', error);
-      }
-    };
-    
-    ws.onclose = () => {
-      console.log('WebSocket соединение закрыто');
-      // Переподключение через 3 секунды
-      setTimeout(initWebSocket, 3000);
-    };
-    
-    ws.onerror = (error) => {
-      console.error('WebSocket ошибка:', error);
-    };
-    
-  } catch (error) {
-    console.error('Не удалось установить WebSocket соединение:', error);
-  }
-};
+import { websocketStore } from '@/stores/websocket';
+import { authStore } from '@/stores/auth';
 
 export const sendWebSocketMessage = (message: any) => {
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(typeof message === 'string' ? message : JSON.stringify(message));
-  } else {
-    console.warn('WebSocket не подключен');
-  }
+  return websocketStore.sendMessage(message);
 };
 
 export const initializeApp = async () => {
+  authStore.initAuthStore();
+  
   try {
     await directus.connect();
-
-    // Инициализация WebSocket соединения
-    initWebSocket();
 
     // Будем получать на основе авторизации
     const accountId = 'ba12e291-2e9c-452e-ae06-81c1a885390e';
@@ -97,6 +45,10 @@ export const initializeApp = async () => {
 
     // Инициализация увеличения помощи альянса
     initAllianceHelp();
+
+    // WebSocket будет автоматически подключаться при авторизации через authStore/websocketStore
+    console.log('✅ App initialized successfully');
+    console.log('🔗 WebSocket connection will be managed by auth system');
 
     return true;
   } catch (error) {

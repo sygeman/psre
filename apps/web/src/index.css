@@ -16,26 +16,3 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer utilities {
-  .perspective-500 {
-    perspective: 500px;
-  }
-}
-
-@keyframes slot-spin {
-  0% {
-    transform: rotateX(0deg);
-  }
-  100% {
-    transform: rotateX(360deg);
-  }
-}
-
-.animate-slot-spin {
-  animation: slot-spin 0.2s linear infinite;
-}
