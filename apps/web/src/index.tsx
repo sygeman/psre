@@ -57,13 +57,11 @@ const App = () => {
       }
     >
       {/* Лоадер при проверке авторизации */}
-      <div class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="text-center space-y-4">
+      <div class="min-h-screen flex items-center justify-center bg-black">
+        <div class="text-center space-y-6">
           <div class="flex justify-center">
-            <div class="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin" />
+            <div class="w-16 h-16 border-4 border-slate-800 border-t-blue-500 rounded-full animate-spin" />
           </div>
-          <h2 class="text-xl font-semibold text-gray-700">Загрузка приложения</h2>
-          <p class="text-gray-500">Проверка авторизации...</p>
         </div>
       </div>
     </Show>
