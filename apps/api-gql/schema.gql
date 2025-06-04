@@ -1,0 +1,15 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Query {
+  comments: [String!]!
+}
+
+type Mutation {
+  addComment(postId: Int!, comment: String!): String!
+}
+
+type Subscription {
+  commentAdded: String!
+}
