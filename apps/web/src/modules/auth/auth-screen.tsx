@@ -1,46 +1,42 @@
-import { createSignal, Show } from 'solid-js';
-import { authStore } from '@/stores/auth';
+import { createEffect, createSignal, Show } from 'solid-js';
+import { authService } from './auth.service';
 
-const TelegramAuth = () => {
+export const AuthTelegram = () => {
   const [authCode, setAuthCode] = createSignal('');
   const [isVerifying, setIsVerifying] = createSignal(false);
+  const [isLoading, setIsLoading] = createSignal(false);
   const [authError, setAuthError] = createSignal('');
 
   const handleVerifyCode = async () => {
-    if (!authCode().trim()) {
-      return;
-    }
-
     setIsVerifying(true);
     setAuthError('');
+    setIsLoading(true);
     
-    const result = await authStore.verifyCode(authCode());
+    const result = await authService.verifyCode(authCode());
     
     if (result.success) {
       setAuthCode('');
       setAuthError('');
+      window.location.reload();
     } else {
       setAuthError(result.error || 'Произошла ошибка');
     }
     
     setIsVerifying(false);
+    setIsLoading(false);
   };
+
+  createEffect(() => {
+    if (authCode().length === 8) handleVerifyCode();
+  });
 
   const handleCodeInput = (event: Event) => {
     const target = event.target as HTMLInputElement;
-    const value = target.value.replace(/[^0-9]/g, '').slice(0, 8);
+    const value = target.value.replace(/[^0-9]/g, '').trim().slice(0, 8);
     setAuthCode(value);
     target.value = value;
-    
     // Очищаем ошибку при вводе
-    if (authError()) {
-      setAuthError('');
-    }
-    
-    // Автоматическая верификация при вводе 8 цифр
-    if (value.length === 8) {
-      handleVerifyCode();
-    }
+    if (authError()) setAuthError('');
   };
 
   return (
@@ -56,7 +52,7 @@ const TelegramAuth = () => {
         </div>
 
         <Show
-          when={authStore.isLoading}
+          when={isLoading()}
           fallback={
             <div class="space-y-4">
               {/* Кнопка открытия бота */}
@@ -78,7 +74,7 @@ const TelegramAuth = () => {
                     for="auth-code" 
                     class="block text-sm font-medium text-white text-center"
                   >
-                    Введите код авторизации из Telegram
+                    Код авторизации из Telegram
                   </label>
                   
                   {/* Поле ввода кода */}
@@ -120,5 +116,3 @@ const TelegramAuth = () => {
     </div>
   );
 };
-
-export default TelegramAuth; 

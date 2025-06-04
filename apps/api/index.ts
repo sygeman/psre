@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { inngestHandler } from './inngest';
 import { initializeTelegramBot } from './lib/telegram-bot';
@@ -10,6 +10,15 @@ const PORT = Number(process.env.PORT) || 4000;
 
 // Инициализация Telegram бота
 const bot = initializeTelegramBot();
+
+const clients = new Map<string, WebSocket>();
+
+setInterval(() => {
+    console.log(clients.size)
+    for (const [id, ws] of clients.entries()) {
+        console.log(id, ws.data.subscribtions)
+    }
+}, 1000)
 
 new Elysia()
     .use(cors({
@@ -27,15 +36,27 @@ new Elysia()
         return checkAuthToken(token, userId);
     })
     .ws('/ws', {
+        query: t.Object({
+            token: t.String(),
+            userId: t.String()
+        }),
         message(ws, message) {
+            const userId = (ws as any).data.user.userId;
             console.log('Received message:', message);
             
-            // Отправляем echo сообщение обратно
-            ws.send({
-                type: 'echo',
-                data: message,
-                timestamp: new Date().toISOString()
-            });
+            if (message.type === 'subscribe') {
+                if (message.payload.name === 'state') {
+                    ws.data.subscribtions.add(message.payload.name);
+                    console.log('State subscription requested', userId);
+                }
+            }
+
+            if (message.type === 'unsubscribe') {
+                if (message.payload.name === 'state') {
+                    ws.data.subscribtions.delete(message.payload.name);
+                    console.log('State unsubscription requested', userId);
+                }
+            }
         },
         async open(ws) {
             const url = new URL(ws.data?.request?.url || '');
@@ -69,22 +90,18 @@ new Elysia()
             console.log('✅ User ID verified:', authResult.data?.userId);
                         
             // Сохраняем информацию о пользователе в контексте WebSocket
-            (ws as any).user = authResult.data;
+            (ws as any).data.user = authResult.data;
+            (ws as any).data.subscribtions = new Set();
+            clients.set(ws.data.id, ws);
             
             // Регистрируем новое соединение пользователя
-            
             console.log(`🔗 WebSocket connection established for user: (ID: ${authResult.data?.userId})`);
-            ws.send({
-                type: 'welcome',
-                message: `Добро пожаловать!`,
-                user: authResult.data,
-                timestamp: new Date().toISOString()
-            });
         },
         close(ws) {
-            const user = (ws as any).user;
-            
-            console.log(`🔌 WebSocket connection closed for user: (ID: ${user?.telegramId || 'unknown'})`);
+            const data = (ws as any).data;
+            console.log('close', data.id)
+            clients.delete(data.id);
+            console.log(`🔌 WebSocket connection closed for user: (ID: ${data.user?.userId || 'unknown'})`);
         }
     })
     .all('/api/inngest', inngestHandler) 

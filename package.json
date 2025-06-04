@@ -1,7 +1,12 @@
 {
   "name": "psre-monorepo",
   "version": "0.0.0",
+  "devDependencies": {
+    "turbo": "2.5.4"
+  },
   "description": "PSRE монорепа на turborepo",
+  "license": "MIT",
+  "packageManager": "bun@1.2.15",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -13,13 +18,8 @@
     "clean": "turbo clean"
   },
   "type": "module",
-  "license": "MIT",
   "workspaces": [
     "apps/*",
     "packages/*"
-  ],
-  "devDependencies": {
-    "turbo": "2.5.4"
-  },
-  "packageManager": "bun@1.2.15"
-} 
+  ]
+}

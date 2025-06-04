@@ -1,75 +1,18 @@
 import { render } from 'solid-js/web';
-import { Router, Route } from '@solidjs/router';
-import { Show, onMount } from 'solid-js';
 import './index.css';
 
-import { HomePage } from '@/pages/home';
-import { RegionPage } from '@/pages/region';
-import { HeroesPage } from '@/pages/heroes';
-import { VipPage } from '@/pages/vip';
-import { ShopPage } from '@/pages/shop';
-import { PersonPage } from '@/pages/person';
-import ChatPage from '@/pages/chat';
-import { RankPage } from '@/pages/rank';
-import { QuestsPage } from '@/pages/quests';
-import { AlliancePage } from '@/pages/alliance';
-import { MailPage } from '@/pages/mail';
-import { ArmoryPage } from '@/pages/armory';
-import MiniGames from '@/pages/mini-games';
-import SlotsPage from '@/pages/slots';
-import { initializeApp } from '@/helpers/initialize-app';
-import { authStore } from '@/stores/auth';
-import TelegramAuth from '@/components/telegram-auth';
-import ConnectionOverlay from '@/components/connection-overlay';
+import { QueryClientProvider } from '@tanstack/solid-query';
+import { queryClient } from '@/lib/client';
+import { AuthGuard } from '@/modules/auth/auth.guard';
+import { Main } from './main';
 
 const App = () => {
-  onMount(() => {
-    initializeApp();
-  });
-
   return (
-    <>
-      <Show
-        when={authStore.isLoading}
-        fallback={
-          <Show
-            when={authStore.isAuthorized}
-            fallback={<TelegramAuth />}
-          >
-            <Router>
-              <Route path="/" component={HomePage} />
-              <Route path="/armory" component={ArmoryPage} />
-              <Route path="/region" component={RegionPage} />
-              <Route path="/heroes" component={HeroesPage} />
-              <Route path="/mail" component={MailPage} />
-              <Route path="/vip" component={VipPage} />
-              <Route path="/shop" component={ShopPage} />
-              <Route path="/person" component={PersonPage} />
-              <Route path="/chat" component={ChatPage} />
-              <Route path="/rank" component={RankPage} />
-              <Route path="/quests" component={QuestsPage} />
-              <Route path="/alliance" component={AlliancePage} />
-              <Route path="/mini-games">
-                <Route path="/" component={MiniGames} />
-                <Route path="/slots" component={SlotsPage} />
-              </Route>
-            </Router>
-          </Show>
-        }
-      >
-        {/* Лоадер при проверке авторизации */}
-        <div class="min-h-screen flex items-center justify-center bg-black">
-          <div class="text-center space-y-6">
-            <div class="flex justify-center">
-              <div class="w-16 h-16 border-4 border-slate-800 border-t-blue-500 rounded-full animate-spin" />
-            </div>
-          </div>
-        </div>
-      </Show>
-      
-      {/* Глобальный оверлей статуса соединения */}
-      <ConnectionOverlay />
-    </>
+    <QueryClientProvider client={queryClient}>
+      <AuthGuard>
+        <Main />
+      </AuthGuard>
+    </QueryClientProvider>
   );
 };
 

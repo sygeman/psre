@@ -5,12 +5,25 @@ import { chatStore } from '@/stores/chat';
 import { accountStateSubscription } from '@/subscriptions/account-state';
 import { chatSubscription } from '@/subscriptions/chat';
 import { initAllianceHelp } from '@/stores/alliance';
-import { authStore } from '@/stores/auth';
+import { websocketStore } from '@/stores/websocket';
+import { authService } from '@/modules/auth/auth.service';
+import { createEffect } from 'solid-js';
 
 export const initializeApp = async () => {
-  authStore.initAuthStore();
-  
+  setTimeout(() => {
+    if (websocketStore.isConnected) {
+      websocketStore.sendMessage({
+        type: 'subscribe',
+        payload: {
+          name: 'state',
+        },
+      })
+    }
+  }, 5000);
+
   try {
+    websocketStore.connect();
+
     await directus.connect();
 
     // Будем получать на основе авторизации

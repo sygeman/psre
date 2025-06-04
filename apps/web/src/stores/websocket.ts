@@ -1,8 +1,6 @@
 import { createStore } from 'solid-js/store';
-import { createEffect, onCleanup } from 'solid-js';
-import { authStore } from './auth';
 import { WS_BASE_URL, WS_RECONNECT_DELAY } from '@/constants/app';
-import { authService } from '@/services/auth';
+import { authService } from '@/modules/auth/auth.service';
 
 export enum WebSocketStatus {
   Disconnected = 'disconnected',
@@ -48,53 +46,14 @@ const connect = async (): Promise<boolean> => {
   });
   console.log('🔄 Starting WebSocket connection process...');
 
-  // Проверяем авторизацию
-  if (!authStore.isAuthorized) {
-    console.log('❌ Not authorized, cannot connect WebSocket');
-    setWsState({
-      status: WebSocketStatus.Error,
-      errorMessage: 'Необходима авторизация для подключения',
-    });
-    isInitializing = false;
-    return false;
-  }
-
-  const authToken = authStore.getAuthToken();
-  const userId = authStore.getUserId();
+  const authToken = authService.getAuthToken();
+  const userId = authService.getUserId();
 
   if (!authToken || !userId) {
     console.log('❌ Missing auth data');
     setWsState({
       status: WebSocketStatus.Error,
       errorMessage: 'Отсутствуют данные авторизации',
-    });
-    isInitializing = false;
-    return false;
-  }
-
-  try {
-    // Проверяем токен перед подключением через сервис
-    console.log('🔍 Checking token via HTTP before WebSocket connection');
-    
-    const tokenCheckResult = await authService.checkToken(authToken, userId);
-
-    if (!tokenCheckResult.success) {
-      console.log('❌ Token is invalid');
-      setWsState({
-        status: WebSocketStatus.Error,
-        errorMessage: `Токен недействителен: ${tokenCheckResult.error || 'неизвестная ошибка'}`,
-      });
-      isInitializing = false;
-      authStore.logout(); // Выходим если токен недействителен
-      return false;
-    }
-
-    console.log('✅ Token is valid, proceeding with WebSocket connection');
-  } catch (error) {
-    console.log('❌ Failed to check token:', error);
-    setWsState({
-      status: WebSocketStatus.Error,
-      errorMessage: 'Ошибка при проверке токена: ' + (error instanceof Error ? error.message : 'неизвестная ошибка'),
     });
     isInitializing = false;
     return false;
@@ -115,17 +74,6 @@ const connect = async (): Promise<boolean> => {
       });
       hasConnected = true;
       isInitializing = false;
-      
-      // Отправляем эхо-сообщение
-      const echoMessage = {
-        type: 'echo_test',
-        message: 'Hello from web client!',
-        timestamp: new Date().toISOString(),
-        userId: userId
-      };
-      
-      console.log('📤 Sending echo message on connection:', echoMessage);
-      ws?.send(JSON.stringify(echoMessage));
     };
 
     ws.onmessage = (event) => {
@@ -143,7 +91,7 @@ const connect = async (): Promise<boolean> => {
           if (errorMessage.includes('токен') || errorMessage.includes('Токен') || 
               errorMessage.includes('авторизации') || errorMessage.includes('Авторизации')) {
             console.log('🗑️ Removing invalid token due to WebSocket error');
-            authStore.logout();
+            authService.logout();
           }
         } else if (messageData.type === 'welcome') {
           console.log(`✅ Welcome message received for user ID: ${userId}`);
@@ -165,21 +113,19 @@ const connect = async (): Promise<boolean> => {
           status: WebSocketStatus.Error,
           errorMessage: 'Ошибка авторизации WebSocket (код: 1008)',
         });
-        authStore.logout();
+        authService.logout();
       } else {
         console.log('🔌 WebSocket connection closed normally');
         
         // Автоматическое переподключение если было соединение
-        if (hasConnected && authStore.isAuthorized) {
+        if (hasConnected) {
           setWsState({
             status: WebSocketStatus.Reconnecting,
             errorMessage: '',
           });
           console.log(`🔄 Scheduling reconnection in ${WS_RECONNECT_DELAY / 1000} seconds...`);
           reconnectTimeout = window.setTimeout(() => {
-            if (authStore.isAuthorized) {
-              connect();
-            }
+            connect();
           }, WS_RECONNECT_DELAY);
         } else {
           setWsState({
@@ -250,37 +196,6 @@ const sendMessage = (message: any): boolean => {
   }
 };
 
-// Функция отправки эхо-сообщения
-const sendEchoMessage = () => {
-  const userId = authStore.getUserId();
-  if (!userId) return false;
-
-  const echoMessage = {
-    type: 'echo_test',
-    message: 'Hello from web client!',
-    timestamp: new Date().toISOString(),
-    userId: userId
-  };
-
-  return sendMessage(echoMessage);
-};
-
-// Автоматическое подключение при авторизации
-createEffect(() => {
-  if (authStore.isAuthorized && wsState.status === WebSocketStatus.Disconnected && !isInitializing) {
-    console.log('🔄 Auto-connecting WebSocket after authorization');
-    connect();
-  } else if (!authStore.isAuthorized && wsState.status !== WebSocketStatus.Disconnected) {
-    console.log('🔄 Auto-disconnecting WebSocket after logout');
-    disconnect();
-  }
-});
-
-// Очистка при размонтировании
-onCleanup(() => {
-  disconnect();
-});
-
 export const websocketStore = {
   // Store для доступа к состоянию
   get status() { return wsState.status; },
@@ -295,5 +210,4 @@ export const websocketStore = {
   connect,
   disconnect,
   sendMessage,
-  sendEchoMessage,
 }; 
