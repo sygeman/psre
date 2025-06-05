@@ -9,6 +9,8 @@ type Query {
 type Mutation {
   addComment(comment: String!): String!
   createUser(email: String!, userId: String!): String!
+  createOrder(id: String!, product: String!, quantity: Float!): String!
+  cancelOrder(id: String!, reason: String!): String!
 }
 
 type Subscription {

@@ -7,7 +7,7 @@ import {
   Subscription,
 } from '@nestjs/graphql';
 import { PubSub } from 'mercurius';
-import { InngestService } from './inngest/inngest.service';
+import { InngestService } from '@psre/nestjs-inngest';
 
 @Resolver()
 export class AppResolver {
@@ -48,5 +48,35 @@ export class AppResolver {
     });
 
     return `Пользователь создан: ${email}`;
+  }
+
+  @Mutation(() => String)
+  async createOrder(
+    @Args('id', { type: () => String }) id: string,
+    @Args('product', { type: () => String }) product: string,
+    @Args('quantity', { type: () => Number }) quantity: number,
+  ) {
+    // Отправляем событие создания заказа
+    await this.inngestService.send('orders/order.created', {
+      id,
+      product,
+      quantity,
+    });
+
+    return `Заказ создан: ${product} x${quantity}`;
+  }
+
+  @Mutation(() => String)
+  async cancelOrder(
+    @Args('id', { type: () => String }) id: string,
+    @Args('reason', { type: () => String }) reason: string,
+  ) {
+    // Отправляем событие отмены заказа
+    await this.inngestService.send('orders/order.cancelled', {
+      id,
+      reason,
+    });
+
+    return `Заказ ${id} отменен: ${reason}`;
   }
 }

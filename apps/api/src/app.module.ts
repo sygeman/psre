@@ -3,7 +3,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppResolver } from './app.resolver';
 import { MercuriusDriverConfig } from '@nestjs/mercurius';
 import { MercuriusDriver } from '@nestjs/mercurius';
-import { InngestModule } from './inngest/inngest.module';
+import { InngestModule } from '@psre/nestjs-inngest';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { InngestModule } from './inngest/inngest.module';
       graphiql: true,
     }),
     InngestModule,
+    OrdersModule,
   ],
   providers: [AppResolver],
 })

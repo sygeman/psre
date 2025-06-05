@@ -1,0 +1,37 @@
+{
+  "name": "@psre/nestjs-inngest",
+  "version": "0.0.1",
+  "description": "NestJS интеграция для Inngest с поддержкой декораторов и Fastify",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"**/*.{ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "inngest": "^3.38.0",
+    "fastify": "^4.0.0",
+    "reflect-metadata": "^0.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.23.0",
+    "@typescript-eslint/eslint-plugin": "8.29.0",
+    "@typescript-eslint/parser": "8.29.0",
+    "@types/node": "22.15.29",
+    "eslint": "9.23.0",
+    "globals": "16.0.0",
+    "typescript": "5.8.3"
+  }
+}
