@@ -2,6 +2,7 @@
   "name": "psre-monorepo",
   "version": "0.0.0",
   "devDependencies": {
+    "prettier": "3.5.3",
     "turbo": "2.5.4"
   },
   "description": "PSRE монорепа на turborepo",

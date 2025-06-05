@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import CommentsTest from '@/components/CommentsTest.vue'
+import GraphQLExample from '@/components/GraphQLExample.vue'
 </script>
 
 <template>
   <main>
-    <CommentsTest />
+    <GraphQLExample />
   </main>
 </template>

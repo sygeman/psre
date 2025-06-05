@@ -28,3 +28,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# GraphQL CodeGen generated files
+src/graphql/generated.ts
