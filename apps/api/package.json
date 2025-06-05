@@ -28,6 +28,7 @@
     "@nestjs/graphql": "13.1.0",
     "@nestjs/mercurius": "13.1.0",
     "@nestjs/platform-fastify": "11.1.2",
+    "inngest": "3.38.1",
     "graphql": "16.11.0",
     "mercurius": "16.1.0",
     "reflect-metadata": "0.2.2",

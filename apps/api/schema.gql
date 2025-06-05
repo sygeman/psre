@@ -8,6 +8,7 @@ type Query {
 
 type Mutation {
   addComment(comment: String!): String!
+  createUser(email: String!, userId: String!): String!
 }
 
 type Subscription {
