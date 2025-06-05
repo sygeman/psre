@@ -2,17 +2,42 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ChatMessage {
+  id: ID!
+  content: String!
+  userId: String!
+  userName: String!
+  chatId: String!
+  createdAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Chat {
+  id: ID!
+  name: String!
+  participantIds: [String!]!
+  messages: [ChatMessage!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
-  comments: [String!]!
+  chat(id: String!): Chat
+  chatUsers(userId: String!): [Chat!]!
+  chatMessages(chatId: String!): [ChatMessage!]!
 }
 
 type Mutation {
-  addComment(comment: String!): String!
-  createUser(email: String!, userId: String!): String!
-  createOrder(id: String!, product: String!, quantity: Float!): String!
-  cancelOrder(id: String!, reason: String!): String!
+  createChatMessage(input: SendMessageInput!): ChatMessage!
 }
 
-type Subscription {
-  commentAdded: String!
+input SendMessageInput {
+  chatId: String!
+  content: String!
+  userId: String!
+  userName: String!
 }

@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { AppResolver } from './app.resolver';
 import { MercuriusDriverConfig } from '@nestjs/mercurius';
 import { MercuriusDriver } from '@nestjs/mercurius';
 import { InngestModule } from '@psre/nestjs-inngest';
-import { OrdersModule } from './orders/orders.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -17,8 +16,8 @@ import { OrdersModule } from './orders/orders.module';
       graphiql: true,
     }),
     InngestModule,
-    OrdersModule,
+    ChatModule,
   ],
-  providers: [AppResolver],
+  providers: [],
 })
 export class AppModule {}
