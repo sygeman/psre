@@ -9,7 +9,9 @@ import { MercuriusDriver } from '@nestjs/mercurius';
     GraphQLModule.forRoot<MercuriusDriverConfig>({
       driver: MercuriusDriver,
       autoSchemaFile: 'schema.gql',
-      subscription: true,
+      subscription: {
+        fullWsTransport: true,
+      },
       graphiql: true,
     }),
   ],
