@@ -41,3 +41,7 @@ input SendMessageInput {
   userId: String!
   userName: String!
 }
+
+type Subscription {
+  createdChatMessage(chatId: String!): ChatMessage!
+}

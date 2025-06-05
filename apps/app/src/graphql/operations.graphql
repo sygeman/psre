@@ -1,13 +1,35 @@
-# Получить все комментарии
-query GetComments {
-  comments
+# Получить сообщения чата
+query GetChatMessages($chatId: String!) {
+  chatMessages(chatId: $chatId) {
+    id
+    content
+    userId
+    userName
+    chatId
+    createdAt
+  }
 }
 
-# Добавить новый комментарий
-mutation AddComment($comment: String!) {
-  addComment(comment: $comment)
+# Создать новое сообщение
+mutation CreateChatMessage($input: SendMessageInput!) {
+  createChatMessage(input: $input) {
+    id
+    content
+    userId
+    userName
+    chatId
+    createdAt
+  }
 }
 
-subscription CommentAdded {
-  commentAdded
+# Подписка на новые сообщения
+subscription CreatedChatMessage($chatId: String!) {
+  createdChatMessage(chatId: $chatId) {
+    id
+    content
+    userId
+    userName
+    chatId
+    createdAt
+  }
 }

@@ -1,21 +1,18 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { MercuriusDriverConfig } from '@nestjs/mercurius';
-import { MercuriusDriver } from '@nestjs/mercurius';
-import { InngestModule } from '@psre/nestjs-inngest';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<MercuriusDriverConfig>({
-      driver: MercuriusDriver,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
       autoSchemaFile: 'schema.gql',
-      subscription: {
-        fullWsTransport: true,
+      subscriptions: {
+        'graphql-ws': true,
       },
-      graphiql: true,
+      playground: true,
     }),
-    InngestModule,
     ChatModule,
   ],
   providers: [],
