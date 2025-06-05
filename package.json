@@ -16,7 +16,9 @@
     "format": "turbo format",
     "format:check": "turbo format:check",
     "type-check": "turbo type-check",
-    "clean": "turbo clean"
+    "clean": "turbo clean",
+    "codegen": "turbo codegen",
+    "codegen:watch": "turbo codegen:watch"
   },
   "type": "module",
   "workspaces": [

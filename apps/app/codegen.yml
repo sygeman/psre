@@ -1,0 +1,21 @@
+schema: '../api/schema.gql'
+documents:
+  - 'src/**/*.graphql'
+  - 'src/**/*.gql'
+  - '!src/graphql/generated.ts'
+generates:
+  src/graphql/generated.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-vue-apollo'
+    config:
+      withCompositionFunctions: true
+      vueCompositionApiImportFrom: 'vue'
+      addDocBlocks: false
+      apolloClientInstanceImport: '@/apollo/client#apolloClient'
+      documentMode: 'documentNode'
+      preResolveTypes: true
+      useTypeImports: true
+      avoidOptionals: false
+      immutableTypes: false

@@ -1,0 +1,13 @@
+# Получить все комментарии
+query GetComments {
+  comments
+}
+
+# Добавить новый комментарий
+mutation AddComment($comment: String!) {
+  addComment(comment: $comment)
+}
+
+subscription CommentAdded {
+  commentAdded
+}

@@ -18,6 +18,15 @@
     },
     "type-check": {
       "dependsOn": ["^type-check"]
+    },
+    "codegen": {
+      "dependsOn": ["^build"],
+      "inputs": ["../api/schema.gql", "src/**/*.graphql", "src/**/*.gql", "codegen.yml"],
+      "outputs": ["src/graphql/generated.ts"]
+    },
+    "codegen:watch": {
+      "cache": false,
+      "persistent": true
     }
   }
-} 
+}
