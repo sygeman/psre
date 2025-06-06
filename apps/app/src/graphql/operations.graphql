@@ -22,6 +22,18 @@ mutation CreateChatMessage($input: SendMessageInput!) {
   }
 }
 
+# Создать случайное сообщение
+mutation CreateRandomMessage {
+  createRandomMessage {
+    id
+    content
+    userId
+    userName
+    chatId
+    createdAt
+  }
+}
+
 # Подписка на новые сообщения
 subscription CreatedChatMessage($chatId: String!) {
   createdChatMessage(chatId: $chatId) {

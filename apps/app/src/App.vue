@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from 'vue'
-import { useQuery, useSubscription } from '@vue/apollo-composable'
+import { useQuery, useSubscription, useMutation } from '@vue/apollo-composable'
 import {
   GetChatMessagesDocument,
   CreatedChatMessageDocument,
+  CreateChatMessageDocument,
   type ChatMessage,
 } from '@/graphql/generated'
 
@@ -29,6 +30,49 @@ const { result: newMessageResult } = useSubscription(
   },
 )
 
+// Мутация для создания сообщений
+const { mutate: createChatMessage } = useMutation(CreateChatMessageDocument)
+
+// Тестовые данные
+const testMessages = [
+  'Привет всем!',
+  'Как дела?',
+  'Кто-нибудь видел последние новости?',
+  'Отличная погода сегодня!',
+  'Не забудьте про встречу в 15:00',
+  'Кто идет на обед?',
+  'Интересная статья в блоге компании',
+  'Поздравляю с успешным запуском!',
+  'Нужна помощь с проектом',
+  'Спасибо за отличную работу!',
+]
+
+const testUsers = [
+  { id: 'user_1', name: 'Алекс' },
+  { id: 'user_2', name: 'Мария' },
+  { id: 'user_3', name: 'Дмитрий' },
+  { id: 'user_4', name: 'Анна' },
+  { id: 'user_5', name: 'Сергей' },
+]
+
+let messageCounter = 1
+
+// Автоматическая отправка случайных сообщений
+setInterval(() => {
+  const randomMessage =
+    testMessages[Math.floor(Math.random() * testMessages.length)]
+  const randomUser = testUsers[Math.floor(Math.random() * testUsers.length)]
+
+  createChatMessage({
+    input: {
+      chatId: CHAT_ID,
+      content: randomMessage,
+      userId: randomUser.id,
+      userName: randomUser.name,
+    },
+  })
+}, 100)
+
 // Обрабатываем загрузку существующих сообщений (только при первой загрузке)
 const handleMessagesResult = (result: any) => {
   if (result?.chatMessages && !isInitialized.value) {
@@ -44,12 +88,6 @@ const handleNewMessage = (result: any) => {
     const newMessage = result.createdChatMessage
     // Заменяем массив на одно последнее сообщение
     messages.value = [newMessage]
-    console.log(
-      'Показано последнее сообщение:',
-      newMessage.content,
-      'от',
-      newMessage.userName,
-    )
   }
 }
 

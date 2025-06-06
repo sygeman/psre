@@ -27,7 +27,6 @@ type Chat {
 
 type Query {
   chat(id: String!): Chat
-  chatUsers(userId: String!): [Chat!]!
   chatMessages(chatId: String!): [ChatMessage!]!
 }
 
