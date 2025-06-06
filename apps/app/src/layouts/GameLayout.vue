@@ -13,7 +13,7 @@
       <!-- <PersonPanel /> -->
     </div>
     <div class="absolute top-8 left-24 flex shrink-0 z-10">
-      <!-- <PowerPanel /> -->
+      <PowerPanel />
     </div>
     <div class="absolute top-10 right-2 flex shrink-0 z-10">
       <!-- <MiniGamesButton /> -->
@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import BottomMenu from '@/modules/BottomMenu.vue'
 // import { PersonPanel } from '@/modules/person-panel'
-// import { PowerPanel } from '@/modules/power-panel'
+import PowerPanel from '@/modules/PowerPanel.vue'
 import ResourcesPanel from '@/modules/ResourcesPanel.vue'
 // import { MiniChat } from '@/components/mini-chat'
 // import { ToastNotifications } from '@/components/toast-notifications'
