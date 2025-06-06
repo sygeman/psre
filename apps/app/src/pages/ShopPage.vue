@@ -1,35 +1,88 @@
-import { BackLayout } from '@/layouts/back-layout';
-import { createSignal, For } from 'solid-js';
-import { accountState } from '@/stores/state';
-import { ResourceDisplay } from '@/components/resource-display';
-import { RESOURCES } from '@/constants/resources';
+<template>
+  <BackLayout title="Магазин">
+    <template #rightContent>
+      <div class="px-2">
+        <ResourceDisplay icon="💎" :value="diamond" />
+      </div>
+    </template>
+
+    <div class="flex h-full flex-col">
+      <!-- Категории -->
+      <div class="flex border-b border-slate-700/25">
+        <button
+          v-for="category in SHOP_CATEGORIES"
+          :key="category.id"
+          :class="[
+            'flex-1 p-4 text-sm transition-colors',
+            activeCategory === category.id
+              ? 'border-b-2 border-blue-500 font-medium'
+              : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200',
+          ]"
+          @click="() => setActiveCategory(category.id)"
+        >
+          {{ category.label }}
+        </button>
+      </div>
+
+      <!-- Список товаров -->
+      <div class="hide-scrollbar flex-1 overflow-y-auto">
+        <div class="grid gap-4 p-4">
+          <div
+            v-for="item in filteredItems"
+            :key="item.id"
+            class="flex items-center justify-between rounded-lg bg-slate-800 p-4"
+          >
+            <div class="flex flex-col gap-1">
+              <div class="font-medium">{{ item.name }}</div>
+              <div class="text-sm text-slate-400">{{ item.description }}</div>
+              <div class="text-sm text-slate-400">
+                Стоимость: 💎 {{ item.price }}
+              </div>
+            </div>
+            <button
+              class="flex items-center gap-2 rounded bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+              @click="() => handleBuy(item)"
+            >
+              {{ formatter.format(item.price) }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </BackLayout>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import BackLayout from '@/layouts/BackLayout.vue'
+import ResourceDisplay from '@/components/ResourceDisplay.vue'
 
 type ShopCategory = {
-  id: string;
-  label: string;
-};
+  id: string
+  label: string
+}
 
 type ShopItem = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  amount: number;
-  category: string;
-};
+  id: string
+  name: string
+  description: string
+  price: number
+  amount: number
+  category: string
+}
 
 const SHOP_CATEGORIES: ShopCategory[] = [
   { id: 'diamonds', label: 'Алмазы' },
   { id: 'resources', label: 'Ресурсы' },
   { id: 'items', label: 'Предметы' },
   { id: 'special', label: 'Особое' },
-];
+]
 
 const formatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',
   currency: 'RUB',
   maximumFractionDigits: 0,
-});
+})
 
 const SHOP_ITEMS: ShopItem[] = [
   // Алмазы
@@ -135,73 +188,22 @@ const SHOP_ITEMS: ShopItem[] = [
     amount: 1,
     category: 'special',
   },
-];
+]
 
-export function ShopPage() {
-  const [activeCategory, setActiveCategory] = createSignal('diamonds');
+// Реактивные данные
+const activeCategory = ref('diamonds')
+const diamond = ref(1234)
 
-  const handleBuy = (item: ShopItem) => {
-    // TODO: Implement purchase logic
-    console.log('Buying item:', item);
-  };
+// Вычисляемые свойства
+const filteredItems = computed(() =>
+  SHOP_ITEMS.filter((item) => item.category === activeCategory.value),
+)
 
-  return (
-    <BackLayout
-      title="Магазин"
-      rightContent={
-        <div class="px-2">
-          <ResourceDisplay icon="💎" value={accountState.diamond} />
-        </div>
-      }
-    >
-      <div class="flex h-full flex-col">
-        {/* Категории */}
-        <div class="flex border-b border-slate-700/25">
-          <For each={SHOP_CATEGORIES}>
-            {(category) => (
-              <button
-                class={`flex-1 p-4 text-sm transition-colors ${
-                  activeCategory() === category.id
-                    ? 'border-b-2 border-blue-500 font-medium'
-                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'
-                }`}
-                onClick={() => setActiveCategory(category.id)}
-              >
-                {category.label}
-              </button>
-            )}
-          </For>
-        </div>
-
-        {/* Список товаров */}
-        <div class="hide-scrollbar flex-1 overflow-y-auto">
-          <div class="grid gap-4 p-4">
-            <For
-              each={SHOP_ITEMS.filter(
-                (item) => item.category === activeCategory()
-              )}
-            >
-              {(item) => (
-                <div class="flex items-center justify-between rounded-lg bg-slate-800 p-4">
-                  <div class="flex flex-col gap-1">
-                    <div class="font-medium">{item.name}</div>
-                    <div class="text-sm text-slate-400">{item.description}</div>
-                    <div class="text-sm text-slate-400">
-                      Стоимость: {RESOURCES.DIAMOND.icon} {item.price}
-                    </div>
-                  </div>
-                  <button
-                    class="flex items-center gap-2 rounded bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-600"
-                    onClick={() => handleBuy(item)}
-                  >
-                    {formatter.format(item.price)}
-                  </button>
-                </div>
-              )}
-            </For>
-          </div>
-        </div>
-      </div>
-    </BackLayout>
-  );
+const setActiveCategory = (categoryId: string) => {
+  activeCategory.value = categoryId
 }
+
+const handleBuy = (item: ShopItem) => {
+  console.log('Buying item:', item)
+}
+</script>

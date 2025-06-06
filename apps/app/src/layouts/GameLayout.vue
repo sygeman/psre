@@ -5,7 +5,7 @@
     >
       <slot />
     </div>
-    <!-- <ToastNotifications /> -->
+    <ToastNotifications />
     <div class="absolute top-0 w-full flex shrink-0 z-10">
       <ResourcesPanel />
     </div>
@@ -16,10 +16,10 @@
       <PowerPanel />
     </div>
     <div class="absolute top-10 right-2 flex shrink-0 z-10">
-      <!-- <MiniGamesButton /> -->
+      <MiniGamesButton />
     </div>
     <div class="absolute bottom-16 w-full z-10">
-      <!-- <MiniChat /> -->
+      <MiniChat />
     </div>
     <div class="absolute bottom-0 w-full z-10">
       <BottomMenu />
@@ -32,7 +32,7 @@ import BottomMenu from '@/modules/BottomMenu.vue'
 import PersonPanel from '@/modules/PersonPanel.vue'
 import PowerPanel from '@/modules/PowerPanel.vue'
 import ResourcesPanel from '@/modules/ResourcesPanel.vue'
-// import { MiniChat } from '@/components/mini-chat'
-// import { ToastNotifications } from '@/components/toast-notifications'
-// import { MiniGamesButton } from '@/components/mini-games-button'
+import MiniChat from '@/components/MiniChat.vue'
+import ToastNotifications from '@/components/ToastNotifications.vue'
+import MiniGamesButton from '@/components/MiniGamesButton.vue'
 </script>
