@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ChatModule } from './chat/chat.module';
 import { InngestModule } from './inngest/inngest.module';
+import { ResourcesModule } from './resources/resources.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { InngestModule } from './inngest/inngest.module';
     }),
     ChatModule,
     InngestModule,
+    ResourcesModule,
   ],
   controllers: [],
   providers: [],
