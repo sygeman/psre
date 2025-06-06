@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import { BackButton } from '@/modules/back-button'
-import { ToastNotifications } from '@/components/toast-notifications'
+import BackButton from '@/modules/BackButton.vue'
+import ToastNotifications from '@/components/ToastNotifications.vue'
 
 interface Props {
   title: string

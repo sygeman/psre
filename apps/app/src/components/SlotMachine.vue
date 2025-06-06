@@ -160,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onCleanup } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 
 const symbols = ['🍎', '🌾', '⚙️', '⛽', '💎']
 const SYMBOL_HEIGHT = 96
@@ -335,7 +335,7 @@ const spin = () => {
   })
 }
 
-onCleanup(() => {
+onUnmounted(() => {
   if (timer) clearInterval(timer)
 })
 </script>
