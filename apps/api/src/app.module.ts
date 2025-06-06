@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ChatModule } from './chat/chat.module';
-import { InngestController } from './inngest.controller';
+import { InngestModule } from './inngest/inngest.module';
 
 @Module({
   imports: [
@@ -15,8 +15,9 @@ import { InngestController } from './inngest.controller';
       playground: true,
     }),
     ChatModule,
+    InngestModule,
   ],
-  controllers: [InngestController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

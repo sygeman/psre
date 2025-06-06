@@ -18,7 +18,7 @@ export class ChatService {
     };
   }
 
-  addMessage(input: SendMessageInput): ChatMessage {
+  createMessage(input: SendMessageInput): ChatMessage {
     const messageId = randomUUID();
     const message: ChatMessage = {
       id: messageId,

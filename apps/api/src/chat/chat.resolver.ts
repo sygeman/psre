@@ -8,26 +8,6 @@ import { pubSub } from '../lib/pubsub';
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
-  @Mutation(() => ChatMessage)
-  async createChatMessage(
-    @Args('input') input: SendMessageInput,
-  ): Promise<ChatMessage> {
-    const message = this.chatService.addMessage(input);
-
-    await inngest.send({
-      name: 'chat/message.created',
-      data: {
-        id: message.id,
-        content: message.content,
-        userId: message.userId,
-        chatId: message.chatId,
-        userName: message.userName,
-      },
-    });
-
-    return message;
-  }
-
   @Query(() => Chat, { nullable: true })
   chat(@Args('id') id: string): Chat | null {
     return this.chatService.getChatById(id);
@@ -36,6 +16,21 @@ export class ChatResolver {
   @Query(() => [ChatMessage])
   chatMessages(@Args('chatId') chatId: string): ChatMessage[] {
     return this.chatService.getChatMessages(chatId);
+  }
+
+  @Mutation(() => Boolean)
+  async createChatMessage(@Args('input') input: SendMessageInput) {
+    await inngest.send({
+      name: 'chat/message.created',
+      data: {
+        content: input.content,
+        userId: input.userId,
+        chatId: input.chatId,
+        userName: input.userName,
+      },
+    });
+
+    return true;
   }
 
   @Subscription(() => ChatMessage)

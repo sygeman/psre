@@ -12,26 +12,7 @@ query GetChatMessages($chatId: String!) {
 
 # Создать новое сообщение
 mutation CreateChatMessage($input: SendMessageInput!) {
-  createChatMessage(input: $input) {
-    id
-    content
-    userId
-    userName
-    chatId
-    createdAt
-  }
-}
-
-# Создать случайное сообщение
-mutation CreateRandomMessage {
-  createRandomMessage {
-    id
-    content
-    userId
-    userName
-    chatId
-    createdAt
-  }
+  createChatMessage(input: $input)
 }
 
 # Подписка на новые сообщения
