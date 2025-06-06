@@ -66,7 +66,7 @@
           :onClick="handleUpgrade"
           :disabled="upgradeProgress < 100"
           :color="color"
-          :iconComponent="UpgradeIcon"
+          icon="⬆️"
           label="Улучшить"
           :timer="
             upgradeProgress < 100 ? formatTime(upgradeTimeLeft) : undefined
@@ -162,14 +162,7 @@ const handleUpgrade = () => {
   }
 }
 
-// SVG иконка для кнопки улучшения
-const UpgradeIcon = {
-  template: `
-    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" transform="rotate(-90 12 12)" />
-    </svg>
-  `,
-}
+// Используем emoji иконку для улучшения
 
 onMounted(() => {
   // Таймер для сбора ресурсов
