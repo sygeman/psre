@@ -14,6 +14,7 @@ import QuestsView from '../views/QuestsView.vue'
 import AllianceView from '../views/AllianceView.vue'
 import MiniGamesView from '../views/MiniGamesView.vue'
 import SlotsView from '../views/SlotsView.vue'
+import SettingsView from '../views/SettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -92,6 +93,11 @@ const router = createRouter({
       path: '/mini-games/slots',
       name: 'slots',
       component: SlotsView,
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SettingsView,
     },
   ],
 })

@@ -89,11 +89,11 @@
     </router-link>
 
     <router-link
-      to="/rank"
+      to="/settings"
       class="flex flex-col items-center justify-center gap-1 transition-colors hover:bg-white/5"
     >
-      <TrophyIcon class="h-6 w-6 text-slate-400" />
-      <div class="text-xs">Ранги</div>
+      <CogIcon class="h-6 w-6 text-slate-400" />
+      <div class="text-xs">Настройки</div>
     </router-link>
   </div>
 </template>
@@ -104,7 +104,7 @@ import { useRoute } from 'vue-router'
 import {
   HomeIcon,
   GlobeAltIcon,
-  TrophyIcon,
+  CogIcon,
   UserCircleIcon,
   ClipboardDocumentListIcon,
   UserGroupIcon,
