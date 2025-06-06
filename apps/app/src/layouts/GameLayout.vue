@@ -10,7 +10,7 @@
       <ResourcesPanel />
     </div>
     <div class="absolute top-8 flex shrink-0 z-10">
-      <!-- <PersonPanel /> -->
+      <PersonPanel />
     </div>
     <div class="absolute top-8 left-24 flex shrink-0 z-10">
       <PowerPanel />
@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import BottomMenu from '@/modules/BottomMenu.vue'
-// import { PersonPanel } from '@/modules/person-panel'
+import PersonPanel from '@/modules/PersonPanel.vue'
 import PowerPanel from '@/modules/PowerPanel.vue'
 import ResourcesPanel from '@/modules/ResourcesPanel.vue'
 // import { MiniChat } from '@/components/mini-chat'

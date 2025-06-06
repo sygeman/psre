@@ -11,12 +11,7 @@
         class="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5"
       />
 
-      <!-- Placeholder для CharacterAvatar -->
-      <div
-        class="size-24 relative z-10 bg-slate-600 rounded flex items-center justify-center text-2xl"
-      >
-        👤
-      </div>
+      <CharacterAvatar class="size-24 relative z-10" />
 
       <div
         class="absolute top-1 left-1 rounded-md bg-black/70 px-1.5 py-0.5 z-20 backdrop-blur-sm border border-white/10 text-yellow-100 font-medium shadow-lg text-xs"
@@ -53,6 +48,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AnimatedNumber from '@/components/AnimatedNumber.vue'
 import PointsProgressBar from '@/components/PointsProgressBar.vue'
+import CharacterAvatar from '@/components/CharacterAvatar.vue'
 
 const router = useRouter()
 
