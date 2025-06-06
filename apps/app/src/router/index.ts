@@ -1,7 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import GraphQLExample from '../components/GraphQLExample.vue'
-import ShadcnDemo from '../components/ShadcnDemo.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,16 +9,72 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
-    {
-      path: '/graphql',
-      name: 'graphql',
-      component: GraphQLExample,
-    },
-    {
-      path: '/shadcn',
-      name: 'shadcn',
-      component: ShadcnDemo,
-    },
+    // {
+    //   path: '/armory',
+    //   name: 'armory',
+    //   component: ArmoryView,
+    // },
+    // {
+    //   path: '/region',
+    //   name: 'region',
+    //   component: RegionView,
+    // },
+    // {
+    //   path: '/heroes',
+    //   name: 'heroes',
+    //   component: HeroesView,
+    // },
+    // {
+    //   path: '/mail',
+    //   name: 'mail',
+    //   component: MailView,
+    // },
+    // {
+    //   path: '/vip',
+    //   name: 'vip',
+    //   component: VipView,
+    // },
+    // {
+    //   path: '/shop',
+    //   name: 'shop',
+    //   component: ShopView,
+    // },
+    // {
+    //   path: '/person',
+    //   name: 'person',
+    //   component: PersonView,
+    // },
+    // {
+    //   path: '/chat',
+    //   name: 'chat',
+    //   component: ChatView,
+    // },
+    // {
+    //   path: '/rank',
+    //   name: 'rank',
+    //   component: RankView,
+    // },
+    // {
+    //   path: '/quests',
+    //   name: 'quests',
+    //   component: QuestsView,
+    // },
+    // {
+    //   path: '/alliance',
+    //   name: 'alliance',
+    //   component: AllianceView,
+    // },
+    // {
+    //   path: '/mini-games',
+    //   name: 'mini-games',
+    //   component: MiniGamesView,
+    //   children: [
+    //     {
+    //       path: '/slots',
+    //       component: SlotsView,
+    //     },
+    //   ],
+    // },
   ],
 })
 
