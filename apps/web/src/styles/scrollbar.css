@@ -1,0 +1,46 @@
+/* Скрываем скроллбар для WebKit (Chrome, Safari) */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Скрываем скроллбар для Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Скрываем скроллбар для IE и Edge */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+}
+
+/* Стили для Firefox */
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(51, 65, 85, 0.5) transparent;
+}
+
+/* Стили для WebKit (Chrome, Safari, Edge) */
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(51, 65, 85, 0.5);
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(71, 85, 105, 0.8);
+}
+
+/* Отключаем скроллбар в IE */
+.scrollbar {
+  -ms-overflow-style: none;
+} 
