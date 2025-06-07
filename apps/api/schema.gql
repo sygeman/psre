@@ -25,39 +25,13 @@ type Chat {
   updatedAt: DateTime!
 }
 
-type Resource {
-  id: ID!
-  type: String!
-  icon: String!
-  name: String!
-  amount: Int!
-  updatedAt: DateTime!
-}
-
-type PlayerResources {
-  playerId: ID!
-  resources: [Resource!]!
-  updatedAt: DateTime!
-}
-
-type ResourceUpdate {
-  playerId: ID!
-  resourceType: String!
-  oldAmount: Int!
-  newAmount: Int!
-  updatedAt: DateTime!
-}
-
 type Query {
   chat(id: String!): Chat
   chatMessages(chatId: String!): [ChatMessage!]!
-  playerResources(playerId: String!): PlayerResources
 }
 
 type Mutation {
   createChatMessage(input: SendMessageInput!): Boolean!
-  updateResource(input: UpdateResourceInput!): ResourceUpdate!
-  addToResource(playerId: String!, resourceType: String!, amount: Float!): ResourceUpdate!
 }
 
 input SendMessageInput {
@@ -67,14 +41,6 @@ input SendMessageInput {
   userName: String!
 }
 
-input UpdateResourceInput {
-  playerId: String!
-  resourceType: String!
-  amount: Int!
-}
-
 type Subscription {
   createdChatMessage(chatId: String!): ChatMessage!
-  resourceUpdated(playerId: String!): ResourceUpdate!
-  playerResourcesUpdated(playerId: String!): PlayerResources!
 }

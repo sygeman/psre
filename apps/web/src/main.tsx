@@ -1,5 +1,5 @@
 import { Router, Route } from '@solidjs/router';
-import { onMount } from 'solid-js';
+import { createEffect, onMount } from 'solid-js';
 import './index.css';
 
 import { HomePage } from '@/pages/home';
@@ -17,16 +17,36 @@ import { ArmoryPage } from '@/pages/armory';
 import MiniGames from '@/pages/mini-games';
 import SlotsPage from '@/pages/slots';
 import { initializeApp } from '@/helpers/initialize-app';
-import ConnectionOverlay from '@/components/connection-overlay';
+import { apolloClient, gql } from '@/lib/apollo';
 
 export const Main = () => {
   onMount(() => {
     initializeApp();
   });
 
+  apolloClient.query({
+    query: gql`
+      query GetChatMessages($chatId: String!) {
+        chatMessages(chatId: $chatId) {
+          id
+          content
+          userId
+          userName
+          chatId
+          createdAt
+        }
+      }
+    `,
+    variables: {
+      chatId: '1'
+    }
+  }).then((data) => {
+    console.log(data?.data?.chatMessages);
+  });
+
   return (
     <Router>
-      <ConnectionOverlay />
+      {/* <ConnectionOverlay /> */}
       <Route path="/" component={HomePage} />
       <Route path="/armory" component={ArmoryPage} />
       <Route path="/region" component={RegionPage} />
