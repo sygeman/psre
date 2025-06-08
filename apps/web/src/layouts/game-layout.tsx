@@ -3,7 +3,7 @@ import { BottomMenu } from '@/modules/bottom-menu';
 import { PersonPanel } from '@/modules/person-panel';
 import { PowerPanel } from '@/modules/power-panel';
 import { ResourcesPanel } from '@/modules/resources-panel';
-import { MiniChat } from '@/components/mini-chat';
+import { MiniChat } from '@/modules/chat/mini-chat';
 import { ToastNotifications } from '@/components/toast-notifications';
 import { MiniGamesButton } from '@/components/mini-games-button';
 

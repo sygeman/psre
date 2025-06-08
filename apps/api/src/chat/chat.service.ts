@@ -18,14 +18,13 @@ export class ChatService {
     };
   }
 
-  createMessage(input: SendMessageInput): ChatMessage {
+  createMessage(input: SendMessageInput & { accountId: string }): ChatMessage {
     const messageId = randomUUID();
     const message: ChatMessage = {
       id: messageId,
       content: input.content,
-      userId: input.userId,
-      userName: input.userName,
       chatId: input.chatId,
+      accountId: input.accountId,
       createdAt: new Date(),
     };
     return message;

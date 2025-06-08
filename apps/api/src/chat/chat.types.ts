@@ -9,10 +9,7 @@ export class ChatMessage {
   content: string;
 
   @Field()
-  userId: string;
-
-  @Field()
-  userName: string;
+  accountId: string;
 
   @Field()
   chatId: string;
@@ -43,25 +40,10 @@ export class Chat {
 }
 
 @InputType()
-export class CreateChatInput {
-  @Field()
-  name: string;
-
-  @Field(() => [String])
-  participantIds: string[];
-}
-
-@InputType()
 export class SendMessageInput {
   @Field()
   chatId: string;
 
   @Field()
   content: string;
-
-  @Field()
-  userId: string;
-
-  @Field()
-  userName: string;
 }

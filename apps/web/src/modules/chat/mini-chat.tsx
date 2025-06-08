@@ -1,13 +1,94 @@
-import { For, createSignal } from 'solid-js';
+import { For, createEffect, createSignal } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import { chatStore, type ChatChannel } from '@/stores/chat';
 import { Icon } from 'solid-heroicons';
 import { globeAlt, userGroup } from 'solid-heroicons/outline';
+import { apolloClient, gql } from '@/lib/apollo';
+import { GetChatMessagesQuery, GetChatMessagesQueryVariables } from './chat.gql.types';
+import { createMutation, createSubscription } from '@/apollo';
+import { CreateMessageMutation, CreateMessageMutationVariables, GetNewChatMessagesSubscription, GetNewChatMessagesSubscriptionVariables } from './mini-chat.gql.types';
 
 export function MiniChat() {
   const navigate = useNavigate();
   const [touchStart, setTouchStart] = createSignal(0);
   const [isAnimating, setIsAnimating] = createSignal(false);
+
+  apolloClient.query<GetChatMessagesQuery, GetChatMessagesQueryVariables>({
+      query: gql`
+        query GetChatMessages($chatId: String!) {
+          chatMessages(chatId: $chatId) {
+            id
+            content
+            accountId
+            chatId
+            createdAt
+          }
+        }
+      `,
+      variables: {
+        chatId: '1', 
+      }
+    }).then((data) => {
+      console.log(data?.data.chatMessages);
+    });
+
+    const [createMessage] = createMutation<CreateMessageMutation, CreateMessageMutationVariables>(gql`
+      mutation CreateMessage($input: SendMessageInput!) {
+        createChatMessage(input: $input)
+      }
+    `)
+
+    const data = createSubscription<GetNewChatMessagesSubscription, GetNewChatMessagesSubscriptionVariables>(gql`
+        subscription GetNewChatMessages($chatId: String!) {
+          createdChatMessage(chatId: $chatId) {
+            id
+            content
+            accountId
+            chatId
+            createdAt
+          }
+        }
+      `, { variables: {chatId: '1'}})
+
+    createEffect(() => {
+      console.log(data().createdChatMessage)
+    })
+
+    // const subscription = apolloClient.subscribe<GetNewChatMessagesSubscription, GetNewChatMessagesSubscriptionVariables>({
+    //   query: gql`
+    //     subscription GetNewChatMessages($chatId: String!) {
+    //       createdChatMessage(chatId: $chatId) {
+    //         id
+    //         content
+    //         accountId
+    //         chatId
+    //         createdAt
+    //       }
+    //     }
+    //   `,
+    //   variables: {
+    //     chatId: '1', 
+    //   }
+    // }).subscribe({
+    //   // error: reject,
+    //   next: ({ data }) => {
+    //     console.log(data?.createdChatMessage)
+    //   },
+    // });
+
+    //  onCleanup(() => subscription.unsubscribe())
+
+
+  setInterval(() => {
+    createMessage({
+      variables: {
+        input: {
+          chatId: '1',
+          content: '',
+        }
+      }
+    })
+  }, 1000)
 
   const handleClick = () => {
     navigate('/chat', { state: { activeChannel: chatStore.activeChannel } });

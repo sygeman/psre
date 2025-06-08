@@ -5,4 +5,4 @@ export type GetChatMessagesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'ChatMessage', id: string, content: string, userId: string, userName: string, chatId: string, createdAt: any }> };
+export type GetChatMessagesQuery = { __typename?: 'Query', chatMessages: Array<{ __typename?: 'ChatMessage', id: string, content: string, accountId: string, chatId: string, createdAt: any }> };

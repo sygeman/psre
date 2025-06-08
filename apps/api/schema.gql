@@ -5,8 +5,7 @@
 type ChatMessage {
   id: ID!
   content: String!
-  userId: String!
-  userName: String!
+  accountId: String!
   chatId: String!
   createdAt: DateTime!
 }
@@ -37,8 +36,6 @@ type Mutation {
 input SendMessageInput {
   chatId: String!
   content: String!
-  userId: String!
-  userName: String!
 }
 
 type Subscription {

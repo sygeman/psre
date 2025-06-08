@@ -20,7 +20,8 @@
       "dependsOn": ["^type-check"]
     },
     "codegen": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build"],
+      "cache": false
     }
   }
 }

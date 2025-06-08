@@ -8,8 +8,7 @@ interface ChatMessageData {
   id: string;
   chatId: string;
   content: string;
-  userId: string;
-  userName: string;
+  accountId: string;
 }
 
 @Injectable()

@@ -28,12 +28,11 @@ export type Chat = {
 
 export type ChatMessage = {
   __typename?: 'ChatMessage';
+  accountId: Scalars['String']['output'];
   chatId: Scalars['String']['output'];
   content: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
-  userId: Scalars['String']['output'];
-  userName: Scalars['String']['output'];
 };
 
 export type Mutation = {
@@ -65,8 +64,6 @@ export type QueryChatMessagesArgs = {
 export type SendMessageInput = {
   chatId: Scalars['String']['input'];
   content: Scalars['String']['input'];
-  userId: Scalars['String']['input'];
-  userName: Scalars['String']['input'];
 };
 
 export type Subscription = {
