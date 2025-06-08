@@ -1,12 +1,20 @@
 {
   "name": "psre",
   "version": "0.1.0",
-  "workspaces": ["packages/*"],
+  "workspaces": ["apps/*", "packages/*"],
   "description": "PSRE monorepo",
   "license": "MIT",
   "packageManager": "bun@1.2.15",
   "type": "module",
   "scripts": {
-    "dev": "bun --filter '*' dev"
+    "dev": "bun --filter './apps/*' dev",
+    "codegen": "graphql-codegen"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "5.0.7",
+    "@graphql-codegen/near-operation-file-preset": "3.0.1",
+    "@graphql-codegen/schema-ast": "4.1.0",
+    "@graphql-codegen/typescript": "4.1.6",
+    "@graphql-codegen/typescript-operations": "4.6.1"
   }
 }

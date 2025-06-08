@@ -1,0 +1,14 @@
+schema: "apps/api/schema.gql"
+documents:
+  - "packages/**/!(*.generated).{ts,tsx}"
+generates:
+  packages/types/src/index.ts:
+    plugins:
+      - "typescript"
+  src:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: "~@psre/types"
+      extension: ".gql.types.ts"
+    plugins:
+      - "typescript-operations"
