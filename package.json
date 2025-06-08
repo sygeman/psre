@@ -1,12 +1,12 @@
 {
   "name": "psre",
   "version": "0.1.0",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": ["packages/*"],
   "description": "PSRE monorepo",
   "license": "MIT",
   "packageManager": "bun@1.2.15",
   "type": "module",
   "scripts": {
-    "dev": "bun --filter './apps/*' dev"
+    "dev": "bun --filter '*' dev"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@psre/api-gql",
+  "name": "@psre/api",
   "version": "0.0.1",
   "description": "PSRE GraphQL API сервер на NestJS",
   "author": "",

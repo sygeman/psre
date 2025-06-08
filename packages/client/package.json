@@ -1,5 +1,5 @@
 {
-  "name": "@psre/web",
+  "name": "@psre/client",
   "version": "0.0.0",
   "description": "PSRE веб-приложение",
   "scripts": {
