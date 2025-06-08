@@ -1,28 +1,12 @@
 {
-  "name": "psre-monorepo",
-  "version": "0.0.0",
-  "devDependencies": {
-    "prettier": "3.5.3",
-    "turbo": "2.5.4"
-  },
-  "description": "PSRE монорепа на turborepo",
+  "name": "psre",
+  "version": "0.1.0",
+  "workspaces": ["apps/*", "packages/*"],
+  "description": "PSRE monorepo",
   "license": "MIT",
   "packageManager": "bun@1.2.15",
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "lint:fix": "turbo lint:fix",
-    "format": "turbo format",
-    "format:check": "turbo format:check",
-    "type-check": "turbo type-check",
-    "clean": "turbo clean",
-    "codegen": "turbo codegen",
-    "codegen:watch": "turbo codegen:watch"
-  },
   "type": "module",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "scripts": {
+    "dev": "bun --filter './apps/*' dev"
+  }
 }
