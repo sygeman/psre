@@ -24,25 +24,7 @@ export const Main = () => {
     initializeApp();
   });
 
-  apolloClient.query({
-    query: gql`
-      query GetChatMessages($chatId: String!) {
-        chatMessages(chatId: $chatId) {
-          id
-          content
-          userId
-          userName
-          chatId
-          createdAt
-        }
-      }
-    `,
-    variables: {
-      chatId: '1'
-    }
-  }).then((data) => {
-    console.log(data?.data?.chatMessages);
-  });
+  
 
   return (
     <Router>
