@@ -1,2 +1,3 @@
-import { RedisPubSub } from 'graphql-redis-subscriptions';
-export const pubsub = new RedisPubSub();
+import { createPubSub } from 'graphql-yoga';
+
+export const pubSub = createPubSub()

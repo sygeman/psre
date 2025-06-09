@@ -10,5 +10,9 @@
     "noEmit": true,
     "isolatedModules": true,
     "baseUrl": ".",
+
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
   },
 }

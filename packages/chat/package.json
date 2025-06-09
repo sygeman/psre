@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "exports": {
+    "./api": "./api/index.ts",
     "./client": "./client/index.ts",
     "./client/*": "./client/*"
   }
