@@ -9,11 +9,6 @@ import { AccountId } from 'src/account-id.decorator';
 export class ChatResolver {
   constructor(private readonly chatService: ChatService) {}
 
-  @Query(() => Chat, { nullable: true })
-  chat(@Args('id') id: string) {
-    return this.chatService.getChatById(id);
-  }
-
   @Query(() => [ChatMessage])
   chatMessages(
     @Args('chatId') chatId: string,

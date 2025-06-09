@@ -1,5 +1,5 @@
 import { Router, Route } from '@solidjs/router';
-import { createEffect, onMount } from 'solid-js';
+import { onMount } from 'solid-js';
 import './index.css';
 
 import { HomePage } from '@/pages/home';
@@ -17,14 +17,11 @@ import { ArmoryPage } from '@/pages/armory';
 import MiniGames from '@/pages/mini-games';
 import SlotsPage from '@/pages/slots';
 import { initializeApp } from '@/helpers/initialize-app';
-import { apolloClient, gql } from '@/lib/apollo';
 
 export const Main = () => {
   onMount(() => {
     initializeApp();
   });
-
-  
 
   return (
     <Router>
