@@ -2,7 +2,7 @@ services:
   inngest:
     restart: unless-stopped
     image: inngest/inngest:latest
-    command: 'inngest dev -u http://host.docker.internal:5000/api/inngest'
+    command: "inngest dev -u http://host.docker.internal:4500/api/inngest"
     ports:
-      - '8288:8288'
-      - '8289:8289'
+      - "8288:8288"
+      - "8289:8289"

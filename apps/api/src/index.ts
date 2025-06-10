@@ -2,8 +2,10 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { createYoga } from "graphql-yoga";
-import { pubsub } from "@psre/gql-tools";
+import { pubsub, inngest } from "@psre/tools";
+import { serve } from "inngest/bun";
 import { schema } from "./schema";
+import { inngestFunctions } from "@psre/chat/api";
 
 const yogaApp = createYoga({
   schema,
@@ -13,6 +15,7 @@ const yogaApp = createYoga({
 
 // Get NodeJS Server from Yoga
 const httpServer = createServer(yogaApp);
+
 // Create WebSocket server instance from our Node server
 const wsServer = new WebSocketServer({
   server: httpServer,
@@ -56,12 +59,17 @@ httpServer.listen(PORT, () => {
   console.log(`Server is now running on http://localhost:${PORT}/graphql`);
 });
 
-setInterval(() => {
-  pubsub.publish("createdChatMessage", "1", {
-    id: crypto.randomUUID(),
-    content: "123",
-    accountId: crypto.randomUUID(),
-    chatId: "1",
-    createdAt: new Date(),
-  });
-}, 4000);
+Bun.serve({
+  port: 4500,
+  fetch(request: Request) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/api/inngest") {
+      return serve({ client: inngest, functions: [...inngestFunctions] })(
+        request,
+      );
+    }
+
+    return new Response("Not found", { status: 404 });
+  },
+});

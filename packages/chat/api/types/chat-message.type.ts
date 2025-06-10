@@ -1,4 +1,4 @@
-import { builder } from "@psre/gql-tools";
+import { builder } from "@psre/tools";
 
 type ChatMessage = {
   id: string;
