@@ -5,25 +5,9 @@ import { chatStore } from '@psre/stores';
 import { accountStateSubscription } from '@/subscriptions/account-state';
 import { chatSubscription } from '@/subscriptions/chat';
 import { initAllianceHelp } from '@/stores/alliance';
-import { websocketStore } from '@/stores/websocket';
-import { authService } from '@/modules/auth/auth.service';
-import { createEffect } from 'solid-js';
 
 export const initializeApp = async () => {
-  setTimeout(() => {
-    if (websocketStore.isConnected) {
-      websocketStore.sendMessage({
-        type: 'subscribe',
-        payload: {
-          name: 'state',
-        },
-      })
-    }
-  }, 5000);
-
   try {
-    websocketStore.connect();
-
     await directus.connect();
 
     // Будем получать на основе авторизации
@@ -43,9 +27,15 @@ export const initializeApp = async () => {
     const allianceChatId = account?.alliance_id?.chat_id?.id;
 
     chatStore.setChatIds(regionChatId, allianceChatId);
-    chatStore.addMessagesToChannel('region', account.region_id.chat_id.messages)
-    chatStore.addMessagesToChannel('alliance', account.alliance_id.chat_id.messages)
-    
+    chatStore.addMessagesToChannel(
+      'region',
+      account.region_id.chat_id.messages
+    );
+    chatStore.addMessagesToChannel(
+      'alliance',
+      account.alliance_id.chat_id.messages
+    );
+
     updateStateFromData(state);
     accountStateSubscription(stateId);
     chatSubscription('region', regionChatId);

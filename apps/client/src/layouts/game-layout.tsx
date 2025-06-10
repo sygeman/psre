@@ -14,26 +14,26 @@ type GameLayoutProps = {
 export function GameLayout(props: GameLayoutProps) {
   return (
     <div class="relative flex h-screen flex-col">
-      <div class="absolute top-8 w-full h-[calc(100%-64px-32px)] overflow-hidden z-0">
+      <div class="absolute top-8 z-0 h-[calc(100%-64px-32px)] w-full overflow-hidden">
         {props.children}
       </div>
       <ToastNotifications />
-      <div class="absolute top-0 w-full flex shrink-0 z-10">
+      <div class="absolute top-0 z-10 flex w-full shrink-0">
         <ResourcesPanel />
       </div>
-      <div class="absolute top-8 flex shrink-0 z-10">
+      <div class="absolute top-8 z-10 flex shrink-0">
         <PersonPanel />
       </div>
-      <div class="absolute top-8 left-24 flex shrink-0 z-10">
+      <div class="absolute top-8 left-24 z-10 flex shrink-0">
         <PowerPanel />
       </div>
-      <div class="absolute top-10 right-2 flex shrink-0 z-10">
+      <div class="absolute top-10 right-2 z-10 flex shrink-0">
         <MiniGamesButton />
       </div>
-      <div class="absolute bottom-16 w-full z-10">
+      <div class="absolute bottom-16 z-10 w-full">
         <MiniChat />
       </div>
-      <div class="absolute bottom-0 w-full z-10">
+      <div class="absolute bottom-0 z-10 w-full">
         <BottomMenu />
       </div>
     </div>
