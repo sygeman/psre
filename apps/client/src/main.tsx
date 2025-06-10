@@ -1,5 +1,7 @@
 import { Router, Route } from '@solidjs/router';
 import { onMount } from 'solid-js';
+import 'virtual:uno.css';
+import '@unocss/reset/tailwind.css';
 import './index.css';
 
 import { HomePage } from '@/pages/home';

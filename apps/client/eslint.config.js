@@ -1,4 +1,5 @@
 import eslint from '@eslint/js';
+import unocss from '@unocss/eslint-config/flat';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tseslintParser from '@typescript-eslint/parser';
 import solidPlugin from 'eslint-plugin-solid';
@@ -6,6 +7,7 @@ import globals from 'globals';
 
 export default [
   eslint.configs.recommended,
+  unocss,
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -13,16 +15,16 @@ export default [
       parserOptions: {
         project: './tsconfig.json',
         ecmaFeatures: {
-          jsx: true
-        }
+          jsx: true,
+        },
       },
       globals: {
-        ...globals.browser
-      }
+        ...globals.browser,
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint,
-      'solid': solidPlugin,
+      solid: solidPlugin,
     },
     rules: {
       ...tseslint.configs.recommended.rules,
@@ -33,7 +35,7 @@ export default [
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-empty-function': 'warn',
-      'solid/self-closing-comp': 'warn'
+      'solid/self-closing-comp': 'warn',
     },
   },
-]; 
+];
