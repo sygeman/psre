@@ -12,32 +12,26 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  /** A date string, such as 2007-12-03, compliant with the `full-date` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
+  Date: { input: any; output: any; }
+  /** A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar. */
   DateTime: { input: any; output: any; }
-};
-
-export type Chat = {
-  __typename?: 'Chat';
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
-  messages: Array<ChatMessage>;
-  name: Scalars['String']['output'];
-  participantIds: Array<Scalars['String']['output']>;
-  updatedAt: Scalars['DateTime']['output'];
+  /** The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: { input: any; output: any; }
 };
 
 export type ChatMessage = {
   __typename?: 'ChatMessage';
-  accountId: Scalars['String']['output'];
-  chatId: Scalars['String']['output'];
-  content: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
+  accountId?: Maybe<Scalars['String']['output']>;
+  chatId?: Maybe<Scalars['String']['output']>;
+  content?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createChatMessage: Scalars['Boolean']['output'];
+  createChatMessage?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
@@ -47,18 +41,12 @@ export type MutationCreateChatMessageArgs = {
 
 export type Query = {
   __typename?: 'Query';
-  chat?: Maybe<Chat>;
-  chatMessages: Array<ChatMessage>;
-};
-
-
-export type QueryChatArgs = {
-  id: Scalars['String']['input'];
+  chatMessages?: Maybe<Array<ChatMessage>>;
 };
 
 
 export type QueryChatMessagesArgs = {
-  chatId: Scalars['String']['input'];
+  chatId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type SendMessageInput = {
@@ -68,10 +56,10 @@ export type SendMessageInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
-  createdChatMessage: ChatMessage;
+  createdChatMessage?: Maybe<ChatMessage>;
 };
 
 
 export type SubscriptionCreatedChatMessageArgs = {
-  chatId: Scalars['String']['input'];
+  chatId?: InputMaybe<Scalars['String']['input']>;
 };

@@ -1,0 +1,10 @@
+{
+  "name": "@psre/gql-tools",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "graphql-scalars": "1.24.2",
+    "graphql-yoga": "5.13.5"
+  }
+}

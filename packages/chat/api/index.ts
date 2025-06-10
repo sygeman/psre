@@ -1,1 +1,1 @@
-export { ChatResolver } from './chat.resolver';
+export { buildChatModule } from "./chat.resolver";

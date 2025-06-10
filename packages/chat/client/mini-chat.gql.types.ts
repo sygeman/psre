@@ -5,11 +5,11 @@ export type CreateMessageMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateMessageMutation = { __typename?: 'Mutation', createChatMessage: boolean };
+export type CreateMessageMutation = { __typename?: 'Mutation', createChatMessage?: boolean | null };
 
 export type GetNewChatMessagesSubscriptionVariables = Types.Exact<{
   chatId: Types.Scalars['String']['input'];
 }>;
 
 
-export type GetNewChatMessagesSubscription = { __typename?: 'Subscription', createdChatMessage: { __typename?: 'ChatMessage', id: string, content: string, accountId: string, chatId: string, createdAt: any } };
+export type GetNewChatMessagesSubscription = { __typename?: 'Subscription', createdChatMessage?: { __typename?: 'ChatMessage', id?: string | null, content?: string | null, accountId?: string | null, chatId?: string | null, createdAt?: any | null } | null };
