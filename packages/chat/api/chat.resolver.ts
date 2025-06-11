@@ -25,10 +25,10 @@ export const buildChatModule = () => {
         args: {
           input: t.arg({ type: SendMessageInput, required: true }),
         },
-        resolve: async (_parent, { input }) => {
+        resolve: async (_parent, { input }, { currentAccountId }) => {
           await inngest.send({
             name: CHAT_EVENTS.MESSAGE_CREATED,
-            data: input,
+            data: { ...input, accountId: currentAccountId },
           });
           return true;
         },

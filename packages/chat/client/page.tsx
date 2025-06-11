@@ -5,6 +5,7 @@ import { Icon } from "solid-heroicons";
 import { paperAirplane, arrowDown } from "solid-heroicons/outline";
 import { useLocation } from "@solidjs/router";
 import { CharacterAvatar } from "@psre/components";
+import { createChat } from "./create-chat";
 
 type LocationState = {
   activeChannel?: ChatChannel;
@@ -18,6 +19,7 @@ export function ChatPage() {
   const [isFirstRender, setIsFirstRender] = createSignal(true);
   let chatContainerRef: HTMLDivElement | undefined;
   let textareaRef: HTMLTextAreaElement | undefined;
+  const { messages, createMessage } = createChat();
 
   const isNearBottom = () => {
     if (chatContainerRef) {
@@ -79,7 +81,7 @@ export function ChatPage() {
 
   createEffect(() => {
     // Вызываем scrollToBottom при изменении списка сообщений
-    const _ = chatStore.messages;
+    const _ = messages;
     // Скроллим только если пользователь близко к низу
     setTimeout(scrollToBottom, 0);
   });
@@ -108,15 +110,7 @@ export function ChatPage() {
     e.preventDefault();
     const message = newMessage().trim();
     if (message) {
-      chatStore.addMessage({
-        id: Date.now().toString(),
-        text: message,
-        author: "User",
-        avatar: "",
-        channel: chatStore.activeChannel,
-        sender: "user",
-        timestamp: new Date(),
-      });
+      createMessage(message);
       setNewMessage("");
       if (textareaRef) {
         textareaRef.style.height = "40px";
@@ -182,34 +176,30 @@ export function ChatPage() {
           class="scrollbar flex-1 space-y-4 overflow-x-hidden overflow-y-auto p-3 bg-slate-900"
           ref={chatContainerRef}
         >
-          <For
-            each={chatStore.messages.filter(
-              (m) => m.channel === chatStore.activeChannel,
-            )}
-          >
+          <For each={messages()}>
             {(message) => (
               <div
                 class={`flex max-w-full min-w-0 items-start gap-3 ${
-                  message.sender === "user" ? "flex-row-reverse" : "flex-row"
+                  false ? "flex-row-reverse" : "flex-row"
                 }`}
               >
                 <div class="h-12 w-12 shrink-0 overflow-hidden rounded bg-slate-600">
                   <CharacterAvatar class="size-12" />
                 </div>
                 <div
-                  class={`flex max-w-[calc(100%-3.5rem)] min-w-0 flex-col gap-1 ${message.sender === "user" ? "items-end" : "items-start"}`}
+                  class={`flex max-w-[calc(100%-3.5rem)] min-w-0 flex-col gap-1 ${false ? "items-end" : "items-start"}`}
                 >
                   <span class="text-xs font-medium text-gray-400">
-                    {message.author}
+                    {message.accountId}
                   </span>
                   <div
                     class={`max-w-full rounded-lg px-3 py-2 break-words backdrop-blur-sm ${
-                      message.sender === "user"
+                      false
                         ? "bg-white/20 backdrop-blur-3xl text-white"
                         : "bg-white/10 backdrop-blur-3xl text-gray-100"
                     }`}
                   >
-                    <p class="text-sm">{message.text}</p>
+                    <p class="text-sm">{message.content}</p>
                   </div>
                 </div>
               </div>

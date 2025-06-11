@@ -1,118 +1,18 @@
-import { For, createEffect, createSignal, onCleanup } from "solid-js";
+import { For, createSignal } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import { chatStore, type ChatChannel } from "./store";
+import { chatStore, type ChatChannel } from "../store";
 import { Icon } from "solid-heroicons";
 import { globeAlt, userGroup } from "solid-heroicons/outline";
-import {
-  createMutation,
-  createSubscription,
-  gql,
-  useApollo,
-} from "@psre/apollo";
-import {
-  CreateMessageMutation,
-  CreateMessageMutationVariables,
-  GetNewChatMessagesSubscription,
-  GetNewChatMessagesSubscriptionVariables,
-} from "./mini-chat.gql.types";
+import { createChat } from "../create-chat";
 
+// Переключение канала (синк выбранного канала с страницей чата)
+// Получение 2 послдених сообщения из истории
+// Реалтайм новые сообщения в канале
 export function MiniChat() {
   const navigate = useNavigate();
   const [touchStart, setTouchStart] = createSignal(0);
   const [isAnimating, setIsAnimating] = createSignal(false);
-  const apolloClient = useApollo();
-
-  // apolloClient.query<GetChatMessagesQuery, GetChatMessagesQueryVariables>({
-  //     query: gql`
-  //       query GetChatMessages($chatId: String!) {
-  //         chatMessages(chatId: $chatId) {
-  //           id
-  //           content
-  //           accountId
-  //           chatId
-  //           createdAt
-  //         }
-  //       }
-  //     `,
-  //     variables: {
-  //       chatId: '1',
-  //     }
-  //   }).then((data) => {
-  //     console.log(data?.data.chatMessages);
-  //   });
-
-  const [createMessage] = createMutation<
-    CreateMessageMutation,
-    CreateMessageMutationVariables
-  >(gql`
-    mutation CreateMessage($input: SendMessageInput!) {
-      createChatMessage(input: $input)
-    }
-  `);
-
-  // const data = createSubscription<
-  //   GetNewChatMessagesSubscription,
-  //   GetNewChatMessagesSubscriptionVariables
-  // >(
-  //   gql`
-  //     subscription GetNewChatMessages($chatId: String!) {
-  //       createdChatMessage(chatId: $chatId) {
-  //         id
-  //         content
-  //         accountId
-  //         chatId
-  //         createdAt
-  //       }
-  //     }
-  //   `,
-  //   { variables: { chatId: "1" } },
-  // );
-
-  // createEffect(() => {
-  //   if (!data.loading) {
-  //     console.log(data().createdChatMessage);
-  //   }
-  // });
-
-  const subscription = apolloClient
-    .subscribe<
-      GetNewChatMessagesSubscription,
-      GetNewChatMessagesSubscriptionVariables
-    >({
-      query: gql`
-        subscription GetNewChatMessages($chatId: String!) {
-          createdChatMessage(chatId: $chatId) {
-            id
-            content
-            accountId
-            chatId
-            createdAt
-          }
-        }
-      `,
-      variables: {
-        chatId: "1",
-      },
-    })
-    .subscribe({
-      // error: reject,
-      next: ({ data }) => {
-        console.log(data?.createdChatMessage);
-      },
-    });
-
-  onCleanup(() => subscription.unsubscribe());
-
-  setInterval(() => {
-    createMessage({
-      variables: {
-        input: {
-          chatId: "1",
-          content: "12312312",
-        },
-      },
-    });
-  }, 1000);
+  const { messages } = createChat();
 
   const handleClick = () => {
     navigate("/chat", { state: { activeChannel: chatStore.activeChannel } });
@@ -173,22 +73,17 @@ export function MiniChat() {
         </div>
       </div>
       <div class="ml-2 max-w-[calc(100%-60px)] min-w-0 flex-1 space-y-0.5 pr-2">
-        <For
-          each={chatStore.messages
-            .filter((m) => m.channel === props.channel)
-            .slice(-2)}
-        >
+        <For each={messages().slice(-2)}>
           {(message) => (
             <div class="max-w-full min-w-0 text-sm leading-[22px] text-gray-400/90 flex">
               <span class="font-medium select-none text-gray-200/90 flex-shrink-0">
-                {message.author}:
+                {message.accountId}:
               </span>
-              <span class="select-none truncate ml-1">{message.text}</span>
+              <span class="select-none truncate ml-1">{message.content}</span>
             </div>
           )}
         </For>
-        {chatStore.messages.filter((m) => m.channel === props.channel)
-          .length === 0 && (
+        {messages().length === 0 && (
           <div class="flex h-[44px] items-center justify-center">
             <p class="text-xs text-gray-500/80 select-none">Нет сообщений</p>
           </div>

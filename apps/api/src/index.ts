@@ -6,10 +6,23 @@ import { pubsub, inngest } from "@psre/tools";
 import { serve } from "inngest/bun";
 import { schema } from "./schema";
 import { inngestFunctions } from "@psre/chat/api";
+import { CloseCode } from "graphql-ws";
 
-const yogaApp = createYoga({
+type ConnectionParams = {
+  token?: string;
+};
+
+type Extra = {
+  accountId?: string;
+};
+
+const isTokenValid = async (token?: string) => token === "123";
+
+const yogaApp = createYoga<{ extra: Extra }>({
   schema,
-  context: () => ({ pubsub }),
+  context: (ctx) => {
+    return { pubsub, currentAccountId: ctx.extra.accountId };
+  },
   graphiql: { subscriptionsProtocol: "WS" },
 });
 
@@ -23,11 +36,23 @@ const wsServer = new WebSocketServer({
 });
 
 // Integrate Yoga's Envelop instance and NodeJS server with graphql-ws
-useServer(
+useServer<ConnectionParams, Extra>(
   {
     execute: (args: any) => args.rootValue.execute(args),
     subscribe: (args: any) => args.rootValue.subscribe(args),
+    onConnect: async (ctx) => {
+      ctx.extra.accountId = "1111";
+      // do your auth check on every connect (recommended)
+      if (!(await isTokenValid(ctx.connectionParams?.token)))
+        // returning false from the onConnect callback will close with `4403: Forbidden`;
+        // therefore, being synonymous to ctx.extra.socket.close(4403, 'Forbidden');
+        return false;
+    },
     onSubscribe: async (ctx, _id, params) => {
+      // or maybe on every subscribe
+      if (!(await isTokenValid(ctx.connectionParams?.token)))
+        return ctx.extra.socket.close(CloseCode.Forbidden, "Forbidden");
+
       const { schema, execute, subscribe, contextFactory, parse, validate } =
         yogaApp.getEnveloped({
           ...ctx,

@@ -3,7 +3,7 @@ import { DateResolver, DateTimeResolver, JSONResolver } from "graphql-scalars";
 import type { pubsub } from "./pubsub";
 
 export const builder = new SchemaBuilder<{
-  Context: { pubsub: typeof pubsub };
+  Context: { pubsub: typeof pubsub; currentAccountId: string };
   Scalars: {
     ID: {
       Output: number | string;
