@@ -7,6 +7,7 @@
     "dev": "bun --watch ./src/index.ts"
   },
   "dependencies": {
+    "@directus/sdk": "19.1.0",
     "@psre/chat": "workspace:*",
     "@psre/tools": "workspace:*",
     "@types/bun": "1.2.15",

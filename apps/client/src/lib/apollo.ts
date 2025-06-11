@@ -7,7 +7,7 @@ export const apolloClient = new ApolloClient({
     createClient({
       url: "http://localhost:4000/graphql",
       connectionParams: () => ({
-        token: "123",
+        token: "fdb410ef-4558-4090-a382-ccca27f01215",
       }),
     }),
   ),

@@ -1,24 +1,17 @@
-import { ApolloProvider } from '@psre/apollo'
-import { render } from 'solid-js/web';
-import './index.css';
+import { ApolloProvider } from "@psre/apollo";
+import { render } from "solid-js/web";
+import "./index.css";
 
-import { QueryClientProvider } from '@tanstack/solid-query';
-import { queryClient } from '@/lib/client';
-import { Main } from './main';
+import { Main } from "./main";
 
-import { apolloClient } from './lib/apollo';
+import { apolloClient } from "./lib/apollo";
 
 const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
-      <QueryClientProvider client={queryClient}>
-        <Main />
-      </QueryClientProvider>
+      <Main />
     </ApolloProvider>
   );
 };
 
-render(
-  () => <App />,
-  document.getElementById('root')
-);
+render(() => <App />, document.getElementById("root"));

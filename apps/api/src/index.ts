@@ -2,11 +2,11 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { createYoga } from "graphql-yoga";
-import { pubsub, inngest } from "@psre/tools";
+import { pubsub, inngest, directus } from "@psre/tools";
 import { serve } from "inngest/bun";
 import { schema } from "./schema";
 import { inngestFunctions } from "@psre/chat/api";
-import { CloseCode } from "graphql-ws";
+import { readItem } from "@directus/sdk";
 
 type ConnectionParams = {
   token?: string;
@@ -16,7 +16,18 @@ type Extra = {
   accountId?: string;
 };
 
-const isTokenValid = async (token?: string) => token === "123";
+const currentAccountIdByToken = async (token?: string) => {
+  if (!token) return false;
+
+  try {
+    const accountQuery = await directus.request(
+      readItem("psre_auth_tokens", token, { fields: ["user.current_account"] }),
+    );
+    return accountQuery?.user?.current_account;
+  } catch {
+    return false;
+  }
+};
 
 const yogaApp = createYoga<{ extra: Extra }>({
   schema,
@@ -41,18 +52,18 @@ useServer<ConnectionParams, Extra>(
     execute: (args: any) => args.rootValue.execute(args),
     subscribe: (args: any) => args.rootValue.subscribe(args),
     onConnect: async (ctx) => {
-      ctx.extra.accountId = "1111";
       // do your auth check on every connect (recommended)
-      if (!(await isTokenValid(ctx.connectionParams?.token)))
-        // returning false from the onConnect callback will close with `4403: Forbidden`;
-        // therefore, being synonymous to ctx.extra.socket.close(4403, 'Forbidden');
-        return false;
+      const accountId = await currentAccountIdByToken(
+        ctx.connectionParams?.token,
+      );
+
+      // returning false from the onConnect callback will close with `4403: Forbidden`;
+      // therefore, being synonymous to ctx.extra.socket.close(4403, 'Forbidden');
+      if (!accountId) return false;
+
+      ctx.extra.accountId = accountId;
     },
     onSubscribe: async (ctx, _id, params) => {
-      // or maybe on every subscribe
-      if (!(await isTokenValid(ctx.connectionParams?.token)))
-        return ctx.extra.socket.close(CloseCode.Forbidden, "Forbidden");
-
       const { schema, execute, subscribe, contextFactory, parse, validate } =
         yogaApp.getEnveloped({
           ...ctx,

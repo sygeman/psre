@@ -17,6 +17,7 @@
     "apps/api": {
       "name": "api",
       "dependencies": {
+        "@directus/sdk": "19.1.0",
         "@psre/chat": "workspace:*",
         "@psre/tools": "workspace:*",
         "@types/bun": "1.2.15",
@@ -38,7 +39,6 @@
         "@psre/constants": "workspace:*",
         "@psre/layouts": "workspace:*",
         "@solidjs/router": "0.15.3",
-        "@tanstack/solid-query": "5.80.6",
         "@unocss/reset": "66.1.4",
         "graphql-ws": "6.0.5",
         "solid-heroicons": "3.2.4",
@@ -82,7 +82,11 @@
       "name": "@psre/constants",
       "version": "0.1.0",
     },
-    "packages/gql-tools": {
+    "packages/layouts": {
+      "name": "@psre/layouts",
+      "version": "0.1.0",
+    },
+    "packages/tools": {
       "name": "@psre/tools",
       "version": "0.1.0",
       "dependencies": {
@@ -90,10 +94,6 @@
         "graphql-scalars": "1.24.2",
         "graphql-yoga": "5.13.5",
       },
-    },
-    "packages/layouts": {
-      "name": "@psre/layouts",
-      "version": "0.1.0",
     },
     "packages/types": {
       "name": "@psre/types",
@@ -641,7 +641,7 @@
 
     "@psre/layouts": ["@psre/layouts@workspace:packages/layouts"],
 
-    "@psre/tools": ["@psre/tools@workspace:packages/gql-tools"],
+    "@psre/tools": ["@psre/tools@workspace:packages/tools"],
 
     "@psre/types": ["@psre/types@workspace:packages/types"],
 
@@ -718,10 +718,6 @@
     "@solid-primitives/utils": ["@solid-primitives/utils@6.3.1", "", { "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-4/Z59nnwu4MPR//zWZmZm2yftx24jMqQ8CSd/JobL26TPfbn4Ph8GKNVJfGJWShg1QB98qObJSskqizbTvcLLA=="],
 
     "@solidjs/router": ["@solidjs/router@0.15.3", "", { "peerDependencies": { "solid-js": "^1.8.6" } }, "sha512-iEbW8UKok2Oio7o6Y4VTzLj+KFCmQPGEpm1fS3xixwFBdclFVBvaQVeibl1jys4cujfAK5Kn6+uG2uBm3lxOMw=="],
-
-    "@tanstack/query-core": ["@tanstack/query-core@5.80.6", "", {}, "sha512-nl7YxT/TAU+VTf+e2zTkObGTyY8YZBMnbgeA1ee66lIVqzKlYursAII6z5t0e6rXgwUMJSV4dshBTNacNpZHbQ=="],
-
-    "@tanstack/solid-query": ["@tanstack/solid-query@5.80.6", "", { "dependencies": { "@tanstack/query-core": "5.80.6" }, "peerDependencies": { "solid-js": "^1.6.0" } }, "sha512-fmq1dHoZsEMsd0mYk9y9Lukp7156xgrjgrKifpPFcCw9rsT8WLewvgrm2Ap5DmeZgs/xoHK7rBmR1bU1NfPteQ=="],
 
     "@types/aws-lambda": ["@types/aws-lambda@8.10.147", "", {}, "sha512-nD0Z9fNIZcxYX5Mai2CTmFD7wX7UldCkW2ezCF8D1T5hdiLsnTWDGRpfRYntU6VjTdLQjOvyszru7I1c1oCQew=="],
 
