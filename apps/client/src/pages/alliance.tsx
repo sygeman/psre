@@ -1,8 +1,8 @@
-import { AnimatedNumber } from '@/components/animated-number';
-import { BackLayout } from '@/layouts/back-layout';
-import { createSignal, For } from 'solid-js';
+import { AnimatedNumber } from "@/components/animated-number";
+import { BackLayout } from "@psre/layouts";
+import { createSignal, For } from "solid-js";
 
-type TabType = 'info' | 'members' | 'diplomacy';
+type TabType = "info" | "members" | "diplomacy";
 
 type AllianceMember = {
   id: number;
@@ -23,37 +23,37 @@ type Alliance = {
 };
 
 export function AlliancePage() {
-  const [activeTab, setActiveTab] = createSignal<TabType>('info');
+  const [activeTab, setActiveTab] = createSignal<TabType>("info");
 
   // Моковые данные для примера
   const alliance: Alliance = {
-    name: 'Северное Сияние',
-    tag: '[NS]',
+    name: "Северное Сияние",
+    tag: "[NS]",
     level: 5,
     power: 1250000,
     description:
-      'Один из сильнейших альянсов северного региона. Мы всегда готовы принять в свои ряды активных игроков, стремящихся к развитию и взаимопомощи.',
+      "Один из сильнейших альянсов северного региона. Мы всегда готовы принять в свои ряды активных игроков, стремящихся к развитию и взаимопомощи.",
     members: [
       {
         id: 1,
-        name: 'Commander_Alex',
-        rank: 'Лидер',
+        name: "Commander_Alex",
+        rank: "Лидер",
         power: 250000,
-        lastOnline: 'Онлайн',
+        lastOnline: "Онлайн",
       },
       {
         id: 2,
-        name: 'IronStar',
-        rank: 'Генерал',
+        name: "IronStar",
+        rank: "Генерал",
         power: 180000,
-        lastOnline: '5 мин. назад',
+        lastOnline: "5 мин. назад",
       },
       {
         id: 3,
-        name: 'StarDust',
-        rank: 'Офицер',
+        name: "StarDust",
+        rank: "Офицер",
         power: 150000,
-        lastOnline: '1 час назад',
+        lastOnline: "1 час назад",
       },
     ],
   };
@@ -71,7 +71,7 @@ export function AlliancePage() {
               <div class="text-lg font-medium">{alliance.name}</div>
               <div class="flex items-center gap-4 text-sm text-slate-400">
                 <div>Уровень {alliance.level}</div>
-                <div>{alliance.power.toLocaleString('en-US')} 🔥</div>
+                <div>{alliance.power.toLocaleString("en-US")} 🔥</div>
               </div>
             </div>
           </div>
@@ -81,31 +81,31 @@ export function AlliancePage() {
         <div class="grid grid-cols-3 border-b border-slate-700/25">
           <button
             class={`p-4 text-sm ${
-              activeTab() === 'info'
-                ? 'border-b-2 border-blue-500 font-medium'
-                : 'text-slate-400'
+              activeTab() === "info"
+                ? "border-b-2 border-blue-500 font-medium"
+                : "text-slate-400"
             }`}
-            onClick={() => setActiveTab('info')}
+            onClick={() => setActiveTab("info")}
           >
             Информация
           </button>
           <button
             class={`p-4 text-sm ${
-              activeTab() === 'members'
-                ? 'border-b-2 border-blue-500 font-medium'
-                : 'text-slate-400'
+              activeTab() === "members"
+                ? "border-b-2 border-blue-500 font-medium"
+                : "text-slate-400"
             }`}
-            onClick={() => setActiveTab('members')}
+            onClick={() => setActiveTab("members")}
           >
             Участники
           </button>
           <button
             class={`p-4 text-sm ${
-              activeTab() === 'diplomacy'
-                ? 'border-b-2 border-blue-500 font-medium'
-                : 'text-slate-400'
+              activeTab() === "diplomacy"
+                ? "border-b-2 border-blue-500 font-medium"
+                : "text-slate-400"
             }`}
-            onClick={() => setActiveTab('diplomacy')}
+            onClick={() => setActiveTab("diplomacy")}
           >
             Дипломатия
           </button>
@@ -113,7 +113,7 @@ export function AlliancePage() {
 
         {/* Контент вкладок */}
         <div class="hide-scrollbar flex-1 overflow-y-auto">
-          {activeTab() === 'info' && (
+          {activeTab() === "info" && (
             <div class="space-y-4 p-4">
               <div class="rounded-lg bg-slate-800 p-4">
                 <div class="mb-2 text-sm font-medium">Описание</div>
@@ -132,7 +132,7 @@ export function AlliancePage() {
             </div>
           )}
 
-          {activeTab() === 'members' && (
+          {activeTab() === "members" && (
             <div class="divide-y divide-slate-700/25">
               <For each={alliance.members}>
                 {(member) => (
@@ -170,7 +170,7 @@ export function AlliancePage() {
             </div>
           )}
 
-          {activeTab() === 'diplomacy' && (
+          {activeTab() === "diplomacy" && (
             <div class="p-4">
               <div class="rounded-lg bg-slate-800 p-4">
                 <div class="mb-4 text-sm font-medium">

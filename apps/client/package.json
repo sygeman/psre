@@ -36,7 +36,7 @@
     "@psre/apollo": "workspace:*",
     "@psre/chat": "workspace:*",
     "@psre/constants": "workspace:*",
-    "@psre/stores": "workspace:*",
+    "@psre/layouts": "workspace:*",
     "@solidjs/router": "0.15.3",
     "@tanstack/solid-query": "5.80.6",
     "@unocss/reset": "66.1.4",

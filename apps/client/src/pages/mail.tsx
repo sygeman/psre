@@ -1,24 +1,24 @@
-import { BackLayout } from '@/layouts/back-layout';
-import { For } from 'solid-js';
-import { mailStore, type Mail } from '@/stores/mail';
+import { BackLayout } from "@psre/layouts";
+import { For } from "solid-js";
+import { mailStore, type Mail } from "@/stores/mail";
 
 export function MailPage() {
-  const getRewardIcon = (type: Mail['hasReward']['type']) => {
+  const getRewardIcon = (type: Mail["hasReward"]["type"]) => {
     switch (type) {
-      case 'food':
-        return '🌾';
-      case 'wood':
-        return '🪵';
-      case 'steel':
-        return '🔩';
-      case 'fuel':
-        return '🛢️';
-      case 'diamond':
-        return '💎';
-      case 'serum':
-        return '🧪';
-      case 'exp':
-        return '✨';
+      case "food":
+        return "🌾";
+      case "wood":
+        return "🪵";
+      case "steel":
+        return "🔩";
+      case "fuel":
+        return "🛢️";
+      case "diamond":
+        return "💎";
+      case "serum":
+        return "🧪";
+      case "exp":
+        return "✨";
     }
   };
 
@@ -31,7 +31,7 @@ export function MailPage() {
               {(mail) => (
                 <div
                   class={`flex cursor-pointer flex-col gap-2 p-4 transition-colors hover:bg-slate-800 ${
-                    !mail.isRead ? 'bg-slate-800/50' : ''
+                    !mail.isRead ? "bg-slate-800/50" : ""
                   }`}
                   onClick={() => mailStore.markAsRead(mail.id)}
                 >
@@ -50,7 +50,7 @@ export function MailPage() {
                       <span>Награда:</span>
                       <span>{getRewardIcon(mail.hasReward.type)}</span>
                       <span>
-                        {mail.hasReward.amount.toLocaleString('en-US')}
+                        {mail.hasReward.amount.toLocaleString("en-US")}
                       </span>
                     </div>
                   )}

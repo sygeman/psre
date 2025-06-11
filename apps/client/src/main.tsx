@@ -1,33 +1,26 @@
-import { Router, Route } from '@solidjs/router';
-import { onMount } from 'solid-js';
-import 'virtual:uno.css';
-import '@unocss/reset/tailwind.css';
-import './index.css';
+import { Router, Route } from "@solidjs/router";
+import "virtual:uno.css";
+import "@unocss/reset/tailwind.css";
+import "./index.css";
 
-import { HomePage } from '@/pages/home';
-import { RegionPage } from '@/pages/region';
-import { HeroesPage } from '@/pages/heroes';
-import { VipPage } from '@/pages/vip';
-import { ShopPage } from '@/pages/shop';
-import { PersonPage } from '@/pages/person';
-import ChatPage from '@/pages/chat';
-import { RankPage } from '@/pages/rank';
-import { QuestsPage } from '@/pages/quests';
-import { AlliancePage } from '@/pages/alliance';
-import { MailPage } from '@/pages/mail';
-import { ArmoryPage } from '@/pages/armory';
-import MiniGames from '@/pages/mini-games';
-import SlotsPage from '@/pages/slots';
-import { initializeApp } from '@/helpers/initialize-app';
+import { HomePage } from "@/pages/home";
+import { RegionPage } from "@/pages/region";
+import { HeroesPage } from "@/pages/heroes";
+import { VipPage } from "@/pages/vip";
+import { ShopPage } from "@/pages/shop";
+import { PersonPage } from "@/pages/person";
+import { ChatPage } from "@psre/chat/client";
+import { RankPage } from "@/pages/rank";
+import { QuestsPage } from "@/pages/quests";
+import { AlliancePage } from "@/pages/alliance";
+import { MailPage } from "@/pages/mail";
+import { ArmoryPage } from "@/pages/armory";
+import MiniGames from "@/pages/mini-games";
+import SlotsPage from "@/pages/slots";
 
 export const Main = () => {
-  onMount(() => {
-    initializeApp();
-  });
-
   return (
     <Router>
-      {/* <ConnectionOverlay /> */}
       <Route path="/" component={HomePage} />
       <Route path="/armory" component={ArmoryPage} />
       <Route path="/region" component={RegionPage} />

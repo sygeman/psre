@@ -36,7 +36,7 @@
         "@psre/apollo": "workspace:*",
         "@psre/chat": "workspace:*",
         "@psre/constants": "workspace:*",
-        "@psre/stores": "workspace:*",
+        "@psre/layouts": "workspace:*",
         "@solidjs/router": "0.15.3",
         "@tanstack/solid-query": "5.80.6",
         "@unocss/reset": "66.1.4",
@@ -70,8 +70,13 @@
       "name": "@psre/chat",
       "version": "0.1.0",
       "dependencies": {
+        "@psre/components": "workspace:*",
         "@psre/tools": "workspace:*",
       },
+    },
+    "packages/components": {
+      "name": "@psre/components",
+      "version": "0.1.0",
     },
     "packages/constants": {
       "name": "@psre/constants",
@@ -86,8 +91,8 @@
         "graphql-yoga": "5.13.5",
       },
     },
-    "packages/stores": {
-      "name": "@psre/stores",
+    "packages/layouts": {
+      "name": "@psre/layouts",
       "version": "0.1.0",
     },
     "packages/types": {
@@ -630,9 +635,11 @@
 
     "@psre/client": ["@psre/client@workspace:apps/client"],
 
+    "@psre/components": ["@psre/components@workspace:packages/components"],
+
     "@psre/constants": ["@psre/constants@workspace:packages/constants"],
 
-    "@psre/stores": ["@psre/stores@workspace:packages/stores"],
+    "@psre/layouts": ["@psre/layouts@workspace:packages/layouts"],
 
     "@psre/tools": ["@psre/tools@workspace:packages/gql-tools"],
 

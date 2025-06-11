@@ -1,4 +1,4 @@
-import { BackLayout } from '@/layouts/back-layout';
+import { BackLayout } from "@psre/layouts";
 
 export function VipPage() {
   return (

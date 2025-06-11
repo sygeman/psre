@@ -1,6 +1,6 @@
 import { For, createEffect, createSignal, onCleanup } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import { chatStore, type ChatChannel } from "@psre/stores";
+import { chatStore, type ChatChannel } from "./store";
 import { Icon } from "solid-heroicons";
 import { globeAlt, userGroup } from "solid-heroicons/outline";
 import {

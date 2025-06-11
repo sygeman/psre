@@ -1,7 +1,7 @@
-import { BackLayout } from '@/layouts/back-layout';
-import { For } from 'solid-js';
-import { AnimatedNumber } from '@/components/animated-number';
-import { CharacterAvatar } from '@/components/character-avatar';
+import { BackLayout } from "@psre/layouts";
+import { For } from "solid-js";
+import { AnimatedNumber } from "@/components/animated-number";
+import { CharacterAvatar } from "@/components/character-avatar";
 
 export function RankPage() {
   const players = Array.from({ length: 100 }, (_, index) => ({
@@ -14,8 +14,8 @@ export function RankPage() {
   // Изменяем данные текущего игрока на первое место
   const currentPlayer = {
     id: 1,
-    name: 'Игрок 1',
-    alliance: 'Альянс 1',
+    name: "Игрок 1",
+    alliance: "Альянс 1",
     power: Math.floor(1000000), // Максимальная мощь для первого места
   };
 
@@ -27,9 +27,9 @@ export function RankPage() {
       case 1:
         return `
           relative overflow-hidden
-          before:absolute before:inset-0 
+          before:absolute before:inset-0
           before:bg-gradient-to-r before:from-yellow-500/10 before:via-yellow-400/20 before:to-yellow-500/10
-          after:absolute after:inset-0 
+          after:absolute after:inset-0
           after:bg-[radial-gradient(circle_at_50%_50%,rgba(234,179,8,0.1),transparent_60%)]
           after:animate-[pulse_3s_ease-in-out_infinite]
           [&>div.shine]:animate-[shine_3s_ease-in-out_infinite]
@@ -37,9 +37,9 @@ export function RankPage() {
       case 2:
         return `
           relative overflow-hidden
-          before:absolute before:inset-0 
+          before:absolute before:inset-0
           before:bg-gradient-to-r before:from-slate-400/10 before:via-slate-300/20 before:to-slate-400/10
-          after:absolute after:inset-0 
+          after:absolute after:inset-0
           after:bg-[radial-gradient(circle_at_50%_50%,rgba(226,232,240,0.1),transparent_60%)]
           after:animate-[pulse_3s_ease-in-out_infinite]
           [&>div.shine]:animate-[shine_3s_ease-in-out_infinite]
@@ -47,15 +47,15 @@ export function RankPage() {
       case 3:
         return `
           relative overflow-hidden
-          before:absolute before:inset-0 
+          before:absolute before:inset-0
           before:bg-gradient-to-r before:from-amber-600/10 before:via-amber-500/20 before:to-amber-600/10
-          after:absolute after:inset-0 
+          after:absolute after:inset-0
           after:bg-[radial-gradient(circle_at_50%_50%,rgba(217,119,6,0.1),transparent_60%)]
           after:animate-[pulse_3s_ease-in-out_infinite]
           [&>div.shine]:animate-[shine_3s_ease-in-out_infinite]
         `;
       default:
-        return '';
+        return "";
     }
   };
 
@@ -63,8 +63,8 @@ export function RankPage() {
     switch (rank) {
       case 1:
         return `
-          bg-gradient-to-br from-yellow-500/90 to-amber-400/90 
-          text-white font-bold 
+          bg-gradient-to-br from-yellow-500/90 to-amber-400/90
+          text-white font-bold
           relative overflow-hidden
           px-2.5 py-1
           before:absolute before:inset-0
@@ -92,12 +92,12 @@ export function RankPage() {
           before:animate-[shine_2s_ease-in-out_infinite]
         `;
       default:
-        return 'bg-slate-800 text-slate-400 px-1.5 py-0.5';
+        return "bg-slate-800 text-slate-400 px-1.5 py-0.5";
     }
   };
 
-  const PlayerRow = (player: typeof players[0]) => (
-    <div 
+  const PlayerRow = (player: (typeof players)[0]) => (
+    <div
       class={`relative flex h-14 items-center gap-4 px-4 group hover:bg-slate-800/30 transition-colors ${getRowStyle(player.id)}`}
     >
       {player.id <= 3 && (
@@ -109,7 +109,7 @@ export function RankPage() {
           <div class="shine absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
         </>
       )}
-      
+
       <div class={`w-10 rounded-md text-center ${getRankStyle(player.id)}`}>
         {player.id}
       </div>
@@ -119,7 +119,7 @@ export function RankPage() {
       <div class="flex flex-1 flex-col relative z-10">
         <div class="font-medium text-amber-50/90">{player.name}</div>
         <div class="text-sm text-slate-400">
-          {player.alliance || 'Нет альянса'}
+          {player.alliance || "Нет альянса"}
         </div>
       </div>
       <div class="text-right text-amber-50/90 relative z-10">
@@ -138,10 +138,7 @@ export function RankPage() {
   );
 
   return (
-    <BackLayout 
-      title="Личный Ранг по Мощи"
-      bottomContent={CurrentPlayerRow}
-    >
+    <BackLayout title="Личный Ранг по Мощи" bottomContent={CurrentPlayerRow}>
       <div class="flex flex-col h-full">
         <div class="flex h-10 shrink-0 items-center border-b border-slate-700/50 px-4 text-xs text-slate-400 sticky top-0 z-20 backdrop-blur-[2px]">
           <div class="absolute inset-0 bg-slate-950/40" />
@@ -155,9 +152,7 @@ export function RankPage() {
 
         <div class="flex-1 overflow-y-auto">
           <div class="divide-y divide-slate-700/25">
-            <For each={players}>
-              {(player) => PlayerRow(player)}
-            </For>
+            <For each={players}>{(player) => PlayerRow(player)}</For>
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
-import { BackLayout } from '@/layouts/back-layout';
-import { createSignal, For } from 'solid-js';
-import { accountState } from '@/stores/state';
-import { ResourceDisplay } from '@/components/resource-display';
-import { RESOURCES } from '@psre/constants';
+import { BackLayout } from "@psre/layouts";
+import { createSignal, For } from "solid-js";
+import { accountState } from "@/stores/state";
+import { ResourceDisplay } from "@/components/resource-display";
+import { RESOURCES } from "@psre/constants";
 
 type ShopCategory = {
   id: string;
@@ -19,130 +19,130 @@ type ShopItem = {
 };
 
 const SHOP_CATEGORIES: ShopCategory[] = [
-  { id: 'diamonds', label: 'Алмазы' },
-  { id: 'resources', label: 'Ресурсы' },
-  { id: 'items', label: 'Предметы' },
-  { id: 'special', label: 'Особое' },
+  { id: "diamonds", label: "Алмазы" },
+  { id: "resources", label: "Ресурсы" },
+  { id: "items", label: "Предметы" },
+  { id: "special", label: "Особое" },
 ];
 
-const formatter = new Intl.NumberFormat('ru-RU', {
-  style: 'currency',
-  currency: 'RUB',
+const formatter = new Intl.NumberFormat("ru-RU", {
+  style: "currency",
+  currency: "RUB",
   maximumFractionDigits: 0,
 });
 
 const SHOP_ITEMS: ShopItem[] = [
   // Алмазы
   {
-    id: 'diamonds_100',
-    name: '100 алмазов',
-    description: 'Малый набор алмазов',
+    id: "diamonds_100",
+    name: "100 алмазов",
+    description: "Малый набор алмазов",
     price: 79,
     amount: 100,
-    category: 'diamonds',
+    category: "diamonds",
   },
   {
-    id: 'diamonds_500',
-    name: '500 алмазов',
-    description: 'Средний набор алмазов',
+    id: "diamonds_500",
+    name: "500 алмазов",
+    description: "Средний набор алмазов",
     price: 349,
     amount: 500,
-    category: 'diamonds',
+    category: "diamonds",
   },
   {
-    id: 'diamonds_1000',
-    name: '1000 алмазов',
-    description: 'Большой набор алмазов',
+    id: "diamonds_1000",
+    name: "1000 алмазов",
+    description: "Большой набор алмазов",
     price: 649,
     amount: 1000,
-    category: 'diamonds',
+    category: "diamonds",
   },
 
   // Ресурсы
   {
-    id: 'food_pack',
-    name: 'Пакет еды',
-    description: 'Содержит 1000 единиц еды',
+    id: "food_pack",
+    name: "Пакет еды",
+    description: "Содержит 1000 единиц еды",
     price: 29,
     amount: 1000,
-    category: 'resources',
+    category: "resources",
   },
   {
-    id: 'wood_pack',
-    name: 'Пакет дерева',
-    description: 'Содержит 1000 единиц дерева',
+    id: "wood_pack",
+    name: "Пакет дерева",
+    description: "Содержит 1000 единиц дерева",
     price: 29,
     amount: 1000,
-    category: 'resources',
+    category: "resources",
   },
   {
-    id: 'steel_pack',
-    name: 'Пакет стали',
-    description: 'Содержит 1000 единиц стали',
+    id: "steel_pack",
+    name: "Пакет стали",
+    description: "Содержит 1000 единиц стали",
     price: 49,
     amount: 1000,
-    category: 'resources',
+    category: "resources",
   },
   {
-    id: 'fuel_pack',
-    name: 'Пакет топлива',
-    description: 'Содержит 1000 единиц топлива',
+    id: "fuel_pack",
+    name: "Пакет топлива",
+    description: "Содержит 1000 единиц топлива",
     price: 69,
     amount: 1000,
-    category: 'resources',
+    category: "resources",
   },
 
   // Предметы
   {
-    id: 'ap_potion',
-    name: 'Зелье действия',
-    description: 'Восстанавливает 50 AP',
+    id: "ap_potion",
+    name: "Зелье действия",
+    description: "Восстанавливает 50 AP",
     price: 19,
     amount: 1,
-    category: 'items',
+    category: "items",
   },
   {
-    id: 'sp_potion',
-    name: 'Зелье выносливости',
-    description: 'Восстанавливает 50 SP',
+    id: "sp_potion",
+    name: "Зелье выносливости",
+    description: "Восстанавливает 50 SP",
     price: 19,
     amount: 1,
-    category: 'items',
+    category: "items",
   },
   {
-    id: 'exp_boost',
-    name: 'Усилитель опыта',
-    description: '+50% к получаемому опыту на 1 час',
+    id: "exp_boost",
+    name: "Усилитель опыта",
+    description: "+50% к получаемому опыту на 1 час",
     price: 99,
     amount: 1,
-    category: 'items',
+    category: "items",
   },
 
   // Особое
   {
-    id: 'name_change',
-    name: 'Смена имени',
-    description: 'Позволяет изменить имя персонажа',
+    id: "name_change",
+    name: "Смена имени",
+    description: "Позволяет изменить имя персонажа",
     price: 299,
     amount: 1,
-    category: 'special',
+    category: "special",
   },
   {
-    id: 'avatar_frame',
-    name: 'Рамка аватара',
-    description: 'Уникальная рамка для аватара',
+    id: "avatar_frame",
+    name: "Рамка аватара",
+    description: "Уникальная рамка для аватара",
     price: 499,
     amount: 1,
-    category: 'special',
+    category: "special",
   },
 ];
 
 export function ShopPage() {
-  const [activeCategory, setActiveCategory] = createSignal('diamonds');
+  const [activeCategory, setActiveCategory] = createSignal("diamonds");
 
   const handleBuy = (item: ShopItem) => {
     // TODO: Implement purchase logic
-    console.log('Buying item:', item);
+    console.log("Buying item:", item);
   };
 
   return (
@@ -162,8 +162,8 @@ export function ShopPage() {
               <button
                 class={`flex-1 p-4 text-sm transition-colors ${
                   activeCategory() === category.id
-                    ? 'border-b-2 border-blue-500 font-medium'
-                    : 'text-slate-400 hover:bg-slate-700/50 hover:text-slate-200'
+                    ? "border-b-2 border-blue-500 font-medium"
+                    : "text-slate-400 hover:bg-slate-700/50 hover:text-slate-200"
                 }`}
                 onClick={() => setActiveCategory(category.id)}
               >
@@ -178,7 +178,7 @@ export function ShopPage() {
           <div class="grid gap-4 p-4">
             <For
               each={SHOP_ITEMS.filter(
-                (item) => item.category === activeCategory()
+                (item) => item.category === activeCategory(),
               )}
             >
               {(item) => (
