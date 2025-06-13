@@ -1,6 +1,8 @@
 import { For, createEffect, createSignal, onCleanup } from "solid-js";
 import { createMutation, gql, useApollo } from "@psre/apollo";
 import {
+  ChatCleanupSubscription,
+  ChatCleanupSubscriptionVariables,
   CreateMessageMutation,
   CreateMessageMutationVariables,
   GetNewChatMessagesSubscription,
@@ -45,6 +47,12 @@ const CHAT_NEW_MESSAGE_SUBSCRIPTION = gql`
   ${CHAT_MESSAGE_FRAGMENT}
 `;
 
+const CHAT_CLEANUP_SUBSCRIPTION = gql`
+  subscription ChatCleanup($chatId: String!) {
+    chatCleanup(chatId: $chatId)
+  }
+`;
+
 export const createChat = () => {
   const apolloClient = useApollo();
   const [messages, setMessages] = createSignal<ChatMessage[]>([]);
@@ -70,7 +78,7 @@ export const createChat = () => {
   `);
 
   createEffect(() => {
-    const subscription = apolloClient
+    const newMessageSubscription = apolloClient
       .subscribe<
         GetNewChatMessagesSubscription,
         GetNewChatMessagesSubscriptionVariables
@@ -86,11 +94,24 @@ export const createChat = () => {
         },
       });
 
+    const cleanupSubscription = apolloClient
+      .subscribe<ChatCleanupSubscription, ChatCleanupSubscriptionVariables>({
+        query: CHAT_CLEANUP_SUBSCRIPTION,
+        variables: { chatId: chatId() },
+      })
+      .subscribe({
+        // error: reject,
+        next: () => {
+          setMessages([]);
+        },
+      });
+
     updateChatHistory();
 
     onCleanup(() => {
       setMessages([]);
-      subscription.unsubscribe();
+      newMessageSubscription.unsubscribe();
+      cleanupSubscription.unsubscribe();
     });
   });
 

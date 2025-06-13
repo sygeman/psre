@@ -69,7 +69,13 @@ export type SendMessageInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  chatCleanup?: Maybe<Scalars['Boolean']['output']>;
   createdChatMessage?: Maybe<ChatMessage>;
+};
+
+
+export type SubscriptionChatCleanupArgs = {
+  chatId?: InputMaybe<Scalars['String']['input']>;
 };
 
 

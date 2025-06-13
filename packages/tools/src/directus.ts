@@ -8,5 +8,6 @@ if (!apiUrl || !apiToken) {
 }
 
 export const directus = createDirectus(apiUrl)
+  .with(rest())
   .with(staticToken(apiToken))
   .with(graphql());

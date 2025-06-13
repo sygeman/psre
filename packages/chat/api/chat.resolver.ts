@@ -1,4 +1,4 @@
-import { builder, directus, inngest, DirectusTypes } from "@psre/tools";
+import { builder, inngest } from "@psre/tools";
 import { ChatMessage } from "./types/chat-message.type";
 import { SendMessageInput } from "./types/send-message.input";
 import { CHAT_EVENTS } from "./chat.events";
@@ -38,6 +38,7 @@ export const buildChatModule = () => {
           input: t.arg({ type: SendMessageInput, required: true }),
         },
         resolve: async (_parent, { input }, { currentAccountId }) => {
+          console.log({ currentAccountId });
           await inngest.send({
             name: CHAT_EVENTS.MESSAGE_CREATED,
             data: { ...input, currentAccountId },
@@ -57,6 +58,20 @@ export const buildChatModule = () => {
         },
         subscribe: (_parent, { chatId }, { pubsub }) => {
           return pubsub.subscribe("createdChatMessage", chatId);
+        },
+        resolve: (message) => message,
+      }),
+    }),
+  });
+
+  builder.subscriptionType({
+    fields: (t) => ({
+      chatCleanup: t.boolean({
+        args: {
+          chatId: t.arg.string(),
+        },
+        subscribe: (_parent, { chatId }, { pubsub }) => {
+          return pubsub.subscribe("chatCleanup", chatId);
         },
         resolve: (message) => message,
       }),

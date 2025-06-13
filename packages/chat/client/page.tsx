@@ -190,7 +190,7 @@ export function ChatPage() {
                   class={`flex max-w-[calc(100%-3.5rem)] min-w-0 flex-col gap-1 ${false ? "items-end" : "items-start"}`}
                 >
                   <span class="text-xs font-medium text-gray-400">
-                    {message.author.name}
+                    {message?.author?.name}
                   </span>
                   <div
                     class={`max-w-full rounded-lg px-3 py-2 break-words backdrop-blur-sm ${

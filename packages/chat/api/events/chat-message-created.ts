@@ -1,6 +1,6 @@
 import { inngest, pubsub } from "@psre/tools";
 import { CHAT_EVENTS, CHAT_FUNCTION_IDS } from "../chat.events";
-import { createMessage } from "api/service/create-message";
+import { createMessage } from "../service/create-message";
 
 export const chatMessageCreatedEventHandler = inngest.createFunction(
   { id: CHAT_FUNCTION_IDS.MESSAGE_HANDLER },
