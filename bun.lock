@@ -70,6 +70,7 @@
       "name": "@psre/chat",
       "version": "0.1.0",
       "dependencies": {
+        "@directus/sdk": "19.1.0",
         "@psre/components": "workspace:*",
         "@psre/tools": "workspace:*",
       },

@@ -1,5 +1,10 @@
 import * as Types from '@psre/types';
 
+export type GetChatsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetChatsQuery = { __typename?: 'Query', chats?: Array<{ __typename?: 'Chat', id?: string | null, type?: string | null, messages?: Array<{ __typename?: 'ChatMessage', id?: string | null, content?: string | null, date_created?: any | null, author?: { __typename?: 'ChatMessageAuthor', id?: string | null, name?: string | null } | null }> | null }> | null };
+
 export type CreateMessageMutationVariables = Types.Exact<{
   input: Types.SendMessageInput;
 }>;
@@ -12,4 +17,4 @@ export type GetNewChatMessagesSubscriptionVariables = Types.Exact<{
 }>;
 
 
-export type GetNewChatMessagesSubscription = { __typename?: 'Subscription', createdChatMessage?: { __typename?: 'ChatMessage', id?: string | null, content?: string | null, accountId?: string | null, chatId?: string | null, createdAt?: any | null } | null };
+export type GetNewChatMessagesSubscription = { __typename?: 'Subscription', createdChatMessage?: { __typename?: 'ChatMessage', id?: string | null, content?: string | null, date_created?: any | null, author?: { __typename?: 'ChatMessageAuthor', id?: string | null, name?: string | null } | null } | null };

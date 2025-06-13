@@ -1,14 +1,17 @@
 {
   "name": "psre",
   "version": "0.1.0",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "description": "PSRE monorepo",
   "license": "MIT",
   "packageManager": "bun@1.2.15",
   "type": "module",
   "scripts": {
     "dev": "bun --filter './apps/*' dev",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen --require dotenv/config --config codegen.ts"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.7",

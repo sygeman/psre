@@ -20,13 +20,25 @@ export type Scalars = {
   JSON: { input: any; output: any; }
 };
 
+export type Chat = {
+  __typename?: 'Chat';
+  id?: Maybe<Scalars['ID']['output']>;
+  messages?: Maybe<Array<ChatMessage>>;
+  type?: Maybe<Scalars['String']['output']>;
+};
+
 export type ChatMessage = {
   __typename?: 'ChatMessage';
-  accountId?: Maybe<Scalars['String']['output']>;
-  chatId?: Maybe<Scalars['String']['output']>;
+  author?: Maybe<ChatMessageAuthor>;
   content?: Maybe<Scalars['String']['output']>;
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  date_created?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+};
+
+export type ChatMessageAuthor = {
+  __typename?: 'ChatMessageAuthor';
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
 };
 
 export type Mutation = {
@@ -42,6 +54,7 @@ export type MutationCreateChatMessageArgs = {
 export type Query = {
   __typename?: 'Query';
   chatMessages?: Maybe<Array<ChatMessage>>;
+  chats?: Maybe<Array<Chat>>;
 };
 
 

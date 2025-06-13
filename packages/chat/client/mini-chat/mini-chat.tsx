@@ -77,7 +77,7 @@ export function MiniChat() {
           {(message) => (
             <div class="max-w-full min-w-0 text-sm leading-[22px] text-gray-400/90 flex">
               <span class="font-medium select-none text-gray-200/90 flex-shrink-0">
-                {message.accountId}:
+                {message.author.name}:
               </span>
               <span class="select-none truncate ml-1">{message.content}</span>
             </div>

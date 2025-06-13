@@ -1,9 +1,21 @@
-import { builder, inngest } from "@psre/tools";
+import { builder, directus, inngest, DirectusTypes } from "@psre/tools";
 import { ChatMessage } from "./types/chat-message.type";
 import { SendMessageInput } from "./types/send-message.input";
 import { CHAT_EVENTS } from "./chat.events";
+import { Chat } from "./types/chat.type";
+import { getChats } from "./service/get-chats";
 
 export const buildChatModule = () => {
+  builder.queryType({
+    fields: (t) => ({
+      chats: t.field({
+        type: [Chat],
+        resolve: (_parent, _args, { currentAccountId }) =>
+          getChats({ currentAccountId }),
+      }),
+    }),
+  });
+
   builder.queryType({
     fields: (t) => ({
       chatMessages: t.field({
@@ -28,7 +40,7 @@ export const buildChatModule = () => {
         resolve: async (_parent, { input }, { currentAccountId }) => {
           await inngest.send({
             name: CHAT_EVENTS.MESSAGE_CREATED,
-            data: { ...input, accountId: currentAccountId },
+            data: { ...input, currentAccountId },
           });
           return true;
         },

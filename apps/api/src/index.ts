@@ -6,7 +6,6 @@ import { pubsub, inngest, directus } from "@psre/tools";
 import { serve } from "inngest/bun";
 import { schema } from "./schema";
 import { inngestFunctions } from "@psre/chat/api";
-import { readItem } from "@directus/sdk";
 
 type ConnectionParams = {
   token?: string;
@@ -16,14 +15,29 @@ type Extra = {
   accountId?: string;
 };
 
+const gql = String.raw;
+
+const CURRENT_ACCOUNT_ID_BY_TOKEN_QUERY = gql`
+  query CurrentAccountIdByToken($psreAuthTokensByIdId: ID!) {
+    psre_auth_tokens_by_id(id: $psreAuthTokensByIdId) {
+      user {
+        current_account {
+          id
+        }
+      }
+    }
+  }
+`;
+
 const currentAccountIdByToken = async (token?: string) => {
   if (!token) return false;
 
   try {
-    const accountQuery = await directus.request(
-      readItem("psre_auth_tokens", token, { fields: ["user.current_account"] }),
+    const accountQuery = await directus.query(
+      CURRENT_ACCOUNT_ID_BY_TOKEN_QUERY,
+      { psreAuthTokensByIdId: token },
     );
-    return accountQuery?.user?.current_account;
+    return accountQuery?.psre_auth_tokens_by_id?.user?.current_account?.id;
   } catch {
     return false;
   }

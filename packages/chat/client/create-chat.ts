@@ -7,30 +7,58 @@ import {
   GetNewChatMessagesSubscriptionVariables,
 } from "./create-chat.gql.types";
 import { ChatMessage } from "@psre/types";
+import { chatStore } from "./store";
+
+const CHAT_MESSAGE_FRAGMENT = gql`
+  fragment ChatMessageFragment on ChatMessage {
+    id
+    content
+    author {
+      id
+      name
+    }
+    date_created
+  }
+`;
+
+const CHATS_QUERY = gql`
+  query GetChats {
+    chats {
+      id
+      type
+      messages {
+        ...ChatMessageFragment
+      }
+    }
+  }
+
+  ${CHAT_MESSAGE_FRAGMENT}
+`;
+
+const CHAT_NEW_MESSAGE_SUBSCRIPTION = gql`
+  subscription GetNewChatMessages($chatId: String!) {
+    createdChatMessage(chatId: $chatId) {
+      ...ChatMessageFragment
+    }
+  }
+
+  ${CHAT_MESSAGE_FRAGMENT}
+`;
 
 export const createChat = () => {
   const apolloClient = useApollo();
   const [messages, setMessages] = createSignal<ChatMessage[]>([]);
-  const [chatId, setChatId] = createSignal("1");
+  const [chatId, setChatId] = createSignal<string | null>(null);
 
-  // apolloClient.query<GetChatMessagesQuery, GetChatMessagesQueryVariables>({
-  //     query: gql`
-  //       query GetChatMessages($chatId: String!) {
-  //         chatMessages(chatId: $chatId) {
-  //           id
-  //           content
-  //           accountId
-  //           chatId
-  //           createdAt
-  //         }
-  //       }
-  //     `,
-  //     variables: {
-  //       chatId: '1',
-  //     }
-  //   }).then((data) => {
-  //     console.log(data?.data.chatMessages);
-  //   });
+  const updateChatHistory = () => {
+    apolloClient.query({ query: CHATS_QUERY }).then((data) => {
+      const chat = data?.data.chats.find(
+        (chat) => chat.type === chatStore.activeChannel,
+      );
+      setChatId(chat.id);
+      setMessages(chat.messages);
+    });
+  };
 
   const [createMessage] = createMutation<
     CreateMessageMutation,
@@ -41,39 +69,35 @@ export const createChat = () => {
     }
   `);
 
-  const subscription = apolloClient
-    .subscribe<
-      GetNewChatMessagesSubscription,
-      GetNewChatMessagesSubscriptionVariables
-    >({
-      query: gql`
-        subscription GetNewChatMessages($chatId: String!) {
-          createdChatMessage(chatId: $chatId) {
-            id
-            content
-            accountId
-            chatId
-            createdAt
-          }
-        }
-      `,
-      variables: {
-        chatId: chatId(),
-      },
-    })
-    .subscribe({
-      // error: reject,
-      next: ({ data }) => {
-        const newMessage = data?.createdChatMessage;
-        setMessages((messages) => [...messages, newMessage]);
-      },
-    });
+  createEffect(() => {
+    const subscription = apolloClient
+      .subscribe<
+        GetNewChatMessagesSubscription,
+        GetNewChatMessagesSubscriptionVariables
+      >({
+        query: CHAT_NEW_MESSAGE_SUBSCRIPTION,
+        variables: { chatId: chatId() },
+      })
+      .subscribe({
+        // error: reject,
+        next: ({ data }) => {
+          const newMessage = data?.createdChatMessage;
+          setMessages((messages) => [...messages, newMessage]);
+        },
+      });
 
-  onCleanup(() => subscription.unsubscribe());
+    updateChatHistory();
+
+    onCleanup(() => {
+      setMessages([]);
+      subscription.unsubscribe();
+    });
+  });
 
   return {
     messages,
-    createMessage: (content: string) =>
+    createMessage: (content: string) => {
+      if (typeof chatId() !== "string") return;
       createMessage({
         variables: {
           input: {
@@ -81,6 +105,7 @@ export const createChat = () => {
             content,
           },
         },
-      }),
+      });
+    },
   };
 };

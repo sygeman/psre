@@ -1,21 +1,23 @@
 import { builder } from "@psre/tools";
+import {
+  ChatMessageAuthor,
+  ChatMessageAuthorType,
+} from "./chat-message-author.type";
 
-type ChatMessage = {
+export type ChatMessageType = {
   id: string;
   content: string;
-  accountId: string;
-  chatId: string;
-  createdAt: Date;
+  author: ChatMessageAuthorType;
+  date_created: Date;
 };
 
 export const ChatMessage = builder
-  .objectRef<ChatMessage>("ChatMessage")
+  .objectRef<ChatMessageType>("ChatMessage")
   .implement({
     fields: (t) => ({
       id: t.exposeID("id"),
       content: t.exposeString("content"),
-      accountId: t.exposeString("accountId"),
-      chatId: t.exposeString("chatId"),
-      createdAt: t.expose("createdAt", { type: "DateTime" }),
+      author: t.expose("author", { type: ChatMessageAuthor }),
+      date_created: t.expose("date_created", { type: "DateTime" }),
     }),
   });
