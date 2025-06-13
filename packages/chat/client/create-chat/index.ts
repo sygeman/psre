@@ -51,11 +51,8 @@ export const createChat = () => {
   };
 
   createEffect(() => {
-    console.log("effect", chatId());
     const _ = chatId();
     if (typeof chatId() !== "string") return;
-
-    console.log("do subs");
 
     const newMessageSubscription = apolloClient
       .subscribe<
@@ -86,7 +83,6 @@ export const createChat = () => {
     updateChatHistory();
 
     onCleanup(() => {
-      console.log("cleanup");
       setMessages([]);
       newMessageSubscription.unsubscribe();
       cleanupSubscription.unsubscribe();

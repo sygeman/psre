@@ -24,7 +24,7 @@ export const testChat = () => {
         chatId: allianceChatId,
       },
     });
-  }, 500);
+  }, 200);
 
   setInterval(() => {
     inngest.send({

@@ -81,7 +81,7 @@ export function ChatPage() {
 
   createEffect(() => {
     // Вызываем scrollToBottom при изменении списка сообщений
-    const _ = messages;
+    const _ = messages();
     // Скроллим только если пользователь близко к низу
     setTimeout(scrollToBottom, 0);
   });
