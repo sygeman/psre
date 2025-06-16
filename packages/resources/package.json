@@ -1,0 +1,15 @@
+{
+  "name": "@psre/resources",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./api": "./api/index.ts",
+    "./client": "./client/index.ts",
+    "./client/*": "./client/*"
+  },
+  "dependencies": {
+    "@directus/sdk": "19.1.0",
+    "@psre/tools": "workspace:*",
+    "@psre/components": "workspace:*"
+  }
+}

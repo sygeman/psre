@@ -19,6 +19,7 @@
       "dependencies": {
         "@directus/sdk": "19.1.0",
         "@psre/chat": "workspace:*",
+        "@psre/resources": "workspace:*",
         "@psre/tools": "workspace:*",
         "@types/bun": "1.2.15",
         "graphql": "16.11.0",
@@ -38,6 +39,7 @@
         "@psre/chat": "workspace:*",
         "@psre/constants": "workspace:*",
         "@psre/layouts": "workspace:*",
+        "@psre/resources": "workspace:*",
         "@solidjs/router": "0.15.3",
         "@unocss/reset": "66.1.4",
         "graphql-ws": "6.0.5",
@@ -86,6 +88,15 @@
     "packages/layouts": {
       "name": "@psre/layouts",
       "version": "0.1.0",
+    },
+    "packages/resources": {
+      "name": "@psre/resources",
+      "version": "0.1.0",
+      "dependencies": {
+        "@directus/sdk": "19.1.0",
+        "@psre/components": "workspace:*",
+        "@psre/tools": "workspace:*",
+      },
     },
     "packages/tools": {
       "name": "@psre/tools",
@@ -641,6 +652,8 @@
     "@psre/constants": ["@psre/constants@workspace:packages/constants"],
 
     "@psre/layouts": ["@psre/layouts@workspace:packages/layouts"],
+
+    "@psre/resources": ["@psre/resources@workspace:packages/resources"],
 
     "@psre/tools": ["@psre/tools@workspace:packages/tools"],
 

@@ -1,11 +1,14 @@
-import { JSX } from 'solid-js';
-import { BottomMenu } from '@/modules/bottom-menu';
-import { PersonPanel } from '@/modules/person-panel';
-import { PowerPanel } from '@/modules/power-panel';
-import { ResourcesPanel } from '@/modules/resources-panel';
-import { MiniChat } from '@psre/chat/client';
-import { ToastNotifications } from '@/components/toast-notifications';
-import { MiniGamesButton } from '@/components/mini-games-button';
+import { JSX } from "solid-js";
+
+import { ResourcesPanel } from "@psre/resources/client";
+import { MiniChat } from "@psre/chat/client";
+
+import { BottomMenu } from "@/modules/bottom-menu";
+import { PersonPanel } from "@/modules/person-panel";
+import { PowerPanel } from "@/modules/power-panel";
+
+import { ToastNotifications } from "@/components/toast-notifications";
+import { MiniGamesButton } from "@/components/mini-games-button";
 
 type GameLayoutProps = {
   children: JSX.Element;

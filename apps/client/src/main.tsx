@@ -15,8 +15,8 @@ import { QuestsPage } from "@/pages/quests";
 import { AlliancePage } from "@/pages/alliance";
 import { MailPage } from "@/pages/mail";
 import { ArmoryPage } from "@/pages/armory";
-import MiniGames from "@/pages/mini-games";
-import SlotsPage from "@/pages/slots";
+import { MiniGames } from "@/pages/mini-games";
+import { SlotsPage } from "@/pages/slots";
 
 export const Main = () => {
   return (

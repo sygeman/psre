@@ -4,7 +4,7 @@ import { SlotMachinePage } from "@/components/slot-machine-page";
 import { accountState } from "@/stores/state";
 import { ResourceDisplay } from "@/components/resource-display";
 
-const SlotsPage: Component = () => {
+export const SlotsPage: Component = () => {
   return (
     <BackLayout
       title="Испытай удачу"
@@ -18,5 +18,3 @@ const SlotsPage: Component = () => {
     </BackLayout>
   );
 };
-
-export default SlotsPage;

@@ -41,6 +41,16 @@ export type ChatMessageAuthor = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
+export type MainResources = {
+  __typename?: 'MainResources';
+  diamond?: Maybe<Scalars['String']['output']>;
+  food?: Maybe<Scalars['String']['output']>;
+  fuel?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  steel?: Maybe<Scalars['String']['output']>;
+  wood?: Maybe<Scalars['String']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createChatMessage?: Maybe<Scalars['Boolean']['output']>;
@@ -55,6 +65,7 @@ export type Query = {
   __typename?: 'Query';
   chatMessages?: Maybe<Array<ChatMessage>>;
   chats?: Maybe<Array<Chat>>;
+  resourcesMain?: Maybe<MainResources>;
 };
 
 
@@ -71,6 +82,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   chatCleanup?: Maybe<Scalars['Boolean']['output']>;
   createdChatMessage?: Maybe<ChatMessage>;
+  resourcesMainChanged?: Maybe<MainResources>;
 };
 
 

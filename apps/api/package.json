@@ -9,6 +9,7 @@
   "dependencies": {
     "@directus/sdk": "19.1.0",
     "@psre/chat": "workspace:*",
+    "@psre/resources": "workspace:*",
     "@psre/tools": "workspace:*",
     "@types/bun": "1.2.15",
     "graphql": "16.11.0",

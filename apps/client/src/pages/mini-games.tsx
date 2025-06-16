@@ -2,7 +2,7 @@ import { Component } from "solid-js";
 import { BackLayout } from "@psre/layouts";
 import { useNavigate } from "@solidjs/router";
 
-const MiniGames: Component = () => {
+export const MiniGames: Component = () => {
   const navigate = useNavigate();
 
   return (
@@ -35,5 +35,3 @@ const MiniGames: Component = () => {
     </BackLayout>
   );
 };
-
-export default MiniGames;
