@@ -11,6 +11,10 @@
   "type": "module",
   "scripts": {
     "dev": "bun --elide-lines=0 --filter './apps/*' dev",
+    "db-push": "drizzle-kit push",
+    "db-generate": "drizzle-kit generate",
+    "db-migrate": "drizzle-kit migrate",
+    "db-studio": "drizzle-kit studio",
     "codegen": "graphql-codegen --require dotenv/config --config codegen.ts"
   },
   "devDependencies": {
@@ -21,6 +25,7 @@
     "@graphql-codegen/typescript-operations": "4.6.1"
   },
   "dependencies": {
+    "drizzle-kit": "0.31.1",
     "graphql": "16.11.0"
   }
 }

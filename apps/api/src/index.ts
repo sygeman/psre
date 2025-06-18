@@ -2,7 +2,7 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { createYoga } from "graphql-yoga";
-import { pubsub, inngest, directus } from "@psre/tools";
+import { pubsub, inngest, directus, db, seed, dbSeed } from "@psre/tools";
 import { serve } from "inngest/bun";
 import { schema } from "./schema";
 import { inngestFunctions } from "@psre/chat/api";
@@ -123,3 +123,5 @@ Bun.serve({
     return new Response("Not found", { status: 404 });
   },
 });
+
+await dbSeed()
