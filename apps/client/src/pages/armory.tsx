@@ -1,6 +1,6 @@
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { createSignal, Match, Switch } from "solid-js";
-import { MATERIALS_CONFIG, WEAPONS_CONFIG, RESOURCES } from "@psre/constants";
+import { MATERIALS_CONFIG, WEAPONS_CONFIG, RESOURCES } from "@/constants";
 import { accountState } from "@/stores/state";
 import { ResourceDisplay } from "@/components/resource-display";
 

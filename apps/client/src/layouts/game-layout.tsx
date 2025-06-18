@@ -1,7 +1,7 @@
 import { JSX } from "solid-js";
 
-import { ResourcesPanel } from "@psre/resources/client";
-import { MiniChat } from "@psre/chat/client";
+import { ResourcesPanel } from "@/modules/resources";
+import { MiniChat } from "@/modules/chat";
 
 import { BottomMenu } from "@/modules/bottom-menu";
 import { PersonPanel } from "@/modules/person-panel";

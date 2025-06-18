@@ -1,5 +1,5 @@
 import { HeroCard } from "@/components/hero-card";
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { accountState } from "@/stores/state";
 import { ResourceDisplay } from "@/components/resource-display";
 

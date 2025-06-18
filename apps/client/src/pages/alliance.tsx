@@ -1,5 +1,5 @@
 import { AnimatedNumber } from "@/components/animated-number";
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { createSignal, For } from "solid-js";
 
 type TabType = "info" | "members" | "diplomacy";

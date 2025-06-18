@@ -10,22 +10,6 @@
   "packageManager": "bun@1.2.15",
   "type": "module",
   "scripts": {
-    "dev": "bun --elide-lines=0 --filter './apps/*' dev",
-    "db-push": "drizzle-kit push",
-    "db-generate": "drizzle-kit generate",
-    "db-migrate": "drizzle-kit migrate",
-    "db-studio": "drizzle-kit studio",
-    "codegen": "graphql-codegen --require dotenv/config --config codegen.ts"
-  },
-  "devDependencies": {
-    "@graphql-codegen/cli": "5.0.7",
-    "@graphql-codegen/near-operation-file-preset": "3.0.1",
-    "@graphql-codegen/schema-ast": "4.1.0",
-    "@graphql-codegen/typescript": "4.1.6",
-    "@graphql-codegen/typescript-operations": "4.6.1"
-  },
-  "dependencies": {
-    "drizzle-kit": "0.31.1",
-    "graphql": "16.11.0"
+    "dev": "bun --elide-lines=0 --filter './apps/*' dev"
   }
 }

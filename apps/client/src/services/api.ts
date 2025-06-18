@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '@psre/constants';
+import { API_BASE_URL } from '@/constants';
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -50,4 +50,4 @@ class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient(API_BASE_URL); 
+export const apiClient = new ApiClient(API_BASE_URL);

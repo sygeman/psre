@@ -1,4 +1,4 @@
-import { ApolloProvider } from "@psre/apollo";
+import { ApolloProvider } from "@/apollo";
 import { render } from "solid-js/web";
 import "./index.css";
 

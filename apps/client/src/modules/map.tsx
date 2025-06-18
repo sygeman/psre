@@ -1,6 +1,6 @@
 import { BuildingButton } from "@/components/building-button";
 import { createSignal, onCleanup, For } from "solid-js";
-import { RESOURCES } from '@psre/constants';
+import { RESOURCES } from '@/constants';
 import { Icon } from 'solid-heroicons';
 import { arrowUp } from 'solid-heroicons/outline';
 import { useNavigate } from '@solidjs/router';
@@ -29,7 +29,7 @@ function BuildingCard(props: Building) {
   const [timeLeft, setTimeLeft] = createSignal(
     props.initialProgress === 100 ? 0 : props.collectionTime
   );
-  
+
   const [upgradeProgress, setUpgradeProgress] = createSignal(props.initialUpgradeProgress || 0);
   const [upgradeTimeLeft, setUpgradeTimeLeft] = createSignal(
     props.initialUpgradeProgress === 100 ? 0 : props.upgradeDuration
@@ -90,13 +90,13 @@ function BuildingCard(props: Building) {
   }[baseColor.split('-')[0]] || 'from-slate-900/50 via-slate-800/30 to-slate-900/50';
 
   const isArmory = props.name === 'Арсенал';
-  
+
   return (
     <div class="w-full h-32 select-none flex-shrink-0">
       <div class={`relative h-full ${props.color} rounded-lg border border-white/10 overflow-hidden group`}>
         {/* Анимированный градиентный фон */}
         <div class={`absolute inset-0 bg-gradient-to-r ${gradientClass} animate-[pulse_4s_ease-in-out_infinite]`} />
-        
+
         {/* Светящиеся частицы */}
         <div class="absolute inset-0 opacity-30">
           <div class="absolute w-12 h-12 -left-6 -top-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite]" />
@@ -146,11 +146,11 @@ function BuildingCard(props: Building) {
 
 export const Map = () => {
   const buildings: Building[] = [
-    { 
+    {
       color: 'bg-cyan-900',
-      name: 'Лаборатория', 
+      name: 'Лаборатория',
       resourceName: RESOURCES.VACCINE.name,
-      level: 3, 
+      level: 3,
       collectionTime: 300,
       upgradeDuration: 600,
       icon: RESOURCES.VACCINE.icon,
@@ -159,11 +159,11 @@ export const Map = () => {
         console.log('Повышение уровня лаборатории');
       }
     },
-    { 
+    {
       color: 'bg-emerald-900',
-      name: 'Лесопилка', 
+      name: 'Лесопилка',
       resourceName: RESOURCES.WOOD.name,
-      level: 5, 
+      level: 5,
       collectionTime: 180,
       upgradeDuration: 360,
       icon: RESOURCES.WOOD.icon,
@@ -171,11 +171,11 @@ export const Map = () => {
         console.log('Повышение уровня лесопилки');
       }
     },
-    { 
+    {
       color: 'bg-yellow-900',
-      name: 'Ферма', 
+      name: 'Ферма',
       resourceName: RESOURCES.FOOD.name,
-      level: 4, 
+      level: 4,
       collectionTime: 120,
       upgradeDuration: 300,
       icon: RESOURCES.FOOD.icon,
@@ -185,11 +185,11 @@ export const Map = () => {
         console.log('Повышение уровня фермы');
       }
     },
-    { 
+    {
       color: 'bg-orange-900',
-      name: 'Заправка', 
+      name: 'Заправка',
       resourceName: RESOURCES.FUEL.name,
-      level: 2, 
+      level: 2,
       collectionTime: 240,
       upgradeDuration: 480,
       icon: RESOURCES.FUEL.icon,
@@ -197,11 +197,11 @@ export const Map = () => {
         console.log('Повышение уровня заправки');
       }
     },
-    { 
+    {
       color: 'bg-slate-700',
-      name: 'Плавильня', 
+      name: 'Плавильня',
       resourceName: RESOURCES.STEEL.name,
-      level: 1, 
+      level: 1,
       collectionTime: 360,
       upgradeDuration: 720,
       icon: RESOURCES.STEEL.icon,
@@ -209,11 +209,11 @@ export const Map = () => {
         console.log('Повышение уровня плавильни');
       }
     },
-    { 
+    {
       color: 'bg-red-900',
-      name: 'Арсенал', 
+      name: 'Арсенал',
       resourceName: '', // пустая строка, так как это не ресурсное здание
-      level: 2, 
+      level: 2,
       collectionTime: 0, // не используется для Арсенала
       upgradeDuration: 600,
       icon: ARMORY_CONFIG.icon,
@@ -224,12 +224,12 @@ export const Map = () => {
   ];
 
   return (
-    <div 
+    <div
       class="h-full w-full relative overflow-hidden"
       style={{
         "background-image": `
           radial-gradient(circle at 50% 50%, rgb(30 41 59), rgb(17 24 39)),
-          linear-gradient(135deg, 
+          linear-gradient(135deg,
             rgba(234, 88, 12, 0.25) 0%,
             rgba(59, 130, 246, 0.2) 25%,
             rgba(234, 88, 12, 0.25) 50%,
@@ -244,7 +244,7 @@ export const Map = () => {
       }}
     >
       {/* Основной слой с частицами */}
-      <div 
+      <div
         class="absolute inset-0 opacity-40"
         style={{
           "background-image": `
@@ -259,7 +259,7 @@ export const Map = () => {
         }}
       />
       {/* Дополнительный слой с движущимися частицами */}
-      <div 
+      <div
         class="absolute inset-0 opacity-30"
         style={{
           "background-image": `
@@ -272,7 +272,7 @@ export const Map = () => {
         }}
       />
       {/* Дополнительный слой с подсветкой */}
-      <div 
+      <div
         class="absolute inset-0 opacity-20"
         style={{
           "background-image": `

@@ -1,4 +1,4 @@
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { For } from "solid-js";
 import { mailStore, type Mail } from "@/stores/mail";
 

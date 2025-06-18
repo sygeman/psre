@@ -1,4 +1,4 @@
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { For, createSignal } from "solid-js";
 import { AnimatedNumber } from "@/components/animated-number";
 

@@ -9,7 +9,7 @@ import { HeroesPage } from "@/pages/heroes";
 import { VipPage } from "@/pages/vip";
 import { ShopPage } from "@/pages/shop";
 import { PersonPage } from "@/pages/person";
-import { ChatPage } from "@psre/chat/client";
+import { ChatPage } from "@/modules/chat";
 import { RankPage } from "@/pages/rank";
 import { QuestsPage } from "@/pages/quests";
 import { AlliancePage } from "@/pages/alliance";

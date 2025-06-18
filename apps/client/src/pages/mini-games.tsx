@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { useNavigate } from "@solidjs/router";
 
 export const MiniGames: Component = () => {

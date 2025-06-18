@@ -1,5 +1,5 @@
 import { createSignal, For, Index, createEffect, onCleanup } from 'solid-js';
-import { SLOTS_CONFIG } from '@psre/constants';
+import { SLOTS_CONFIG } from '@/constants';
 import { accountState, setAccountState } from '@/stores/state';
 
 const { SYMBOLS, REWARDS, CHANCES, ATTEMPTS, ANIMATION } = SLOTS_CONFIG;
@@ -37,7 +37,7 @@ export function SlotMachine() {
       const now = Date.now();
       const secondsLeft = Math.max(0, Math.ceil((time - now) / 1000));
       setTimeLeft(`${secondsLeft} сек`);
-      
+
       const elapsed = ATTEMPTS.RESTORE_TIME - (time - now);
       setProgress(Math.min(100, Math.max(0, (elapsed * 100) / ATTEMPTS.RESTORE_TIME)));
 
@@ -84,7 +84,7 @@ export function SlotMachine() {
   const determineOutcome = () => {
     const chance = Math.random() * 100;
     const totalWinChance = CHANCES.REGULAR + CHANCES.DIAMOND;
-    
+
     // Если не выпал выигрыш - генерируем проигрышную комбинацию
     if (chance >= totalWinChance) {
       const result = [];
@@ -98,7 +98,7 @@ export function SlotMachine() {
       }
       return result;
     }
-    
+
     // Определяем тип выигрыша
     let winningSymbol;
     if (chance < CHANCES.REGULAR) {
@@ -106,7 +106,7 @@ export function SlotMachine() {
     } else {
       winningSymbol = SYMBOLS[SYMBOLS.length - 1];
     }
-    
+
     return [winningSymbol, winningSymbol, winningSymbol];
   };
 
@@ -115,23 +115,23 @@ export function SlotMachine() {
     const totalRotations = 10 + reelIndex * 2;
     const finalIndex = SYMBOLS.indexOf(finalSymbol);
     const finalPosition = (totalRotations * SYMBOLS.length + finalIndex) * ANIMATION.SYMBOL_HEIGHT;
-    
+
     const animate = () => {
       const currentTime = Date.now();
       const elapsed = currentTime - startTime;
       const duration = ANIMATION.SPIN_DURATION + reelIndex * 500;
-      
+
       if (elapsed < duration) {
         const progress = elapsed / duration;
         const easeOut = 1 - Math.pow(1 - progress, 3);
         const currentPosition = easeOut * finalPosition;
-        
+
         setPositions(prev => {
           const next = [...prev];
           next[reelIndex] = currentPosition;
           return next;
         });
-        
+
         requestAnimationFrame(animate);
       } else {
         setPositions(prev => {
@@ -141,7 +141,7 @@ export function SlotMachine() {
         });
 
         if (reelIndex === 2) {
-          const finalSymbols = [0, 1, 2].map(i => 
+          const finalSymbols = [0, 1, 2].map(i =>
             SYMBOLS[Math.floor((positions()[i] / ANIMATION.SYMBOL_HEIGHT) % SYMBOLS.length)]
           );
           if (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]) {
@@ -164,7 +164,7 @@ export function SlotMachine() {
 
   const spin = () => {
     if (isSpinning()) return;
-    
+
     if (attempts() <= 0) {
       if (accountState.diamond < 100) {
         return;
@@ -173,13 +173,13 @@ export function SlotMachine() {
     } else {
       setAttempts(attempts() - 1 as typeof ATTEMPTS.MAX);
     }
-    
+
     setIsSpinning(true);
     setResult('');
     setWinningSymbol(null);
-    
+
     const outcome = determineOutcome();
-    
+
     outcome.forEach((symbol, index) => {
       setTimeout(() => {
         spinReel(index, symbol);
@@ -208,7 +208,7 @@ export function SlotMachine() {
             {/* Градиентный фон */}
             <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent" />
             <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.1),transparent_70%)]" />
-            
+
             {/* Светящиеся частицы */}
             <div class="absolute inset-0 opacity-30">
               <div class="absolute w-12 h-12 -left-6 -top-6 bg-white/10 rounded-full blur-xl animate-[pulse_3s_ease-in-out_infinite]" />
@@ -223,8 +223,8 @@ export function SlotMachine() {
                     {/* Блики на барабане */}
                     <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
                     <div class="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" />
-                    
-                    <div 
+
+                    <div
                       class="absolute left-0 w-full transition-transform"
                       style={{
                         "transform": `translateY(${-position % (ANIMATION.SYMBOL_HEIGHT * SYMBOLS.length)}px)`,
@@ -263,7 +263,7 @@ export function SlotMachine() {
             {result() && result() !== '' && (
               <div class={`flex items-center gap-2 text-lg font-medium ${
                 result() === 'Победа' && winningSymbol()
-                  ? 'bg-green-500/10 text-green-400 px-4 py-1.5 rounded-lg border border-green-500/20' 
+                  ? 'bg-green-500/10 text-green-400 px-4 py-1.5 rounded-lg border border-green-500/20'
                   : 'text-slate-400'
               }`}>
                 {result() === 'Победа' && winningSymbol() ? (
@@ -284,7 +284,7 @@ export function SlotMachine() {
           <div>Осталось попыток: {attempts()}</div>
           {attempts() < ATTEMPTS.MAX && nextAttemptTime() && (
             <div class="relative w-48 h-6 bg-slate-700 rounded-full overflow-hidden">
-              <div 
+              <div
                 class="h-full bg-blue-500 transition-all duration-100 flex items-center justify-center text-xs text-white/90 font-medium"
                 style={{ width: `${progress()}%` }}
               >
@@ -314,12 +314,12 @@ export function SlotMachine() {
           {/* Блики на кнопке */}
           <div class="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent" />
           <div class="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" />
-          
+
           {/* Текст кнопки */}
           <span class="relative">
-            {isSpinning() 
-              ? 'Крутится...' 
-              : attempts() <= 0 
+            {isSpinning()
+              ? 'Крутится...'
+              : attempts() <= 0
                 ? accountState.diamond < 100
                   ? 'Недостаточно алмазов'
                   : '100 💎 за прокрутку'
@@ -329,4 +329,4 @@ export function SlotMachine() {
       </div>
     </div>
   );
-} 
+}

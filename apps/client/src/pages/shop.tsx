@@ -1,8 +1,8 @@
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { createSignal, For } from "solid-js";
 import { accountState } from "@/stores/state";
 import { ResourceDisplay } from "@/components/resource-display";
-import { RESOURCES } from "@psre/constants";
+import { RESOURCES } from "@/constants";
 
 type ShopCategory = {
   id: string;

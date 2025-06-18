@@ -1,5 +1,5 @@
 import { Component } from "solid-js";
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { SlotMachinePage } from "@/components/slot-machine-page";
 import { accountState } from "@/stores/state";
 import { ResourceDisplay } from "@/components/resource-display";

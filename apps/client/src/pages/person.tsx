@@ -1,4 +1,4 @@
-import { BackLayout } from "@psre/layouts";
+import { BackLayout } from "@/layouts/back-layout";
 import { accountState } from "@/stores/state";
 import { createSignal, Match, Switch } from "solid-js";
 import { Tab, Tabs } from "@/components/tabs";
