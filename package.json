@@ -10,7 +10,7 @@
   "packageManager": "bun@1.2.15",
   "type": "module",
   "scripts": {
-    "dev": "bun --filter './apps/*' dev",
+    "dev": "bun --elide-lines=0 --filter './apps/*' dev",
     "codegen": "graphql-codegen --require dotenv/config --config codegen.ts"
   },
   "devDependencies": {
