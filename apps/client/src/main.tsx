@@ -17,11 +17,13 @@ import { MailPage } from "@/pages/mail";
 import { ArmoryPage } from "@/pages/armory";
 import { MiniGames } from "@/pages/mini-games";
 import { SlotsPage } from "@/pages/slots";
+import { LoginPage } from "./pages/login";
 
 export const Main = () => {
   return (
     <Router>
       <Route path="/" component={HomePage} />
+      <Route path="/login" component={LoginPage} />
       <Route path="/armory" component={ArmoryPage} />
       <Route path="/region" component={RegionPage} />
       <Route path="/heroes" component={HeroesPage} />

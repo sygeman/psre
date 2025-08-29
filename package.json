@@ -7,7 +7,7 @@
   ],
   "description": "PSRE monorepo",
   "license": "MIT",
-  "packageManager": "bun@1.2.15",
+  "packageManager": "bun@1.2.21",
   "type": "module",
   "scripts": {
     "dev": "bun --elide-lines=0 --filter './apps/*' dev"

@@ -1,11 +1,15 @@
 services:
   inngest:
     restart: unless-stopped
-    image: inngest/inngest:latest
+    image: inngest/inngest:v1.11.9
     command: "inngest dev -u http://host.docker.internal:4500/api/inngest"
+    environment:
+      - INNGEST_POSTGRES_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DB}:${POSTGRES_PORT}/inngest
+      - INNGEST_REDIS_URI=redis://redis:6379
     ports:
       - "8288:8288"
       - "8289:8289"
+
   postgres:
     image: postgres
     hostname: postgreshost
@@ -45,5 +49,18 @@ services:
         condition: service_healthy
     user: root
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
 volumes:
   postgres_data:
+  redis_data:
