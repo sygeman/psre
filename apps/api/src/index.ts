@@ -3,12 +3,15 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { createYoga } from "graphql-yoga";
 import { serve } from "inngest/bun";
+import { AuthDataMap, AuthDataValidator } from "@telegram-auth/server";
+import {users as usersTable} from './db/schema/users'
 import { schema } from "./schema";
 import { inngestFunctions } from "./modules/chat";
 import { inngest } from "./lib/inngest";
-import { dbSeed } from "./db";
+import { db, dbSeed } from "./db";
 import { pubsub } from "./lib/pubsub";
 import { directus } from "./lib/directus";
+import { eq } from "drizzle-orm";
 
 type ConnectionParams = {
   token?: string;
@@ -36,11 +39,11 @@ const currentAccountIdByToken = async (token?: string) => {
   if (!token) return false;
 
   try {
-    const accountQuery = await directus.query(
-      CURRENT_ACCOUNT_ID_BY_TOKEN_QUERY,
-      { psreAuthTokensByIdId: token },
-    );
-    return accountQuery?.psre_auth_tokens_by_id?.user?.current_account?.id;
+    const user = await db.query.users.findFirst({
+      where: (users, { eq }) => (eq(users.token, token))
+    })
+
+    return user?.currentAccountId;
   } catch {
     return false;
   }
@@ -73,6 +76,8 @@ useServer<ConnectionParams, Extra>(
       const accountId = await currentAccountIdByToken(
         ctx.connectionParams?.token,
       );
+
+      console.log('accountId', accountId)
 
       // returning false from the onConnect callback will close with `4403: Forbidden`;
       // therefore, being synonymous to ctx.extra.socket.close(4403, 'Forbidden');
@@ -114,8 +119,44 @@ httpServer.listen(PORT, () => {
 
 Bun.serve({
   port: 4500,
-  fetch(request: Request) {
+  async fetch(request: Request) {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/login") {
+      const { data } = await request.json();
+
+      // Validate telegram data
+      const botToken = process.env.TELEGRAM_BOT_TOKEN!;
+      const validator = new AuthDataValidator({ botToken });
+      const user = await validator.validate(new Map(Object.entries(data)));
+
+      // console.log(user);
+      // Find user
+      const userFromDb = await db.query.users.findFirst({
+        where: (users, { eq }) => (eq(users.telegramId, user.id.toString()))
+      })
+
+      // Create user if not exist
+      if (!userFromDb) {
+        // Create user
+        return new Response('User not found', {status: 404});
+      }
+
+      // Generate auth token
+      const token = crypto.randomUUID()
+      await db.update(usersTable)
+        .set({ token })
+        .where(eq(usersTable.id, userFromDb.id))
+
+      return new Response(token, {
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'OPTIONS, POST',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        }
+      });
+    }
 
     if (url.pathname === "/api/inngest") {
       return serve({ client: inngest, functions: [...inngestFunctions] })(

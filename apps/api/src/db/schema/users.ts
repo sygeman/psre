@@ -5,6 +5,7 @@ import { accounts } from "./accounts";
 export const users = pgTable("users", (t) => ({
   id: t.serial().primaryKey(),
   telegramId: t.varchar().unique(),
+  token: t.varchar().unique(),
   currentAccountId: t.integer(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
