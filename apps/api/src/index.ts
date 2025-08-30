@@ -3,14 +3,14 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/use/ws";
 import { createYoga } from "graphql-yoga";
 import { serve } from "inngest/bun";
-import { AuthDataMap, AuthDataValidator } from "@telegram-auth/server";
-import {users as usersTable} from './db/schema/users'
+import { AuthDataValidator } from "@telegram-auth/server";
+import { users as usersTable } from './db/schema/users'
+import { accounts as accountsTable } from './db/schema/accounts'
 import { schema } from "./schema";
 import { inngestFunctions } from "./modules/chat";
 import { inngest } from "./lib/inngest";
 import { db, dbSeed } from "./db";
 import { pubsub } from "./lib/pubsub";
-import { directus } from "./lib/directus";
 import { eq } from "drizzle-orm";
 
 type ConnectionParams = {
@@ -43,7 +43,7 @@ const currentAccountIdByToken = async (token?: string) => {
       where: (users, { eq }) => (eq(users.token, token))
     })
 
-    return user?.currentAccountId;
+    return user?.currentAccountId?.toString() || false;
   } catch {
     return false;
   }
@@ -128,18 +128,36 @@ Bun.serve({
       // Validate telegram data
       const botToken = process.env.TELEGRAM_BOT_TOKEN!;
       const validator = new AuthDataValidator({ botToken });
-      const user = await validator.validate(new Map(Object.entries(data)));
+      const userTgData = await validator.validate(new Map(Object.entries(data)));
+      const telegramId = userTgData.id.toString()
 
       // console.log(user);
       // Find user
-      const userFromDb = await db.query.users.findFirst({
-        where: (users, { eq }) => (eq(users.telegramId, user.id.toString()))
+      let userFromDb = await db.query.users.findFirst({
+        where: (users, { eq }) => (eq(users.telegramId, telegramId))
       })
 
       // Create user if not exist
       if (!userFromDb) {
         // Create user
-        return new Response('User not found', {status: 404});
+        const users = await db.insert(usersTable).values({ telegramId }).returning();
+        userFromDb = users[0];
+
+        if (!userFromDb) return new Response('User not found', { status: 404 });;
+
+        const accounts = await db.insert(accountsTable).values({
+          userId: userFromDb.id,
+          name: crypto.randomUUID().toString()
+        }).returning();
+
+        const account = accounts[0]
+
+        if (!account) return new Response('Account not found', { status: 404 });;
+
+        await db.update(usersTable)
+          .set({ currentAccountId: account.id })
+          .where(eq(accountsTable.id, account.id))
+          .from(accountsTable)
       }
 
       // Generate auth token
@@ -168,4 +186,4 @@ Bun.serve({
   },
 });
 
-await dbSeed()
+// await dbSeed()

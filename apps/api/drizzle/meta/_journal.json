@@ -8,6 +8,13 @@
       "when": 1756587587790,
       "tag": "0000_flashy_baron_zemo",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1756590642860,
+      "tag": "0001_lean_juggernaut",
+      "breakpoints": true
     }
   ]
 }
