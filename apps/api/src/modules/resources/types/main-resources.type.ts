@@ -2,11 +2,11 @@ import { builder } from "@/lib/builder";
 
 export type MainResourcesType = {
   id: string;
-  food: string;
-  wood: string;
-  steel: string;
-  fuel: string;
-  diamond: string;
+  food: number;
+  wood: number;
+  steel: number;
+  fuel: number;
+  diamond: number;
 };
 
 export const MainResources = builder
@@ -14,10 +14,10 @@ export const MainResources = builder
   .implement({
     fields: (t) => ({
       id: t.exposeID("id"),
-      food: t.exposeString("food"),
-      wood: t.exposeString("wood"),
-      steel: t.exposeString("steel"),
-      fuel: t.exposeString("fuel"),
-      diamond: t.exposeString("diamond"),
+      food: t.exposeInt("food"),
+      wood: t.exposeInt("wood"),
+      steel: t.exposeInt("steel"),
+      fuel: t.exposeInt("fuel"),
+      diamond: t.exposeInt("diamond"),
     }),
   });

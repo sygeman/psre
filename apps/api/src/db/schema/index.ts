@@ -1,4 +1,6 @@
 export * from './accounts'
+export * from './alliances'
 export * from './chat-messages'
 export * from './chats'
+export * from './regions'
 export * from './users'

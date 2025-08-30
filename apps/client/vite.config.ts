@@ -19,7 +19,7 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
-    allowedHosts: ['be088f4578f8.ngrok-free.app']
+    allowedHosts: ['4f08bbe34f69.ngrok-free.app']
   },
   build: {
     target: 'esnext',

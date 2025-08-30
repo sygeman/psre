@@ -1,31 +1,22 @@
-import { directus } from "@/lib/directus";
-
-const gql = String.raw;
-
-const MAIN_RESOURCES_QUERY = gql`
-  query MainResourcesQuery($psreAccountByIdId: ID!) {
-    psre_account_by_id(id: $psreAccountByIdId) {
-      id
-      state {
-        id
-        food
-        wood
-        steel
-        fuel
-        diamond
-      }
-    }
-  }
-`;
+import { db } from "@/db";
 
 export const resourcesMain = async ({
   currentAccountId,
 }: {
   currentAccountId: string;
 }) => {
-  const { psre_account_by_id } = await directus.query(MAIN_RESOURCES_QUERY, {
-    psreAccountByIdId: currentAccountId,
-  });
+  const account = await db.query.accounts.findFirst({
+    where: (accounts, { eq }) => (eq(accounts.id, parseInt(currentAccountId)))
+  })
 
-  return psre_account_by_id.state?.[0];
+  if (!account) return;
+
+  return {
+    id: account.id.toString(),
+    food: account.food,
+    wood: account.wood,
+    steel: account.steel,
+    fuel: account.fuel,
+    diamond: account.diamond,
+  };
 };

@@ -1,11 +1,18 @@
-CREATE TYPE "public"."type" AS ENUM('state', 'alliance');--> statement-breakpoint
 CREATE TABLE "accounts" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar,
-	"userId" integer,
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
 	"updatedAt" timestamp with time zone,
-	"deletedAt" timestamp with time zone
+	"deletedAt" timestamp with time zone,
+	"name" varchar,
+	"userId" integer,
+	"food" integer DEFAULT 0 NOT NULL,
+	"wood" integer DEFAULT 0 NOT NULL,
+	"steel" integer DEFAULT 0 NOT NULL,
+	"fuel" integer DEFAULT 0 NOT NULL,
+	"diamond" integer DEFAULT 0 NOT NULL,
+	"regionId" integer,
+	"allianceId" integer,
+	CONSTRAINT "accounts_userId_unique" UNIQUE("userId")
 );
 --> statement-breakpoint
 CREATE TABLE "chat-messages" (
@@ -20,7 +27,6 @@ CREATE TABLE "chat-messages" (
 --> statement-breakpoint
 CREATE TABLE "chats" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"type" "type",
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL,
 	"updatedAt" timestamp with time zone,
 	"deletedAt" timestamp with time zone

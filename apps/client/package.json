@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@apollo/client": "3.13.8",
-    "@directus/sdk": "19.1.0",
     "@solidjs/router": "0.15.3",
     "@unocss/reset": "66.1.4",
     "graphql-ws": "6.0.5",
