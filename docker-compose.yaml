@@ -2,10 +2,14 @@ services:
   inngest:
     restart: unless-stopped
     image: inngest/inngest:v1.11.9
-    command: "inngest dev -u http://host.docker.internal:4500/api/inngest"
+    command: "inngest start"
     environment:
-      - INNGEST_POSTGRES_URI=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DB}:${POSTGRES_PORT}/inngest
+      - INNGEST_POSTGRES_URI=postgresql://psre:f9349f3zljf92@postgreshost:5432/psre
       - INNGEST_REDIS_URI=redis://redis:6379
+      - INNGEST_SIGNING_KEY=${INNGEST_SIGNING_KEY}
+      - INNGEST_EVENT_KEY=${INNGEST_EVENT_KEY}
+      - INNGEST_BASE_URL=http://localhost:8288
+      - INNGEST_DEV=0
     ports:
       - "8288:8288"
       - "8289:8289"
@@ -28,26 +32,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
-
-  pgadmin:
-    image: dpage/pgadmin4
-    env_file:
-      - .env
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-      - POSTGRES_HOST=postgreshost
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - PGADMIN_CONFIG_SERVER_MODE=False
-      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
-    ports:
-      - ${PGADMIN_PORT}:80
-    depends_on:
-      postgres:
-        condition: service_healthy
-    user: root
 
   redis:
     image: redis:7-alpine
