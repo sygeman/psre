@@ -15,11 +15,11 @@ export default defineConfig({
     */
     // devtools(),
     solidPlugin(),
-    UnoCSS(),
+    UnoCSS()
   ],
   server: {
     port: 3000,
-    allowedHosts: ['psre-dev.sgmn.dev']
+    allowedHosts: true
   },
   build: {
     target: 'esnext',

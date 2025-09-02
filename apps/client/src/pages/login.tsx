@@ -8,8 +8,6 @@ const buttonSize = 'large'
 export function LoginPage() {
   let hiddenDivRef;
 
-
-
   createEffect(() => {
     window.onAuthCallback = async (data) => {
       const response = await fetch("http://localhost:4500/api/login", {
