@@ -4,14 +4,12 @@ import { useServer } from "graphql-ws/use/ws";
 import { createYoga } from "graphql-yoga";
 import { serve } from "inngest/bun";
 import { AuthDataValidator } from "@telegram-auth/server";
-import { users as usersTable } from './db/schema/users'
-import { accounts as accountsTable } from './db/schema/accounts'
 import { schema } from "./schema";
 import { inngestFunctions } from "./modules/chat";
 import { inngest } from "./lib/inngest";
 import { db, dbSeed } from "./db";
 import { pubsub } from "./lib/pubsub";
-import { eq } from "drizzle-orm";
+import { createUser } from "./modules/user/service/create-user";
 
 type ConnectionParams = {
   token?: string;
@@ -20,20 +18,6 @@ type ConnectionParams = {
 type Extra = {
   accountId?: string;
 };
-
-const gql = String.raw;
-
-const CURRENT_ACCOUNT_ID_BY_TOKEN_QUERY = gql`
-  query CurrentAccountIdByToken($psreAuthTokensByIdId: ID!) {
-    psre_auth_tokens_by_id(id: $psreAuthTokensByIdId) {
-      user {
-        current_account {
-          id
-        }
-      }
-    }
-  }
-`;
 
 const currentAccountIdByToken = async (token?: string) => {
   if (!token) return false;
@@ -123,57 +107,28 @@ Bun.serve({
     const url = new URL(request.url);
 
     if (url.pathname === "/api/login") {
-      const { data } = await request.json();
+      try {
+        const { data } = await request.json();
 
-      // Validate telegram data
-      const botToken = process.env.TELEGRAM_BOT_TOKEN!;
-      const validator = new AuthDataValidator({ botToken });
-      const userTgData = await validator.validate(new Map(Object.entries(data)));
-      const telegramId = userTgData.id.toString()
+        // Validate telegram data
+        const botToken = process.env.TELEGRAM_BOT_TOKEN!;
+        const validator = new AuthDataValidator({ botToken });
+        const userTgData = await validator.validate(new Map(Object.entries(data)));
+        const telegramId = userTgData.id;
 
-      // console.log(user);
-      // Find user
-      let userFromDb = await db.query.users.findFirst({
-        where: (users, { eq }) => (eq(users.telegramId, telegramId))
-      })
+        const { token } = await createUser({ telegramId });
 
-      // Create user if not exist
-      if (!userFromDb) {
-        // Create user
-        const users = await db.insert(usersTable).values({ telegramId }).returning();
-        userFromDb = users[0];
-
-        if (!userFromDb) return new Response('User not found', { status: 404 });;
-
-        const accounts = await db.insert(accountsTable).values({
-          userId: userFromDb.id,
-          name: crypto.randomUUID().toString()
-        }).returning();
-
-        const account = accounts[0]
-
-        if (!account) return new Response('Account not found', { status: 404 });;
-
-        await db.update(usersTable)
-          .set({ currentAccountId: account.id })
-          .where(eq(accountsTable.id, account.id))
-          .from(accountsTable)
+        return new Response(token, {
+          status: 200,
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS, POST',
+            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+          }
+        });
+      } catch {
+        return new Response('Error', { status: 500 });;
       }
-
-      // Generate auth token
-      const token = crypto.randomUUID()
-      await db.update(usersTable)
-        .set({ token })
-        .where(eq(usersTable.id, userFromDb.id))
-
-      return new Response(token, {
-        status: 200,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'OPTIONS, POST',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        }
-      });
     }
 
     if (url.pathname === "/api/inngest") {
@@ -186,4 +141,4 @@ Bun.serve({
   },
 });
 
-// await dbSeed()
+await dbSeed()
