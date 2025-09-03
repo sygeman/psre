@@ -5,7 +5,7 @@ import "./index.css";
 
 import { Main } from "./main";
 
-import { apolloClient } from "./lib/apollo";
+import { apolloClient } from "./apollo/client";
 import { LoginPage } from "./pages/login";
 
 const App = () => {
