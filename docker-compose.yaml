@@ -1,10 +1,9 @@
 services:
   inngest:
     restart: unless-stopped
-    image: inngest/inngest:v1.11.9
+    image: inngest/inngest:v1.11.10
     command: "inngest start"
     environment:
-      - INNGEST_POSTGRES_URI=postgresql://psre:f9349f3zljf92@postgreshost:5432/psre
       - INNGEST_REDIS_URI=redis://redis:6379
       - INNGEST_SIGNING_KEY=${INNGEST_SIGNING_KEY}
       - INNGEST_EVENT_KEY=${INNGEST_EVENT_KEY}
