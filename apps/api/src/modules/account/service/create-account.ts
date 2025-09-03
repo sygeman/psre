@@ -23,8 +23,7 @@ export const createAccount = async ({ userId, regionId }: { userId: number, regi
 
   await db.update(usersTable)
     .set({ currentAccountId: account.id })
-    .where(eq(accountsTable.id, account.id))
-    .from(accountsTable)
+    .where(eq(usersTable.id, userId))
 
   return { account };
 }

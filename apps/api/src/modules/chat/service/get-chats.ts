@@ -1,49 +1,95 @@
-// const GET_CHATS_QUERY = gql`
-//   fragment ChatFields on psre_chats {
-//     id
-//     type
-//     messages(limit: 20, sort: "-date_created") {
-//       id
-//       content
-//       author {
-//         id
-//         name
-//       }
-//       date_created
-//     }
-//   }
-
-//   query ChatsByAccountId($psreAccountByIdId: ID!) {
-//     psre_account_by_id(id: $psreAccountByIdId) {
-//       region_id {
-//         chat_id {
-//           ...ChatFields
-//         }
-//       }
-//       alliance_id {
-//         chat_id {
-//           ...ChatFields
-//         }
-//       }
-//     }
-//   }
-// `;
+import { db } from "@/db";
 
 export const getChats = async ({
   currentAccountId,
 }: {
   currentAccountId: string;
 }) => {
-  // const { psre_account_by_id } = await directus.query(GET_CHATS_QUERY, {
-  //   psreAccountByIdId: currentAccountId,
-  // });
+  const account = await db.query.accounts.findFirst({
+    where: (accounts, { eq }) => (eq(accounts.id, parseInt(currentAccountId))),
+    columns: {
+      id: true
+    },
+    with: {
+      region: {
+        columns: {
+          chatId: true
+        },
+        with: {
+          chat: {
+            with: {
+              messages: {
+                columns: {
+                  id: true,
+                  content: true,
+                  createdAt: true
+                },
+                limit: 20,
+                orderBy: (messages, { desc }) => [desc(messages.createdAt)],
+                with: {
+                  author: {
+                    columns: {
+                      id: true,
+                      name: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      alliance: {
+        columns: {
+          chatId: true
+        },
+        with: {
+          chat: {
+            with: {
+              messages: {
+                columns: {
+                  id: true,
+                  content: true,
+                  createdAt: true
+                },
+                limit: 20,
+                orderBy: (messages, { desc }) => [desc(messages.createdAt)],
+                with: {
+                  author: {
+                    columns: {
+                      id: true,
+                      name: true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  });
 
-  // const regionChat = psre_account_by_id?.region_id?.chat_id;
-  // const allianceChat = psre_account_by_id?.alliance_id?.chat_id;
+  if (!account) throw 'Account not found';
 
-  // regionChat?.messages.reverse();
-  // allianceChat?.messages.reverse();
+  const regionChatId = account.region?.chatId?.toString();
+  const allianceChatId = account.alliance?.chatId?.toString();
 
-  // return [regionChat, allianceChat];
-  return []
+  if (!regionChatId) throw 'regionChatId is null';
+
+  const chats = [{
+    id: regionChatId,
+    type: "region",
+    messages: account.region?.chat?.messages.reverse()
+  }];
+
+  if (allianceChatId) {
+    chats.push({
+      id: allianceChatId,
+      type: "alliance",
+      messages: account.alliance?.chat?.messages.reverse()
+    })
+  }
+
+  return chats;
 };

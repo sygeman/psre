@@ -5,6 +5,7 @@ import { SendMessageInput } from "./types/send-message.input";
 import { CHAT_EVENTS } from "./chat.events";
 import { Chat } from "./types/chat.type";
 import { getChats } from "./service/get-chats";
+import { getChatMessages } from "./service/get-messages";
 
 export const buildChatModule = () => {
   builder.queryType({
@@ -22,12 +23,9 @@ export const buildChatModule = () => {
       chatMessages: t.field({
         type: [ChatMessage],
         args: {
-          chatId: t.arg.string(),
+          chatId: t.arg({ type: 'String', required: true }),
         },
-        resolve: (_parent, { chatId }) => {
-          console.log(chatId);
-          return [];
-        },
+        resolve: (_parent, { chatId }) =>  getChatMessages({ chatId: parseInt(chatId) }),
       }),
     }),
   });

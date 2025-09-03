@@ -31,7 +31,7 @@ export type ChatMessage = {
   __typename?: 'ChatMessage';
   author?: Maybe<ChatMessageAuthor>;
   content?: Maybe<Scalars['String']['output']>;
-  date_created?: Maybe<Scalars['DateTime']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
 };
 

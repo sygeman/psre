@@ -24,8 +24,9 @@ const currentAccountIdByToken = async (token?: string) => {
 
   try {
     const user = await db.query.users.findFirst({
-      where: (users, { eq }) => (eq(users.token, token))
+      // where: (users, { eq }) => (eq(users.token, token))
     })
+
 
     return user?.currentAccountId?.toString() || false;
   } catch {

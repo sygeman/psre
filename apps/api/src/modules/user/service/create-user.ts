@@ -19,11 +19,13 @@ export const createUser = async ({ telegramId }: { telegramId: number | string }
 
     if (!user) throw 'User not found';
 
-    await createAccount({ userId: user.id });
+    const { account } = await createAccount({ userId: user.id });
+    user.currentAccountId = account.id
   }
 
   // Generate auth token
   const token = await regenerateToken(user.id)
+
 
   return { token, user }
 }

@@ -8,7 +8,7 @@ export const CHAT_MESSAGE_FRAGMENT = gql`
       id
       name
     }
-    date_created
+    createdAt
   }
 `;
 

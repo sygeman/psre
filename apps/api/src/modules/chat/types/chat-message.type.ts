@@ -8,7 +8,7 @@ export type ChatMessageType = {
   id: string;
   content: string;
   author: ChatMessageAuthorType;
-  date_created: Date;
+  createdAt: Date;
 };
 
 export const ChatMessage = builder
@@ -18,6 +18,6 @@ export const ChatMessage = builder
       id: t.exposeID("id"),
       content: t.exposeString("content"),
       author: t.expose("author", { type: ChatMessageAuthor }),
-      date_created: t.expose("date_created", { type: "DateTime" }),
+      createdAt: t.expose("createdAt", { type: "DateTime" }),
     }),
   });

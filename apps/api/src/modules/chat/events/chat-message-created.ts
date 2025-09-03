@@ -17,6 +17,8 @@ export const chatMessageCreatedEventHandler = inngest.createFunction(
       });
     });
 
+    if (!message) return { success: false };
+
     await step.run("publish-message-event", async () => {
       pubsub.publish("createdChatMessage", data.chatId, message);
     });

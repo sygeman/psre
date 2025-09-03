@@ -1,30 +1,34 @@
+import { db } from "@/db";
+import { chatMessages as chatMessagesTable } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
-// const CREATE_CHAT_MESSAGE_MUTATION = gql`
-//   mutation CreateChatMessage($data: create_psre_chat_message_input!) {
-//     create_psre_chat_message_item(data: $data) {
-//       id
-//       content
-//       author {
-//         id
-//         name
-//       }
-//       date_created
-//     }
-//   }
-// `;
+export const createMessage = async ({
+  content, authorId, chatId
+}: { content: string, authorId: number, chatId: number }) => {
+  const chatMessages = await db.insert(chatMessagesTable).values({
+    content,
+    authorId,
+    chatId
+  }).returning();
 
-export const createMessage = async ({ content, authorId, chatId }) => {
-  // const { create_psre_chat_message_item } = await directus.query(
-  //   CREATE_CHAT_MESSAGE_MUTATION,
-  //   {
-  //     data: {
-  //       author: { id: authorId },
-  //       content,
-  //       chat_id: { id: chatId },
-  //     },
-  //   },
-  // );
+  const messageId = chatMessages[0]?.id;
 
-  // return create_psre_chat_message_item;
-  return null;
+  if (!messageId) throw 'Message not found';
+
+  return db.query.chatMessages.findFirst({
+    where: eq(chatMessagesTable.id, messageId),
+    columns: {
+      id: true,
+      content: true,
+      createdAt: true
+    },
+    with: {
+      author: {
+        columns: {
+          id: true,
+          name: true
+        }
+      }
+    }
+  })
 };

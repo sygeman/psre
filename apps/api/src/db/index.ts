@@ -6,6 +6,7 @@ import * as schema from './schema'
 import { createUser } from '@/modules/user/service/create-user';
 import { createRegion } from '@/modules/region/service/create-region';
 import { createAlliance } from '@/modules/alliance/service/create-alliance';
+import { testChat } from '@/modules/chat/test';
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL! });
 
@@ -16,5 +17,11 @@ export const dbSeed = async () => {
 
   const { region } = await createRegion();
   const { user } = await createUser({ telegramId: 57902065 });
-  await createAlliance({ regionId: region.id, ownerId: user.id });
+
+  console.log(user)
+
+  if (!user.currentAccountId) throw 'currentAccountId is null'
+  const { alliance } = await createAlliance({ regionId: region.id, ownerId: user.currentAccountId });
+
+  testChat({ allianceChatId: alliance.chatId, regionChatId: region.chatId, testAccountId: user.currentAccountId })
 }

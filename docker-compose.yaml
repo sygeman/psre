@@ -2,13 +2,9 @@ services:
   inngest:
     restart: unless-stopped
     image: inngest/inngest:v1.11.10
-    command: "inngest start"
+    command: "inngest dev -u http://host.docker.internal:4500/api/inngest"
     environment:
       - INNGEST_REDIS_URI=redis://redis:6379
-      - INNGEST_SIGNING_KEY=${INNGEST_SIGNING_KEY}
-      - INNGEST_EVENT_KEY=${INNGEST_EVENT_KEY}
-      - INNGEST_BASE_URL=http://localhost:8288
-      - INNGEST_DEV=0
     ports:
       - "8288:8288"
       - "8289:8289"

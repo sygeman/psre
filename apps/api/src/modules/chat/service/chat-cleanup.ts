@@ -1,15 +1,7 @@
-
+import { db } from "@/db";
+import { chatMessages } from "@/db/schema";
+import { eq } from "drizzle-orm";
 
 export const chatCleanup = async ({ chatId }) => {
-  return false;
-  // return await directus.request(
-  //   deleteItems("psre_chat_message", {
-  //     filter: {
-  //       chat_id: {
-  //         _eq: chatId,
-  //       },
-  //     },
-  //     limit: -1,
-  //   }),
-  // );
+  return db.delete(chatMessages).where(eq(chatMessages.chatId, chatId));
 };

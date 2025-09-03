@@ -3,7 +3,6 @@ import { pgTable } from "drizzle-orm/pg-core";
 import { accounts } from "./accounts";
 import { chats } from "./chats";
 import { regions } from "./regions";
-import { users } from "./users";
 
 export const alliances = pgTable('alliances', (t) => ({
   id: t.serial().primaryKey(),
@@ -25,8 +24,8 @@ export const alliancesRelations = relations(alliances, ({ many, one }) => ({
 		fields: [alliances.regionId],
 		references: [regions.id],
 	}),
-  owner: one(users, {
+  owner: one(accounts, {
 		fields: [alliances.ownerId],
-		references: [users.id],
+		references: [accounts.id],
 	}),
 }));
