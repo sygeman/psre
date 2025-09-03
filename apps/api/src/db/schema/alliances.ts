@@ -1,7 +1,9 @@
 import { relations } from "drizzle-orm";
-import { pgTable, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable } from "drizzle-orm/pg-core";
 import { accounts } from "./accounts";
 import { chats } from "./chats";
+import { regions } from "./regions";
+import { users } from "./users";
 
 export const alliances = pgTable('alliances', (t) => ({
   id: t.serial().primaryKey(),
@@ -9,6 +11,8 @@ export const alliances = pgTable('alliances', (t) => ({
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),
   chatId: t.integer(),
+  regionId: t.integer(),
+  ownerId: t.integer(),
 }))
 
 export const alliancesRelations = relations(alliances, ({ many, one }) => ({
@@ -16,5 +20,13 @@ export const alliancesRelations = relations(alliances, ({ many, one }) => ({
   chat: one(chats, {
 		fields: [alliances.chatId],
 		references: [chats.id],
+	}),
+  region: one(regions, {
+		fields: [alliances.regionId],
+		references: [regions.id],
+	}),
+  owner: one(users, {
+		fields: [alliances.ownerId],
+		references: [users.id],
 	}),
 }));

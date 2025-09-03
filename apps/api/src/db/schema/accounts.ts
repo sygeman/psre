@@ -28,11 +28,11 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 		references: [users.id],
 	}),
 	region: one(regions, {
-		fields: [accounts.userId],
+		fields: [accounts.regionId],
 		references: [regions.id],
 	}),
 	alliance: one(alliances, {
-		fields: [accounts.userId],
+		fields: [accounts.allianceId],
 		references: [alliances.id],
 	}),
 }));
