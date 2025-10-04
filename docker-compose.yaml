@@ -1,7 +1,7 @@
 services:
   inngest:
     restart: unless-stopped
-    image: inngest/inngest:v1.11.10
+    image: inngest/inngest:v1.12.1
     command: "inngest dev -u http://host.docker.internal:4500/api/inngest"
     environment:
       - INNGEST_REDIS_URI=redis://redis:6379

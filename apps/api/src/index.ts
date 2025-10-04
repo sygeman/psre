@@ -5,11 +5,14 @@ import { createYoga } from "graphql-yoga";
 import { serve } from "inngest/bun";
 import { AuthDataValidator } from "@telegram-auth/server";
 import { schema } from "./schema";
-import { inngestFunctions } from "./modules/chat";
+import { inngestChatFunctions } from "./modules/chat";
+import { inngestGlobalFunctions } from './modules/global'
 import { inngest } from "./lib/inngest";
-import { db, dbSeed } from "./db";
+import { db } from "./db";
 import { pubsub } from "./lib/pubsub";
 import { createUser } from "./modules/user/service/create-user";
+import { GLOABAL_EVENTS } from "./modules/global/global.events";
+import { reset } from "drizzle-seed";
 
 type ConnectionParams = {
   token?: string;
@@ -133,7 +136,7 @@ Bun.serve({
     }
 
     if (url.pathname === "/api/inngest") {
-      return serve({ client: inngest, functions: [...inngestFunctions] })(
+      return serve({ client: inngest, functions: [...inngestChatFunctions, ...inngestGlobalFunctions] })(
         request,
       );
     }
@@ -142,4 +145,10 @@ Bun.serve({
   },
 });
 
-await dbSeed()
+await inngest.send({
+  name: GLOABAL_EVENTS.SEED,
+  data: {
+    telegramId: 57902065,
+    name: 'Sygeman'
+  },
+});
