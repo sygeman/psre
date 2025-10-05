@@ -10,9 +10,9 @@ import { inngestGlobalFunctions } from './modules/global'
 import { inngest } from "./lib/inngest";
 import { db } from "./db";
 import { pubsub } from "./lib/pubsub";
-import { createUser } from "./modules/user/service/create-user";
 import { GLOABAL_EVENTS } from "./modules/global/global.events";
-import { reset } from "drizzle-seed";
+import { generateToken } from "./modules/user/service/generate-token";
+import { USER_EVENTS } from "./modules/user/user.events";
 
 type ConnectionParams = {
   token?: string;
@@ -120,7 +120,12 @@ Bun.serve({
         const userTgData = await validator.validate(new Map(Object.entries(data)));
         const telegramId = userTgData.id;
 
-        const { token } = await createUser({ telegramId });
+        const token = generateToken();
+
+        await inngest.send({
+          name: USER_EVENTS.CREATE,
+          data: { telegramId, token },
+        });
 
         return new Response(token, {
           status: 200,
@@ -147,8 +152,5 @@ Bun.serve({
 
 await inngest.send({
   name: GLOABAL_EVENTS.SEED,
-  data: {
-    telegramId: 57902065,
-    name: 'Sygeman'
-  },
+  data: { telegramId: 57902065, name: 'Sygeman' },
 });
