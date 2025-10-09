@@ -12,6 +12,7 @@ services:
   postgres:
     image: postgres
     hostname: postgreshost
+    restart: unless-stopped
     env_file:
       - .env
     environment:
@@ -30,6 +31,7 @@ services:
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
