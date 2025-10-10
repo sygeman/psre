@@ -5,12 +5,12 @@ import { regions } from "./regions";
 import { alliances } from "./alliances";
 
 export const accounts = pgTable('accounts', (t) => ({
-  id: t.serial().primaryKey(),
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),
   name: t.varchar(),
-  userId: t.integer().unique(),
+  userId: t.uuid().unique(),
   // Main Resources
   food: t.integer().default(0).notNull(),
   wood: t.integer().default(0).notNull(),
@@ -18,8 +18,8 @@ export const accounts = pgTable('accounts', (t) => ({
   fuel: t.integer().default(0).notNull(),
   diamond: t.integer().default(0).notNull(),
   // Region, Alliance
-  regionId: t.integer(),
-  allianceId: t.integer(),
+  regionId: t.uuid(),
+  allianceId: t.uuid(),
 }))
 
 export const accountsRelations = relations(accounts, ({ one }) => ({

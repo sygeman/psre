@@ -1,4 +1,6 @@
 import { db } from "@/db";
+import { builder } from "@/lib/builder";
+import { Chat } from "../types/chat.type";
 
 export const getChats = async ({
   currentAccountId,
@@ -6,7 +8,7 @@ export const getChats = async ({
   currentAccountId: string;
 }) => {
   const account = await db.query.accounts.findFirst({
-    where: (accounts, { eq }) => (eq(accounts.id, parseInt(currentAccountId))),
+    where: (accounts, { eq }) => (eq(accounts.id, currentAccountId)),
     columns: {
       id: true
     },
@@ -72,8 +74,8 @@ export const getChats = async ({
 
   if (!account) throw 'Account not found';
 
-  const regionChatId = account.region?.chatId?.toString();
-  const allianceChatId = account.alliance?.chatId?.toString();
+  const regionChatId = account.region?.chatId;
+  const allianceChatId = account.alliance?.chatId;
 
   if (!regionChatId) throw 'regionChatId is null';
 
@@ -93,3 +95,13 @@ export const getChats = async ({
 
   return chats;
 };
+
+builder.queryType({
+  fields: (t) => ({
+    chats: t.field({
+      type: [Chat],
+      resolve: (_parent, _args, { currentAccountId }) =>
+        getChats({ currentAccountId }),
+    }),
+  }),
+});

@@ -28,7 +28,7 @@ export const createAccount = inngest.createFunction(
         .values({
           userId,
           regionId,
-          name: name || crypto.randomUUID().toString(),
+          name: name || crypto.randomUUID(),
         })
         .returning();
 

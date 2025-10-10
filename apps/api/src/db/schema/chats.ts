@@ -1,11 +1,11 @@
 import { relations } from "drizzle-orm";
-import { pgTable, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable } from "drizzle-orm/pg-core";
 import { chatMessages } from "./chat-messages";
 import { regions } from "./regions";
 import { alliances } from "./alliances";
 
 export const chats = pgTable('chats', (t) => ({
-  id: t.serial().primaryKey(),
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),

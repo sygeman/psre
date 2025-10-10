@@ -31,7 +31,7 @@ const currentAccountIdByToken = async (token?: string) => {
     })
 
 
-    return user?.currentAccountId?.toString() || false;
+    return user?.currentAccountId || false;
   } catch {
     return false;
   }
@@ -40,7 +40,7 @@ const currentAccountIdByToken = async (token?: string) => {
 const yogaApp = createYoga<{ extra: Extra }>({
   schema,
   context: (ctx) => {
-    return { pubsub, currentAccountId: ctx.extra.accountId };
+    return { db, pubsub, currentAccountId: ctx.extra.accountId };
   },
   graphiql: { subscriptionsProtocol: "WS" },
 });

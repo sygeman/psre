@@ -5,13 +5,13 @@ import { chats } from "./chats";
 import { regions } from "./regions";
 
 export const alliances = pgTable('alliances', (t) => ({
-  id: t.serial().primaryKey(),
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),
-  chatId: t.integer(),
-  regionId: t.integer(),
-  ownerId: t.integer(),
+  chatId: t.uuid(),
+  regionId: t.uuid(),
+  ownerId: t.uuid(),
 }))
 
 export const alliancesRelations = relations(alliances, ({ many, one }) => ({

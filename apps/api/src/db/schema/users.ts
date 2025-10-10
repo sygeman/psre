@@ -3,10 +3,10 @@ import { pgTable } from "drizzle-orm/pg-core";
 import { accounts } from "./accounts";
 
 export const users = pgTable("users", (t) => ({
-  id: t.serial().primaryKey(),
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
   telegramId: t.varchar().unique(),
   token: t.varchar().unique(),
-  currentAccountId: t.integer(),
+  currentAccountId: t.uuid(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),

@@ -6,13 +6,13 @@ export const resourcesMain = async ({
   currentAccountId: string;
 }) => {
   const account = await db.query.accounts.findFirst({
-    where: (accounts, { eq }) => (eq(accounts.id, parseInt(currentAccountId)))
+    where: (accounts, { eq }) => (eq(accounts.id, currentAccountId))
   })
 
   if (!account) return;
 
   return {
-    id: account.id.toString(),
+    id: account.id,
     food: account.food,
     wood: account.wood,
     steel: account.steel,

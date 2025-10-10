@@ -4,10 +4,10 @@ import { chats } from "./chats";
 import { accounts } from "./accounts";
 
 export const chatMessages = pgTable('chat-messages', (t) => ({
-  id: t.serial().primaryKey(),
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
   content: t.text(),
-  chatId: t.integer(),
-  authorId: t.integer(),
+  chatId: t.uuid(),
+  authorId: t.uuid(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),

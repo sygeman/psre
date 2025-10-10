@@ -5,18 +5,18 @@ import { SendMessageInput } from "./types/send-message.input";
 import { CHAT_EVENTS } from "./chat.events";
 import { Chat } from "./types/chat.type";
 import { getChats } from "./service/get-chats";
-import { getChatMessages } from "./service/get-messages";
+import './service/get-chats'
 
 export const buildChatModule = () => {
-  builder.queryType({
-    fields: (t) => ({
-      chats: t.field({
-        type: [Chat],
-        resolve: (_parent, _args, { currentAccountId }) =>
-          getChats({ currentAccountId }),
-      }),
-    }),
-  });
+  // builder.queryType({
+  //   fields: (t) => ({
+  //     chats: t.field({
+  //       type: [Chat],
+  //       resolve: (_parent, _args, { currentAccountId }) =>
+  //         getChats({ currentAccountId }),
+  //     }),
+  //   }),
+  // });
 
   builder.queryType({
     fields: (t) => ({
@@ -25,7 +25,10 @@ export const buildChatModule = () => {
         args: {
           chatId: t.arg({ type: 'String', required: true }),
         },
-        resolve: (_parent, { chatId }) =>  getChatMessages({ chatId: parseInt(chatId) }),
+        resolve: (_parent, { chatId }) => {
+          console.log('get messages for ', chatId)
+          return []
+        },
       }),
     }),
   });

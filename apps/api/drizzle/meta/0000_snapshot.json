@@ -1,5 +1,5 @@
 {
-  "id": "d7a34b34-144e-49da-a791-34e4043ddc70",
+  "id": "e1ae7b35-6839-49d9-8b1f-5ab24f670b3a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -109,8 +109,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.chat-messages": {
-      "name": "chat-messages",
+    "public.alliances": {
+      "name": "alliances",
       "schema": "",
       "columns": {
         "id": {
@@ -118,6 +118,63 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chatId": {
+          "name": "chatId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "regionId": {
+          "name": "regionId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ownerId": {
+          "name": "ownerId",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.chat-messages": {
+      "name": "chat-messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "content": {
           "name": "content",
@@ -191,6 +248,50 @@
         "deletedAt": {
           "name": "deletedAt",
           "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.regions": {
+      "name": "regions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deletedAt": {
+          "name": "deletedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chatId": {
+          "name": "chatId",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
