@@ -3,12 +3,15 @@ import { createRegion } from '@/modules/region/service/create-region';
 import { createAlliance } from '@/modules/alliance/service/create-alliance';
 import { GLOABAL_EVENTS, GLOABAL_FUNCTION_IDS } from "../global.events";
 import { createUser } from "@/modules/user/events/create-user";
+import { reset } from "drizzle-seed";
 
 export const seedEventHandler = inngest.createFunction(
   { id: GLOABAL_FUNCTION_IDS.SEED_HANDLER },
   { event: GLOABAL_EVENTS.SEED },
-  async ({ event, step }) => {
-    const data = event.data;
+  async ({ event: { data }, step, db, dbSchema }) => {
+    await step.run('reset-db', async () => {
+      return await reset(db, dbSchema);
+    })
 
     const { region } = await step.invoke("create-first-region", {
       function: createRegion,
