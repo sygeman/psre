@@ -1,10 +1,12 @@
+import { Glob } from "bun";
 import { printSchema } from "graphql";
 import { builder } from "./lib/builder";
-import { buildResourcesModule } from "./modules/resources";
-import './modules/global'
-import "./modules/chat";
 
-buildResourcesModule();
+const glob = new Glob("**/modules/**/*.gql.ts");
+
+for await (const file of glob.scan(".")) {
+  await import(file)
+}
 
 export const schema = builder.toSchema();
 
