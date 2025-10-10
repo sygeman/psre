@@ -19,9 +19,11 @@ export const seedEventHandler = inngest.createFunction(
       data: { telegramId: data.telegramId, name: data.name }
     })
 
-    await step.run("create-alliance", async () => {
-      if (!user.currentAccountId) throw 'currentAccountId is null';
-      return createAlliance({ regionId: region.id, ownerId: user.currentAccountId });
+    if (!user.currentAccountId) throw 'currentAccountId is null';
+
+    await step.invoke("create-first-alliance", {
+      function: createAlliance,
+      data: { regionId: region.id, ownerId: user.currentAccountId }
     });
   },
 );

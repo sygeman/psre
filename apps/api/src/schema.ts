@@ -1,10 +1,9 @@
 import { printSchema } from "graphql";
 import { builder } from "./lib/builder";
-import { buildChatModule } from "./modules/chat";
 import { buildResourcesModule } from "./modules/resources";
 import './modules/global'
+import "./modules/chat";
 
-buildChatModule();
 buildResourcesModule();
 
 export const schema = builder.toSchema();

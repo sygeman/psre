@@ -1,25 +1,29 @@
-import { alliances as alliancesTable } from '@/db/schema/alliances'
-import { db } from "@/db";
-import { createChat } from '@/modules/chat/service/create-chat';
-import { accounts as accountsTable } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { inngest } from "@/lib/inngest";
+import { createChat } from '@/modules/chat/events/create-chat';
 
-export const createAlliance = async ({ regionId, ownerId }: { regionId: number, ownerId: number }) => {
-  const { chat } = await createChat();
+export const createAlliance = inngest.createFunction(
+  { id: "create-alliance" },
+  { event: "alliance/create" },
+  async ({ event: { data: { regionId, ownerId } }, step, db, dbSchema }) => {
+    const { chat } = await step.invoke("create-chat-for-alliance", {
+      function: createChat,
+    });
 
-  const alliances = await db.insert(alliancesTable).values({
-    chatId: chat.id,
-    regionId,
-    ownerId
-  }).returning();
-  const alliance = alliances[0];
+    const alliances = await db.insert(dbSchema.alliances).values({
+      chatId: chat.id,
+      regionId,
+      ownerId
+    }).returning();
+    const alliance = alliances[0];
 
-  if (!alliance) throw 'Alliance not found';
+    if (!alliance) throw 'Alliance not found';
 
-  await db.update(accountsTable)
-    .set({ allianceId: alliance.id })
-    .where(eq(accountsTable.id, ownerId))
+    await db.update(dbSchema.accounts)
+      .set({ allianceId: alliance.id })
+      .where(eq(dbSchema.accounts.id, ownerId))
 
 
-  return { alliance }
-}
+    return { alliance };
+  }
+);

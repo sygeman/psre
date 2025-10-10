@@ -9,7 +9,7 @@ export const accounts = pgTable('accounts', (t) => ({
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),
-  name: t.varchar(),
+  name: t.varchar().notNull(),
   userId: t.uuid().unique(),
   // Main Resources
   food: t.integer().default(0).notNull(),

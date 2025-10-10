@@ -6,8 +6,8 @@ import {
 
 export type ChatMessageType = {
   id: string;
-  content: string;
-  author: ChatMessageAuthorType;
+  content: string | null;
+  author: ChatMessageAuthorType | null;
   createdAt: Date;
 };
 
