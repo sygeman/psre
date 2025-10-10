@@ -1,23 +1,22 @@
-import { users as usersTable } from '@/db/schema/users'
-import { db } from "@/db";
-import { createAccount } from '@/modules/account/events/create-account';
-import { USER_EVENTS, USER_FUNCTION_IDS } from '../user.events';
-import { inngest } from '@/lib/inngest';
-import { generateToken } from '../service/generate-token';
-import { eq } from 'drizzle-orm';
+import { users as usersTable } from "@/db/schema/users";
+import { createAccount } from "@/modules/account/events/create-account";
+import { USER_EVENTS, USER_FUNCTION_IDS } from "../user.events";
+import { inngest } from "@/lib/inngest";
+import { generateToken } from "../service/generate-token";
+import { eq } from "drizzle-orm";
 
 export const createUser = inngest.createFunction(
   { id: USER_FUNCTION_IDS.CREATE_HANDLER },
   { event: USER_EVENTS.CREATE },
-  async ({ event, step }) => {
+  async ({ event, step, db }) => {
     let { telegramId, token, name } = event.data;
 
-    telegramId = telegramId.toString()
+    telegramId = telegramId.toString();
 
     let user = await step.run("find-user-in-db", () => {
       return db.query.users.findFirst({
-        where: (users, { eq }) => (eq(users.telegramId, telegramId))
-      })
+        where: (users, { eq }) => eq(users.telegramId, telegramId),
+      });
     });
 
     if (user) {
@@ -25,9 +24,10 @@ export const createUser = inngest.createFunction(
         token = await step.run("regenerate-token", async () => {
           const token = generateToken();
 
-          await db.update(usersTable)
+          await db
+            .update(usersTable)
             .set({ token })
-            .where(eq(usersTable.id, user.id))
+            .where(eq(usersTable.id, user.id));
 
           return token;
         });
@@ -37,27 +37,30 @@ export const createUser = inngest.createFunction(
     }
 
     if (!token) {
-      token = generateToken()
+      token = generateToken();
     }
 
     user = await step.run("create-user-in-db", async () => {
-      const users = await db.insert(usersTable).values({
-        telegramId,
-        token
-      }).returning();
+      const users = await db
+        .insert(usersTable)
+        .values({
+          telegramId,
+          token,
+        })
+        .returning();
 
       return users[0];
     });
 
-    if (!user) throw 'User not found';
+    if (!user) throw "User not found";
 
     const { account } = await step.invoke("create-account", {
       function: createAccount,
-      data: { telegramId, name, userId: user.id }
-    })
+      data: { telegramId, name, userId: user.id },
+    });
 
     user.currentAccountId = account.id;
 
     return { token, user };
-  },
+  }
 );
