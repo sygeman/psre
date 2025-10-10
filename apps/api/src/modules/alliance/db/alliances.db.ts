@@ -1,8 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable } from "drizzle-orm/pg-core";
-import { accounts } from "./accounts";
-import { chats } from "./chats";
-import { regions } from "./regions";
+import { accounts, chats, regions } from "@/schema/db";
 
 export const alliances = pgTable('alliances', (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),

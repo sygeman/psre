@@ -1,4 +1,3 @@
-import { users as usersTable } from "@/db/schema/users";
 import { createAccount } from "@/modules/account/events/create-account";
 import { USER_EVENTS, USER_FUNCTION_IDS } from "../user.events";
 import { inngest } from "@/lib/inngest";
@@ -8,7 +7,7 @@ import { eq } from "drizzle-orm";
 export const createUser = inngest.createFunction(
   { id: USER_FUNCTION_IDS.CREATE_HANDLER },
   { event: USER_EVENTS.CREATE },
-  async ({ event, step, db }) => {
+  async ({ event, step, db, dbSchema }) => {
     let { telegramId, token, name } = event.data;
 
     telegramId = telegramId.toString();
@@ -25,9 +24,9 @@ export const createUser = inngest.createFunction(
           const token = generateToken();
 
           await db
-            .update(usersTable)
+            .update(dbSchema.users)
             .set({ token })
-            .where(eq(usersTable.id, user.id));
+            .where(eq(dbSchema.users.id, user.id));
 
           return token;
         });
@@ -42,7 +41,7 @@ export const createUser = inngest.createFunction(
 
     user = await step.run("create-user-in-db", async () => {
       const users = await db
-        .insert(usersTable)
+        .insert(dbSchema.users)
         .values({
           telegramId,
           token,

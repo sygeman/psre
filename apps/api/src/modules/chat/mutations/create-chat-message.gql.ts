@@ -1,4 +1,4 @@
-import { builder } from "@/lib/builder";
+import { builder } from "@/lib/pothos";
 import { inngest } from "@/lib/inngest";
 import { SendMessageInput } from "../types/send-message.input";
 import { CHAT_EVENTS } from "../chat.events";

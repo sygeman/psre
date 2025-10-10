@@ -146,19 +146,19 @@ function BuildingCard(props: Building) {
 
 export const Map = () => {
   const buildings: Building[] = [
-    {
-      color: 'bg-cyan-900',
-      name: 'Лаборатория',
-      resourceName: RESOURCES.VACCINE.name,
-      level: 3,
-      collectionTime: 300,
-      upgradeDuration: 600,
-      icon: RESOURCES.VACCINE.icon,
-      initialUpgradeProgress: 75,
-      onLevelUp: () => {
-        console.log('Повышение уровня лаборатории');
-      }
-    },
+    // {
+    //   color: 'bg-cyan-900',
+    //   name: 'Лаборатория',
+    //   resourceName: RESOURCES.VACCINE.name,
+    //   level: 3,
+    //   collectionTime: 300,
+    //   upgradeDuration: 600,
+    //   icon: RESOURCES.VACCINE.icon,
+    //   initialUpgradeProgress: 75,
+    //   onLevelUp: () => {
+    //     console.log('Повышение уровня лаборатории');
+    //   }
+    // },
     {
       color: 'bg-emerald-900',
       name: 'Лесопилка',
@@ -209,18 +209,18 @@ export const Map = () => {
         console.log('Повышение уровня плавильни');
       }
     },
-    {
-      color: 'bg-red-900',
-      name: 'Арсенал',
-      resourceName: '', // пустая строка, так как это не ресурсное здание
-      level: 2,
-      collectionTime: 0, // не используется для Арсенала
-      upgradeDuration: 600,
-      icon: ARMORY_CONFIG.icon,
-      onLevelUp: () => {
-        console.log('Повышение уровня арсенала');
-      }
-    },
+    // {
+    //   color: 'bg-red-900',
+    //   name: 'Арсенал',
+    //   resourceName: '', // пустая строка, так как это не ресурсное здание
+    //   level: 2,
+    //   collectionTime: 0, // не используется для Арсенала
+    //   upgradeDuration: 600,
+    //   icon: ARMORY_CONFIG.icon,
+    //   onLevelUp: () => {
+    //     console.log('Повышение уровня арсенала');
+    //   }
+    // },
   ];
 
   return (

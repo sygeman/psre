@@ -4,12 +4,12 @@ import { useServer } from "graphql-ws/use/ws";
 import { createYoga } from "graphql-yoga";
 import { serve } from "inngest/bun";
 import { AuthDataValidator } from "@telegram-auth/server";
-import { schema } from "./schema";
+import { schema } from "./schema/gql";
 import { inngestChatFunctions } from "./modules/chat";
 import { inngestGlobalFunctions } from './modules/global'
-import { inngest } from "./lib/inngest";
-import { db } from "./db";
-import { pubsub } from "./lib/pubsub";
+import { inngest } from "@/lib/inngest";
+import { db } from "@/lib/drizzle";
+import { pubsub } from "@/lib/pubsub";
 import { GLOABAL_EVENTS } from "./modules/global/global.events";
 import { generateToken } from "./modules/user/service/generate-token";
 import { USER_EVENTS } from "./modules/user/user.events";

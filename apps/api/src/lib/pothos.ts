@@ -1,7 +1,7 @@
 import SchemaBuilder from "@pothos/core";
 import { DateResolver, DateTimeResolver, JSONResolver } from "graphql-scalars";
 import type { pubsub } from "./pubsub";
-import type { db } from "@/db";
+import type { db } from "./drizzle";
 
 export const builder = new SchemaBuilder<{
   Context: { pubsub: typeof pubsub; currentAccountId: string; db: typeof db };

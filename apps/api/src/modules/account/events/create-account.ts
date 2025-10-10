@@ -1,19 +1,20 @@
-import { users as usersTable } from "@/db/schema/users";
-import { accounts as accountsTable } from "@/db/schema/accounts";
-import { eq } from "drizzle-orm";
-import { getLatestRegion } from "@/modules/region/service/get-latest-region";
+import { desc, eq } from "drizzle-orm";
 import { ACCOUNT_EVENTS, ACCOUNT_FUNCTION_IDS } from "../account.events";
 import { inngest } from "@/lib/inngest";
 
 export const createAccount = inngest.createFunction(
   { id: ACCOUNT_FUNCTION_IDS.CREATE_HANDLER },
   { event: ACCOUNT_EVENTS.CREATE },
-  async ({ event, step, db }) => {
+  async ({ event, step, db, dbSchema }) => {
     let { userId, regionId, name } = event.data;
 
     if (!regionId) {
       regionId = await step.run("get-latest-region-id", async () => {
-        const { region } = await getLatestRegion();
+        let region = await db.query.regions.findFirst({
+          orderBy: [desc(dbSchema.regions.id)],
+        })
+
+        if (!region) throw 'Region not found';
         return region.id;
       });
     }
@@ -24,7 +25,7 @@ export const createAccount = inngest.createFunction(
 
     const account = await step.run("create-account-in-db", async () => {
       const accounts = await db
-        .insert(accountsTable)
+        .insert(dbSchema.accounts)
         .values({
           userId,
           regionId,
@@ -39,9 +40,9 @@ export const createAccount = inngest.createFunction(
 
     await step.run("update-current-account-id", async () => {
       return db
-        .update(usersTable)
+        .update(dbSchema.users)
         .set({ currentAccountId: account.id })
-        .where(eq(usersTable.id, userId));
+        .where(eq(dbSchema.users.id, userId));
     });
 
     return { account };

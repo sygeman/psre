@@ -1,4 +1,4 @@
-import { builder } from "@/lib/builder";
+import { builder } from "@/lib/pothos";
 
 export type ChatMessageAuthorType = {
   id: string;

@@ -1,4 +1,4 @@
-import { builder } from "@/lib/builder";
+import { builder } from "@/lib/pothos";
 import { MainResources } from "../types/main-resources.type";
 
 builder.queryType({

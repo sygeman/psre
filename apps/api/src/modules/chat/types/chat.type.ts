@@ -1,4 +1,4 @@
-import { builder } from "@/lib/builder";
+import { builder } from "@/lib/pothos";
 import { type ChatMessageType, ChatMessage } from "./chat-message.type";
 
 type Chat = {

@@ -1,6 +1,6 @@
 import { Glob } from "bun";
 import { printSchema } from "graphql";
-import { builder } from "./lib/builder";
+import { builder } from "@/lib/pothos";
 
 const glob = new Glob("**/modules/**/*.gql.ts");
 
