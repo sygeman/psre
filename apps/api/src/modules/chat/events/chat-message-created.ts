@@ -1,6 +1,6 @@
-import { inngest } from "@/lib/inngest";
-import { CHAT_EVENTS, CHAT_FUNCTION_IDS } from "../chat.events";
-import { eq } from "drizzle-orm";
+import { inngest } from "@/lib/inngest"
+import { CHAT_EVENTS, CHAT_FUNCTION_IDS } from "../chat.events"
+import { eq } from "drizzle-orm"
 
 export const chatMessageCreatedEventHandler = inngest.createFunction(
   { id: CHAT_FUNCTION_IDS.MESSAGE_HANDLER },
@@ -14,11 +14,11 @@ export const chatMessageCreatedEventHandler = inngest.createFunction(
           authorId: data.currentAccountId,
           chatId: data.chatId,
         })
-        .returning();
+        .returning()
 
-      const messageId = chatMessages[0]?.id;
+      const messageId = chatMessages[0]?.id
 
-      if (!messageId) throw "Message not found";
+      if (!messageId) throw "Message not found"
 
       return db.query.chatMessages.findFirst({
         where: eq(dbSchema.chatMessages.id, messageId),
@@ -35,15 +35,15 @@ export const chatMessageCreatedEventHandler = inngest.createFunction(
             },
           },
         },
-      });
-    });
+      })
+    })
 
-    if (!message) return { success: false };
+    if (!message) return { success: false }
 
     await step.run("publish-message-event", async () => {
-      pubsub.publish("createdChatMessage", data.chatId, message);
-    });
+      pubsub.publish("createdChatMessage", data.chatId, message)
+    })
 
-    return { success: true };
-  }
-);
+    return { success: true }
+  },
+)

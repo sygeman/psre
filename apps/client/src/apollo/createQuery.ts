@@ -1,12 +1,12 @@
-import type { WatchQueryOptions, OperationVariables } from '@apollo/client/core'
-import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core'
-import type { Accessor } from 'solid-js'
-import { createResource, onCleanup } from 'solid-js'
-import { createStore, reconcile } from 'solid-js/store'
+import type { WatchQueryOptions, OperationVariables } from "@apollo/client/core"
+import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core"
+import type { Accessor } from "solid-js"
+import { createResource, onCleanup } from "solid-js"
+import { createStore, reconcile } from "solid-js/store"
 
-import { useApollo } from './ApolloProvider'
+import { useApollo } from "./ApolloProvider"
 
-interface BaseOptions<TData, TVariables> extends Omit<WatchQueryOptions<TVariables, TData>, 'query'> {
+interface BaseOptions<TData, TVariables> extends Omit<WatchQueryOptions<TVariables, TData>, "query"> {
   skip?: boolean
 }
 
@@ -14,29 +14,32 @@ type CreateQueryOptions<TData, TVariables> = BaseOptions<TData, TVariables> | Ac
 
 export const createQuery = <TData = {}, TVariables = OperationVariables>(
   query: DocumentNode<TData, TVariables>,
-  options: CreateQueryOptions<TData, TVariables> = {}
+  options: CreateQueryOptions<TData, TVariables> = {},
 ) => {
   const apolloClient = useApollo()
 
   const optionsAccessor = () => {
-    if (typeof options !== 'function') {
+    if (typeof options !== "function") {
       if (options.skip) {
         console.warn(
-          'you passed options.skip to createQuery, but the options are not an acccessor.\nThis query will never execute!\n\nReplace your options with a function.'
+          "you passed options.skip to createQuery, but the options are not an acccessor.\nThis query will never execute!\n\nReplace your options with a function.",
         )
       }
 
       return options
     }
-    const opts = typeof options === 'function' ? options() : options
+    const opts = typeof options === "function" ? options() : options
     if (opts.skip) {
       return false
     }
     return opts
   }
 
-  const [resource] = createResource<TData, BaseOptions<TData, TVariables>>(optionsAccessor, opts => {
-    const observable = apolloClient.watchQuery<TData, TVariables>({ query, ...opts })
+  const [resource] = createResource<TData, BaseOptions<TData, TVariables>>(optionsAccessor, (opts) => {
+    const observable = apolloClient.watchQuery<TData, TVariables>({
+      query,
+      ...opts,
+    })
     const [state, setState] = createStore<TData>({} as any)
 
     let resolved = false

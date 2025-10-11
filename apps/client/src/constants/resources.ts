@@ -1,26 +1,26 @@
 export const RESOURCES = {
   FOOD: {
-    icon: '🌾',
-    name: 'Еда'
+    icon: "🌾",
+    name: "Еда",
   },
   WOOD: {
-    icon: '🪵',
-    name: 'Древесина'
+    icon: "🪵",
+    name: "Древесина",
   },
   STEEL: {
-    icon: '🔩',
-    name: 'Сталь'
+    icon: "🔩",
+    name: "Сталь",
   },
   FUEL: {
-    icon: '🛢️',
-    name: 'Топливо'
+    icon: "🛢️",
+    name: "Топливо",
   },
   DIAMOND: {
-    icon: '💎',
-    name: 'Алмазы'
+    icon: "💎",
+    name: "Алмазы",
   },
   VACCINE: {
-    icon: '🧪',
-    name: 'Вакцина'
-  }
-} as const;
+    icon: "🧪",
+    name: "Вакцина",
+  },
+} as const

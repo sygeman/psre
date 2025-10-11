@@ -1,14 +1,8 @@
-import { useNavigate } from '@solidjs/router';
-import { BuildingButton } from './building-button';
+import { useNavigate } from "@solidjs/router"
+import { BuildingButton } from "./building-button"
 
 export function MiniGamesButton() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
-  return (
-    <BuildingButton
-      onClick={() => navigate('/mini-games')}
-      color="bg-purple-500"
-      icon="🎮"
-    />
-  );
-} 
+  return <BuildingButton onClick={() => navigate("/mini-games")} color="bg-purple-500" icon="🎮" />
+}

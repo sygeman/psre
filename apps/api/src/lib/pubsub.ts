@@ -1,3 +1,3 @@
-import { createPubSub } from "graphql-yoga";
+import { createPubSub } from "graphql-yoga"
 
-export const pubsub = createPubSub();
+export const pubsub = createPubSub()

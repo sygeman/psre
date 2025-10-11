@@ -1,8 +1,8 @@
-import { relations } from "drizzle-orm";
-import { pgTable } from "drizzle-orm/pg-core";
-import { chats, accounts } from "@/schema/db";
+import { relations } from "drizzle-orm"
+import { pgTable } from "drizzle-orm/pg-core"
+import { chats, accounts } from "@/schema/db"
 
-export const chatMessages = pgTable('chat-messages', (t) => ({
+export const chatMessages = pgTable("chat-messages", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   content: t.text(),
   chatId: t.uuid(),
@@ -13,12 +13,12 @@ export const chatMessages = pgTable('chat-messages', (t) => ({
 }))
 
 export const chatMessagesRelations = relations(chatMessages, ({ one }) => ({
-	chat: one(chats, {
-		fields: [chatMessages.chatId],
-		references: [chats.id],
-	}),
-	author: one(accounts, {
-		fields: [chatMessages.authorId],
-		references: [accounts.id],
-	}),
-}));
+  chat: one(chats, {
+    fields: [chatMessages.chatId],
+    references: [chats.id],
+  }),
+  author: one(accounts, {
+    fields: [chatMessages.authorId],
+    references: [accounts.id],
+  }),
+}))

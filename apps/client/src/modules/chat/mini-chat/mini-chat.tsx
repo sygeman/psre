@@ -1,73 +1,66 @@
-import { For, createSignal } from "solid-js";
-import { useNavigate } from "@solidjs/router";
-import { chatStore, type ChatChannel } from "../store";
-import { Icon } from "solid-heroicons";
-import { globeAlt, userGroup } from "solid-heroicons/outline";
-import { createChat } from "../create-chat";
+import { For, createSignal } from "solid-js"
+import { useNavigate } from "@solidjs/router"
+import { chatStore, type ChatChannel } from "../store"
+import { Icon } from "solid-heroicons"
+import { globeAlt, userGroup } from "solid-heroicons/outline"
+import { createChat } from "../create-chat"
 
 // Переключение канала (синк выбранного канала с страницей чата)
 // Получение 2 послдених сообщения из истории
 // Реалтайм новые сообщения в канале
 export function MiniChat() {
-  const navigate = useNavigate();
-  const [touchStart, setTouchStart] = createSignal(0);
-  const [isAnimating, setIsAnimating] = createSignal(false);
-  const { messages } = createChat();
+  const navigate = useNavigate()
+  const [touchStart, setTouchStart] = createSignal(0)
+  const [isAnimating, setIsAnimating] = createSignal(false)
+  const { messages } = createChat()
 
   const handleClick = () => {
-    navigate("/chat", { state: { activeChannel: chatStore.activeChannel } });
-  };
+    navigate("/chat", { state: { activeChannel: chatStore.activeChannel } })
+  }
 
   const handleTouchStart = (e: TouchEvent) => {
-    setTouchStart(e.touches[0].clientX);
-  };
+    setTouchStart(e.touches[0].clientX)
+  }
 
   const handleTouchMove = (e: TouchEvent) => {
-    e.preventDefault(); // Предотвращаем скролл страницы при свайпе
-  };
+    e.preventDefault() // Предотвращаем скролл страницы при свайпе
+  }
 
   const handleTouchEnd = (e: TouchEvent) => {
-    e.preventDefault(); // Предотвращаем открытие страницы после свайпа
-    const touchEnd = e.changedTouches[0].clientX;
-    const diff = touchEnd - touchStart();
+    e.preventDefault() // Предотвращаем открытие страницы после свайпа
+    const touchEnd = e.changedTouches[0].clientX
+    const diff = touchEnd - touchStart()
 
     if (Math.abs(diff) > 50 && !isAnimating()) {
-      setIsAnimating(true);
+      setIsAnimating(true)
       if (diff > 0 && chatStore.activeChannel === "alliance") {
-        chatStore.setActiveChannel("region");
+        chatStore.setActiveChannel("region")
       } else if (diff < 0 && chatStore.activeChannel === "region") {
-        chatStore.setActiveChannel("alliance");
+        chatStore.setActiveChannel("alliance")
       }
-      setTimeout(() => setIsAnimating(false), 300);
+      setTimeout(() => setIsAnimating(false), 300)
     } else if (Math.abs(diff) <= 5) {
       // Если это был клик (очень маленькое движение), а не свайп
-      handleClick();
+      handleClick()
     }
-  };
+  }
 
   const MessageContainer = (props: { channel: ChatChannel }) => (
     <div class="flex min-w-0">
       <div class="ml-2 flex h-[44px] w-[44px] flex-shrink-0 flex-col items-center">
         <div class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 before:absolute before:inset-0 before:rounded-full before:border before:border-white/20 relative">
-          <Icon
-            path={props.channel === "region" ? globeAlt : userGroup}
-            class="h-5 w-5 text-gray-200/90"
-          />
+          <Icon path={props.channel === "region" ? globeAlt : userGroup} class="h-5 w-5 text-gray-200/90" />
         </div>
         {/* Индикаторы каналов под иконкой */}
         <div class="mt-1 flex gap-1">
           <div
             class={`h-1.5 w-1.5 rounded-full transition-colors ${
-              chatStore.activeChannel === "region"
-                ? "bg-blue-500"
-                : "bg-slate-600"
+              chatStore.activeChannel === "region" ? "bg-blue-500" : "bg-slate-600"
             }`}
           />
           <div
             class={`h-1.5 w-1.5 rounded-full transition-colors ${
-              chatStore.activeChannel === "alliance"
-                ? "bg-blue-500"
-                : "bg-slate-600"
+              chatStore.activeChannel === "alliance" ? "bg-blue-500" : "bg-slate-600"
             }`}
           />
         </div>
@@ -76,9 +69,7 @@ export function MiniChat() {
         <For each={messages().slice(-2)}>
           {(message) => (
             <div class="max-w-full min-w-0 text-sm leading-[22px] text-gray-400/90 flex">
-              <span class="font-medium select-none text-gray-200/90 flex-shrink-0">
-                {message?.author?.name}:
-              </span>
+              <span class="font-medium select-none text-gray-200/90 flex-shrink-0">{message?.author?.name}:</span>
               <span class="select-none truncate ml-1">{message.content}</span>
             </div>
           )}
@@ -90,7 +81,7 @@ export function MiniChat() {
         )}
       </div>
     </div>
-  );
+  )
 
   return (
     <div
@@ -125,5 +116,5 @@ export function MiniChat() {
         </div>
       </div>
     </div>
-  );
+  )
 }

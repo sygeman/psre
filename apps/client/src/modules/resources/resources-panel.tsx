@@ -1,11 +1,11 @@
-import { useNavigate } from "@solidjs/router";
-import { RESOURCES } from "@/constants";
-import { AnimatedNumber } from "@/components/animated-number";
-import { createResources } from "./create-resources";
+import { useNavigate } from "@solidjs/router"
+import { RESOURCES } from "@/constants"
+import { AnimatedNumber } from "@/components/animated-number"
+import { createResources } from "./create-resources"
 
 export const ResourcesPanel = () => {
-  const navigate = useNavigate();
-  const { food, wood, steel, fuel, diamond } = createResources();
+  const navigate = useNavigate()
+  const { food, wood, steel, fuel, diamond } = createResources()
 
   return (
     <div class="grid h-8 w-full grid-cols-5 px-4 bg-slate-950/90 backdrop-blur-md border-b border-white/5 shadow-lg">
@@ -53,10 +53,8 @@ export const ResourcesPanel = () => {
         <span class="truncate">
           <AnimatedNumber value={diamond()} />
         </span>
-        <span class="inline-flex items-center font-bold text-yellow-400 flex-shrink-0">
-          +
-        </span>
+        <span class="inline-flex items-center font-bold text-yellow-400 flex-shrink-0">+</span>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,34 +1,34 @@
-import { createStore } from 'solid-js/store';
+import { createStore } from "solid-js/store"
 
 export type AccountState = {
-  level: number;
-  action_points: number;
-  stamina_points: number;
-  food: number;
-  wood: number;
-  steel: number;
-  fuel: number;
-  diamond: number;
-  power: number;
-  serum: number;
-  exp: number;
-  materials: number;
-};
+  level: number
+  action_points: number
+  stamina_points: number
+  food: number
+  wood: number
+  steel: number
+  fuel: number
+  diamond: number
+  power: number
+  serum: number
+  exp: number
+  materials: number
+}
 
 export type AccountStateData = {
-  level?: number;
-  action_points?: number;
-  stamina_points?: number;
-  food?: number | string;
-  wood?: number | string;
-  steel?: number | string;
-  fuel?: number | string;
-  diamond?: number | string;
-  power?: number | string;
-  serum?: number | string;
-  exp?: number | string;
-  materials?: number | string;
-};
+  level?: number
+  action_points?: number
+  stamina_points?: number
+  food?: number | string
+  wood?: number | string
+  steel?: number | string
+  fuel?: number | string
+  diamond?: number | string
+  power?: number | string
+  serum?: number | string
+  exp?: number | string
+  materials?: number | string
+}
 
 export const [accountState, setAccountState] = createStore<AccountState>({
   level: 0,
@@ -43,10 +43,10 @@ export const [accountState, setAccountState] = createStore<AccountState>({
   serum: 0,
   exp: 0,
   materials: 0,
-});
+})
 
 export const updateStateFromData = (data: AccountStateData) => {
-  if (!data) return;
+  if (!data) return
 
   setAccountState({
     level: data.level ?? 0,
@@ -61,5 +61,5 @@ export const updateStateFromData = (data: AccountStateData) => {
     serum: Number(data.serum ?? 0),
     exp: Number(data.exp ?? 0),
     materials: Number(data.materials ?? 0),
-  });
-};
+  })
+}

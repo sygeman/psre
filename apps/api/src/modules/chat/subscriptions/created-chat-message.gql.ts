@@ -1,5 +1,5 @@
-import { builder } from "@/lib/pothos";
-import { ChatMessage } from "../types/chat-message.type";
+import { builder } from "@/lib/pothos"
+import { ChatMessage } from "../types/chat-message.type"
 
 builder.subscriptionType({
   fields: (t) => ({
@@ -9,9 +9,9 @@ builder.subscriptionType({
         chatId: t.arg.string(),
       },
       subscribe: (_parent, { chatId }, { pubsub }) => {
-        return pubsub.subscribe("createdChatMessage", chatId);
+        return pubsub.subscribe("createdChatMessage", chatId)
       },
       resolve: (message) => message,
     }),
   }),
-});
+})

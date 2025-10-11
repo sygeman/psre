@@ -1,12 +1,12 @@
-import { ApolloProvider } from "@/apollo";
-import { render } from "solid-js/web";
-import { Show } from "solid-js";
-import "./index.css";
+import { ApolloProvider } from "@/apollo"
+import { render } from "solid-js/web"
+import { Show } from "solid-js"
+import "./index.css"
 
-import { Main } from "./main";
+import { Main } from "./main"
 
-import { apolloClient } from "./apollo/client";
-import { LoginPage } from "./pages/login";
+import { apolloClient } from "./apollo/client"
+import { LoginPage } from "./pages/login"
 
 const App = () => {
   // If TMA -> POST /api/login -> set token -> show main app
@@ -16,7 +16,7 @@ const App = () => {
 
   // TODO: Need to create loading screen (init tma, login with tma data, validate token)
 
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token")
 
   return (
     <>
@@ -29,7 +29,7 @@ const App = () => {
         </ApolloProvider>
       </Show>
     </>
-  );
-};
+  )
+}
 
-render(() => <App />, document.getElementById("root"));
+render(() => <App />, document.getElementById("root"))

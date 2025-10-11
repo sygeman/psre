@@ -1,22 +1,20 @@
-import { Accessor, Component, createMemo, mergeProps } from 'solid-js';
+import { Accessor, Component, createMemo, mergeProps } from "solid-js"
 
 type Props = {
-  points: Accessor<number>;
-  color: string;
-  icon: string;
-  max?: number;
-  labelClass?: string;
-  showValue?: boolean;
-};
+  points: Accessor<number>
+  color: string
+  icon: string
+  max?: number
+  labelClass?: string
+  showValue?: boolean
+}
 
 export const PointsProgressBar: Component<Props> = (oProps) => {
-  const props = mergeProps({ max: 120, showValue: false }, oProps);
+  const props = mergeProps({ max: 120, showValue: false }, oProps)
 
-  const progress = createMemo(() =>
-    Math.min((props.points() / props.max) * 100, 100)
-  );
+  const progress = createMemo(() => Math.min((props.points() / props.max) * 100, 100))
 
-  const percentage = createMemo(() => Math.round(progress()));
+  const percentage = createMemo(() => Math.round(progress()))
 
   return (
     <div class="group relative h-6 w-full bg-black/40 rounded overflow-hidden">
@@ -32,7 +30,7 @@ export const PointsProgressBar: Component<Props> = (oProps) => {
 
       {/* Метка и значение */}
       <div class="relative flex h-full items-center justify-between px-1">
-        <div class={`flex items-center gap-1 rounded px-1 ${props.labelClass || 'bg-black/60'}`}>
+        <div class={`flex items-center gap-1 rounded px-1 ${props.labelClass || "bg-black/60"}`}>
           <span class="text-sm">{props.icon}</span>
         </div>
 
@@ -52,5 +50,5 @@ export const PointsProgressBar: Component<Props> = (oProps) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

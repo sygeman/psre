@@ -100,9 +100,7 @@
         "accounts_userId_unique": {
           "name": "accounts_userId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "userId"
-          ]
+          "columns": ["userId"]
         }
       },
       "policies": {},
@@ -359,16 +357,12 @@
         "users_telegramId_unique": {
           "name": "users_telegramId_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "telegramId"
-          ]
+          "columns": ["telegramId"]
         },
         "users_token_unique": {
           "name": "users_token_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token"
-          ]
+          "columns": ["token"]
         }
       },
       "policies": {},

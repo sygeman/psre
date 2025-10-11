@@ -1,202 +1,202 @@
-import { createSignal, For, Index, createEffect, onCleanup } from 'solid-js';
-import { SLOTS_CONFIG } from '@/constants';
-import { accountState, setAccountState } from '@/stores/state';
+import { createSignal, For, Index, createEffect, onCleanup } from "solid-js"
+import { SLOTS_CONFIG } from "@/constants"
+import { accountState, setAccountState } from "@/stores/state"
 
-const { SYMBOLS, REWARDS, CHANCES, ATTEMPTS, ANIMATION } = SLOTS_CONFIG;
+const { SYMBOLS, REWARDS, CHANCES, ATTEMPTS, ANIMATION } = SLOTS_CONFIG
 
-type SlotSymbol = typeof SYMBOLS[number];
+type SlotSymbol = (typeof SYMBOLS)[number]
 
 export function SlotMachine() {
-  const [positions, setPositions] = createSignal([0, 0, 0]);
-  const [isSpinning, setIsSpinning] = createSignal(false);
-  const [result, setResult] = createSignal('');
-  const [attempts, setAttempts] = createSignal<typeof ATTEMPTS.MAX>(ATTEMPTS.MAX);
-  const [nextAttemptTime, setNextAttemptTime] = createSignal<number | null>(null);
-  const [winningSymbol, setWinningSymbol] = createSignal<SlotSymbol | null>(null);
-  const [winningAmount, setWinningAmount] = createSignal<number | null>(null);
-  const [timeLeft, setTimeLeft] = createSignal('');
-  const [progress, setProgress] = createSignal(100);
+  const [positions, setPositions] = createSignal([0, 0, 0])
+  const [isSpinning, setIsSpinning] = createSignal(false)
+  const [result, setResult] = createSignal("")
+  const [attempts, setAttempts] = createSignal<typeof ATTEMPTS.MAX>(ATTEMPTS.MAX)
+  const [nextAttemptTime, setNextAttemptTime] = createSignal<number | null>(null)
+  const [winningSymbol, setWinningSymbol] = createSignal<SlotSymbol | null>(null)
+  const [winningAmount, setWinningAmount] = createSignal<number | null>(null)
+  const [timeLeft, setTimeLeft] = createSignal("")
+  const [progress, setProgress] = createSignal(100)
 
   // Восстановление попыток
   createEffect(() => {
     if (attempts() < ATTEMPTS.MAX && !nextAttemptTime()) {
-      setNextAttemptTime(Date.now() + ATTEMPTS.RESTORE_TIME);
+      setNextAttemptTime(Date.now() + ATTEMPTS.RESTORE_TIME)
     }
-  });
+  })
 
   // Таймер восстановления и обновления UI
   createEffect(() => {
-    const time = nextAttemptTime();
+    const time = nextAttemptTime()
     if (!time) {
-      setTimeLeft('');
-      setProgress(100);
-      return;
+      setTimeLeft("")
+      setProgress(100)
+      return
     }
 
     const updateUI = () => {
-      const now = Date.now();
-      const secondsLeft = Math.max(0, Math.ceil((time - now) / 1000));
-      setTimeLeft(`${secondsLeft} сек`);
+      const now = Date.now()
+      const secondsLeft = Math.max(0, Math.ceil((time - now) / 1000))
+      setTimeLeft(`${secondsLeft} сек`)
 
-      const elapsed = ATTEMPTS.RESTORE_TIME - (time - now);
-      setProgress(Math.min(100, Math.max(0, (elapsed * 100) / ATTEMPTS.RESTORE_TIME)));
+      const elapsed = ATTEMPTS.RESTORE_TIME - (time - now)
+      setProgress(Math.min(100, Math.max(0, (elapsed * 100) / ATTEMPTS.RESTORE_TIME)))
 
       if (now >= time) {
-        setAttempts(prev => Math.min(prev + 1, ATTEMPTS.MAX));
-        setNextAttemptTime(null);
+        setAttempts((prev) => Math.min(prev + 1, ATTEMPTS.MAX))
+        setNextAttemptTime(null)
       }
-    };
-
-    updateUI();
-    const interval = setInterval(updateUI, 100);
-    onCleanup(() => clearInterval(interval));
-  });
-
-  const getRandomAmount = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  const addReward = (symbol: string) => {
-    const reward = REWARDS[symbol];
-    const amount = getRandomAmount(reward.range.min, reward.range.max);
-
-    switch(symbol) {
-      case SYMBOLS[0]: // FOOD
-        setAccountState('food', accountState.food + amount);
-        break;
-      case SYMBOLS[1]: // WOOD
-        setAccountState('wood', accountState.wood + amount);
-        break;
-      case SYMBOLS[2]: // STEEL
-        setAccountState('steel', accountState.steel + amount);
-        break;
-      case SYMBOLS[3]: // FUEL
-        setAccountState('fuel', accountState.fuel + amount);
-        break;
-      case SYMBOLS[4]: // DIAMOND
-        setAccountState('diamond', accountState.diamond + amount);
-        break;
     }
 
-    return { ...reward, amount };
-  };
+    updateUI()
+    const interval = setInterval(updateUI, 100)
+    onCleanup(() => clearInterval(interval))
+  })
+
+  const getRandomAmount = (min: number, max: number) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min
+  }
+
+  const addReward = (symbol: string) => {
+    const reward = REWARDS[symbol]
+    const amount = getRandomAmount(reward.range.min, reward.range.max)
+
+    switch (symbol) {
+      case SYMBOLS[0]: // FOOD
+        setAccountState("food", accountState.food + amount)
+        break
+      case SYMBOLS[1]: // WOOD
+        setAccountState("wood", accountState.wood + amount)
+        break
+      case SYMBOLS[2]: // STEEL
+        setAccountState("steel", accountState.steel + amount)
+        break
+      case SYMBOLS[3]: // FUEL
+        setAccountState("fuel", accountState.fuel + amount)
+        break
+      case SYMBOLS[4]: // DIAMOND
+        setAccountState("diamond", accountState.diamond + amount)
+        break
+    }
+
+    return { ...reward, amount }
+  }
 
   const determineOutcome = () => {
-    const chance = Math.random() * 100;
-    const totalWinChance = CHANCES.REGULAR + CHANCES.DIAMOND;
+    const chance = Math.random() * 100
+    const totalWinChance = CHANCES.REGULAR + CHANCES.DIAMOND
 
     // Если не выпал выигрыш - генерируем проигрышную комбинацию
     if (chance >= totalWinChance) {
-      const result = [];
+      const result = []
       for (let i = 0; i < 3; i++) {
-        let symbol;
+        let symbol
         do {
           // Используем только обычные ресурсы для проигрышной комбинации
-          symbol = SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length - 1))];
-        } while (result.length > 0 && result.every(s => s === symbol));
-        result.push(symbol);
+          symbol = SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length - 1))]
+        } while (result.length > 0 && result.every((s) => s === symbol))
+        result.push(symbol)
       }
-      return result;
+      return result
     }
 
     // Определяем тип выигрыша
-    let winningSymbol;
+    let winningSymbol
     if (chance < CHANCES.REGULAR) {
-      winningSymbol = SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length - 1))];
+      winningSymbol = SYMBOLS[Math.floor(Math.random() * (SYMBOLS.length - 1))]
     } else {
-      winningSymbol = SYMBOLS[SYMBOLS.length - 1];
+      winningSymbol = SYMBOLS[SYMBOLS.length - 1]
     }
 
-    return [winningSymbol, winningSymbol, winningSymbol];
-  };
+    return [winningSymbol, winningSymbol, winningSymbol]
+  }
 
-  const spinReel = (reelIndex: number, finalSymbol: typeof SYMBOLS[number]) => {
-    const startTime = Date.now();
-    const totalRotations = 10 + reelIndex * 2;
-    const finalIndex = SYMBOLS.indexOf(finalSymbol);
-    const finalPosition = (totalRotations * SYMBOLS.length + finalIndex) * ANIMATION.SYMBOL_HEIGHT;
+  const spinReel = (reelIndex: number, finalSymbol: (typeof SYMBOLS)[number]) => {
+    const startTime = Date.now()
+    const totalRotations = 10 + reelIndex * 2
+    const finalIndex = SYMBOLS.indexOf(finalSymbol)
+    const finalPosition = (totalRotations * SYMBOLS.length + finalIndex) * ANIMATION.SYMBOL_HEIGHT
 
     const animate = () => {
-      const currentTime = Date.now();
-      const elapsed = currentTime - startTime;
-      const duration = ANIMATION.SPIN_DURATION + reelIndex * 500;
+      const currentTime = Date.now()
+      const elapsed = currentTime - startTime
+      const duration = ANIMATION.SPIN_DURATION + reelIndex * 500
 
       if (elapsed < duration) {
-        const progress = elapsed / duration;
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        const currentPosition = easeOut * finalPosition;
+        const progress = elapsed / duration
+        const easeOut = 1 - Math.pow(1 - progress, 3)
+        const currentPosition = easeOut * finalPosition
 
-        setPositions(prev => {
-          const next = [...prev];
-          next[reelIndex] = currentPosition;
-          return next;
-        });
+        setPositions((prev) => {
+          const next = [...prev]
+          next[reelIndex] = currentPosition
+          return next
+        })
 
-        requestAnimationFrame(animate);
+        requestAnimationFrame(animate)
       } else {
-        setPositions(prev => {
-          const next = [...prev];
-          next[reelIndex] = finalPosition;
-          return next;
-        });
+        setPositions((prev) => {
+          const next = [...prev]
+          next[reelIndex] = finalPosition
+          return next
+        })
 
         if (reelIndex === 2) {
-          const finalSymbols = [0, 1, 2].map(i =>
-            SYMBOLS[Math.floor((positions()[i] / ANIMATION.SYMBOL_HEIGHT) % SYMBOLS.length)]
-          );
+          const finalSymbols = [0, 1, 2].map(
+            (i) => SYMBOLS[Math.floor((positions()[i] / ANIMATION.SYMBOL_HEIGHT) % SYMBOLS.length)],
+          )
           if (finalSymbols[0] === finalSymbols[1] && finalSymbols[1] === finalSymbols[2]) {
-            const { amount } = addReward(finalSymbols[0]);
-            setWinningSymbol(finalSymbols[0]);
-            setWinningAmount(amount);
-            setResult('Победа');
+            const { amount } = addReward(finalSymbols[0])
+            setWinningSymbol(finalSymbols[0])
+            setWinningAmount(amount)
+            setResult("Победа")
           } else {
-            setWinningSymbol(null);
-            setWinningAmount(null);
-            setResult('Проигрыш');
+            setWinningSymbol(null)
+            setWinningAmount(null)
+            setResult("Проигрыш")
           }
-          setIsSpinning(false);
+          setIsSpinning(false)
         }
       }
-    };
+    }
 
-    requestAnimationFrame(animate);
-  };
+    requestAnimationFrame(animate)
+  }
 
   const spin = () => {
-    if (isSpinning()) return;
+    if (isSpinning()) return
 
     if (attempts() <= 0) {
       if (accountState.diamond < 100) {
-        return;
+        return
       }
-      setAccountState('diamond', accountState.diamond - 100);
+      setAccountState("diamond", accountState.diamond - 100)
     } else {
-      setAttempts(attempts() - 1 as typeof ATTEMPTS.MAX);
+      setAttempts((attempts() - 1) as typeof ATTEMPTS.MAX)
     }
 
-    setIsSpinning(true);
-    setResult('');
-    setWinningSymbol(null);
+    setIsSpinning(true)
+    setResult("")
+    setWinningSymbol(null)
 
-    const outcome = determineOutcome();
+    const outcome = determineOutcome()
 
     outcome.forEach((symbol, index) => {
       setTimeout(() => {
-        spinReel(index, symbol);
-      }, index * ANIMATION.REEL_DELAY);
-    });
-  };
+        spinReel(index, symbol)
+      }, index * ANIMATION.REEL_DELAY)
+    })
+  }
 
   const getVisibleSymbols = (reelPosition: number) => {
-    const symbols = [];
+    const symbols = []
     // Показываем 3 символа для создания эффекта прокрутки
     for (let i = -1; i <= 1; i++) {
-      const adjustedPosition = Math.floor(reelPosition / ANIMATION.SYMBOL_HEIGHT);
-      const symbolIndex = Math.abs((adjustedPosition + i) % SYMBOLS.length);
-      symbols.push(SYMBOLS[symbolIndex]);
+      const adjustedPosition = Math.floor(reelPosition / ANIMATION.SYMBOL_HEIGHT)
+      const symbolIndex = Math.abs((adjustedPosition + i) % SYMBOLS.length)
+      symbols.push(SYMBOLS[symbolIndex])
     }
-    return symbols;
-  };
+    return symbols
+  }
 
   return (
     <div class="flex h-full flex-col">
@@ -227,8 +227,8 @@ export function SlotMachine() {
                     <div
                       class="absolute left-0 w-full transition-transform"
                       style={{
-                        "transform": `translateY(${-position % (ANIMATION.SYMBOL_HEIGHT * SYMBOLS.length)}px)`,
-                        "transition-duration": isSpinning() ? "0ms" : "500ms"
+                        transform: `translateY(${-position % (ANIMATION.SYMBOL_HEIGHT * SYMBOLS.length)}px)`,
+                        "transition-duration": isSpinning() ? "0ms" : "500ms",
                       }}
                     >
                       <Index each={[...SYMBOLS, ...SYMBOLS]}>
@@ -241,9 +241,7 @@ export function SlotMachine() {
                             {/* Внутреннее свечение */}
                             <div class="absolute inset-1 bg-gradient-to-b from-white/5 to-transparent rounded-sm" />
                             {/* Символ */}
-                            <div class="relative drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">
-                              {symbol()}
-                            </div>
+                            <div class="relative drop-shadow-[0_2px_3px_rgba(0,0,0,0.5)]">{symbol()}</div>
                           </div>
                         )}
                       </Index>
@@ -260,18 +258,20 @@ export function SlotMachine() {
 
           {/* Результат */}
           <div class="h-[40px] flex items-center">
-            {result() && result() !== '' && (
-              <div class={`flex items-center gap-2 text-lg font-medium ${
-                result() === 'Победа' && winningSymbol()
-                  ? 'bg-green-500/10 text-green-400 px-4 py-1.5 rounded-lg border border-green-500/20'
-                  : 'text-slate-400'
-              }`}>
-                {result() === 'Победа' && winningSymbol() ? (
+            {result() && result() !== "" && (
+              <div
+                class={`flex items-center gap-2 text-lg font-medium ${
+                  result() === "Победа" && winningSymbol()
+                    ? "bg-green-500/10 text-green-400 px-4 py-1.5 rounded-lg border border-green-500/20"
+                    : "text-slate-400"
+                }`}
+              >
+                {result() === "Победа" && winningSymbol() ? (
                   <>
                     <span class="text-2xl">{winningSymbol()}</span>
-                    <span>+{winningAmount()?.toLocaleString('ru-RU')}</span>
+                    <span>+{winningAmount()?.toLocaleString("ru-RU")}</span>
                   </>
-                ) : result() === 'Проигрыш' ? (
+                ) : result() === "Проигрыш" ? (
                   <span>Попробуйте еще раз</span>
                 ) : null}
               </div>
@@ -307,8 +307,8 @@ export function SlotMachine() {
           disabled={isSpinning() || (attempts() <= 0 && accountState.diamond < 100)}
           class={`relative w-full rounded-lg py-3 text-sm font-medium text-white transition-colors overflow-hidden ${
             isSpinning() || (attempts() <= 0 && accountState.diamond < 100)
-              ? 'bg-slate-600/50 cursor-not-allowed'
-              : 'bg-blue-500 hover:bg-blue-600'
+              ? "bg-slate-600/50 cursor-not-allowed"
+              : "bg-blue-500 hover:bg-blue-600"
           }`}
         >
           {/* Блики на кнопке */}
@@ -318,15 +318,15 @@ export function SlotMachine() {
           {/* Текст кнопки */}
           <span class="relative">
             {isSpinning()
-              ? 'Крутится...'
+              ? "Крутится..."
               : attempts() <= 0
                 ? accountState.diamond < 100
-                  ? 'Недостаточно алмазов'
-                  : '100 💎 за прокрутку'
-                : 'Крутить'}
+                  ? "Недостаточно алмазов"
+                  : "100 💎 за прокрутку"
+                : "Крутить"}
           </span>
         </button>
       </div>
     </div>
-  );
+  )
 }

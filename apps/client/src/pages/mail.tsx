@@ -1,26 +1,26 @@
-import { BackLayout } from "@/layouts/back-layout";
-import { For } from "solid-js";
-import { mailStore, type Mail } from "@/stores/mail";
+import { BackLayout } from "@/layouts/back-layout"
+import { For } from "solid-js"
+import { mailStore, type Mail } from "@/stores/mail"
 
 export function MailPage() {
   const getRewardIcon = (type: Mail["hasReward"]["type"]) => {
     switch (type) {
       case "food":
-        return "🌾";
+        return "🌾"
       case "wood":
-        return "🪵";
+        return "🪵"
       case "steel":
-        return "🔩";
+        return "🔩"
       case "fuel":
-        return "🛢️";
+        return "🛢️"
       case "diamond":
-        return "💎";
+        return "💎"
       case "serum":
-        return "🧪";
+        return "🧪"
       case "exp":
-        return "✨";
+        return "✨"
     }
-  };
+  }
 
   return (
     <BackLayout title="Почта">
@@ -37,9 +37,7 @@ export function MailPage() {
                 >
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
-                      {!mail.isRead && (
-                        <div class="size-2 rounded-full bg-blue-500" />
-                      )}
+                      {!mail.isRead && <div class="size-2 rounded-full bg-blue-500" />}
                       <div class="font-medium">{mail.title}</div>
                     </div>
                     <div class="text-sm text-slate-400">{mail.date}</div>
@@ -49,9 +47,7 @@ export function MailPage() {
                     <div class="flex items-center gap-1 text-sm">
                       <span>Награда:</span>
                       <span>{getRewardIcon(mail.hasReward.type)}</span>
-                      <span>
-                        {mail.hasReward.amount.toLocaleString("en-US")}
-                      </span>
+                      <span>{mail.hasReward.amount.toLocaleString("en-US")}</span>
                     </div>
                   )}
                 </div>
@@ -61,5 +57,5 @@ export function MailPage() {
         </div>
       </div>
     </BackLayout>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-import { defineConfig } from 'vite';
-import solidPlugin from 'vite-plugin-solid';
-import UnoCSS from 'unocss/vite';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import { defineConfig } from "vite"
+import solidPlugin from "vite-plugin-solid"
+import UnoCSS from "unocss/vite"
+import { fileURLToPath } from "url"
+import { dirname, resolve } from "path"
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 export default defineConfig({
   plugins: [
@@ -15,18 +15,18 @@ export default defineConfig({
     */
     // devtools(),
     solidPlugin(),
-    UnoCSS()
+    UnoCSS(),
   ],
   server: {
     port: 3000,
-    allowedHosts: true
+    allowedHosts: true,
   },
   build: {
-    target: 'esnext',
+    target: "esnext",
   },
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
+      "@": resolve(__dirname, "./src"),
     },
   },
-});
+})

@@ -1,11 +1,11 @@
-import { Component } from 'solid-js';
-import { RESOURCES } from '@/constants';
-import { AnimatedNumber } from './animated-number';
+import { Component } from "solid-js"
+import { RESOURCES } from "@/constants"
+import { AnimatedNumber } from "./animated-number"
 
 type Props = {
-  icon: string;
-  value: number;
-};
+  icon: string
+  value: number
+}
 
 export const ResourceDisplay: Component<Props> = (props) => {
   return (
@@ -21,5 +21,5 @@ export const ResourceDisplay: Component<Props> = (props) => {
         <AnimatedNumber value={props.value} compact={false} />
       </span>
     </div>
-  );
-};
+  )
+}

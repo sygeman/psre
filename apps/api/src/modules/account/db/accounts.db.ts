@@ -1,8 +1,8 @@
-import { relations } from "drizzle-orm";
-import { pgTable } from "drizzle-orm/pg-core";
-import { users, regions, alliances } from "@/schema/db";
+import { relations } from "drizzle-orm"
+import { pgTable } from "drizzle-orm/pg-core"
+import { users, regions, alliances } from "@/schema/db"
 
-export const accounts = pgTable('accounts', (t) => ({
+export const accounts = pgTable("accounts", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
@@ -21,16 +21,16 @@ export const accounts = pgTable('accounts', (t) => ({
 }))
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
-	user: one(users, {
-		fields: [accounts.userId],
-		references: [users.id],
-	}),
-	region: one(regions, {
-		fields: [accounts.regionId],
-		references: [regions.id],
-	}),
-	alliance: one(alliances, {
-		fields: [accounts.allianceId],
-		references: [alliances.id],
-	}),
-}));
+  user: one(users, {
+    fields: [accounts.userId],
+    references: [users.id],
+  }),
+  region: one(regions, {
+    fields: [accounts.regionId],
+    references: [regions.id],
+  }),
+  alliance: one(alliances, {
+    fields: [accounts.allianceId],
+    references: [alliances.id],
+  }),
+}))

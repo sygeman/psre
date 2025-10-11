@@ -1,29 +1,29 @@
-import { AnimatedNumber } from "@/components/animated-number";
-import { BackLayout } from "@/layouts/back-layout";
-import { createSignal, For } from "solid-js";
+import { AnimatedNumber } from "@/components/animated-number"
+import { BackLayout } from "@/layouts/back-layout"
+import { createSignal, For } from "solid-js"
 
-type TabType = "info" | "members" | "diplomacy";
+type TabType = "info" | "members" | "diplomacy"
 
 type AllianceMember = {
-  id: number;
-  name: string;
-  rank: string;
-  power: number;
-  lastOnline: string;
-  avatar?: string;
-};
+  id: number
+  name: string
+  rank: string
+  power: number
+  lastOnline: string
+  avatar?: string
+}
 
 type Alliance = {
-  name: string;
-  tag: string;
-  level: number;
-  power: number;
-  members: AllianceMember[];
-  description: string;
-};
+  name: string
+  tag: string
+  level: number
+  power: number
+  members: AllianceMember[]
+  description: string
+}
 
 export function AlliancePage() {
-  const [activeTab, setActiveTab] = createSignal<TabType>("info");
+  const [activeTab, setActiveTab] = createSignal<TabType>("info")
 
   // Моковые данные для примера
   const alliance: Alliance = {
@@ -56,7 +56,7 @@ export function AlliancePage() {
         lastOnline: "1 час назад",
       },
     ],
-  };
+  }
 
   return (
     <BackLayout title="Альянс">
@@ -81,9 +81,7 @@ export function AlliancePage() {
         <div class="grid grid-cols-3 border-b border-slate-700/25">
           <button
             class={`p-4 text-sm ${
-              activeTab() === "info"
-                ? "border-b-2 border-blue-500 font-medium"
-                : "text-slate-400"
+              activeTab() === "info" ? "border-b-2 border-blue-500 font-medium" : "text-slate-400"
             }`}
             onClick={() => setActiveTab("info")}
           >
@@ -91,9 +89,7 @@ export function AlliancePage() {
           </button>
           <button
             class={`p-4 text-sm ${
-              activeTab() === "members"
-                ? "border-b-2 border-blue-500 font-medium"
-                : "text-slate-400"
+              activeTab() === "members" ? "border-b-2 border-blue-500 font-medium" : "text-slate-400"
             }`}
             onClick={() => setActiveTab("members")}
           >
@@ -101,9 +97,7 @@ export function AlliancePage() {
           </button>
           <button
             class={`p-4 text-sm ${
-              activeTab() === "diplomacy"
-                ? "border-b-2 border-blue-500 font-medium"
-                : "text-slate-400"
+              activeTab() === "diplomacy" ? "border-b-2 border-blue-500 font-medium" : "text-slate-400"
             }`}
             onClick={() => setActiveTab("diplomacy")}
           >
@@ -120,9 +114,7 @@ export function AlliancePage() {
                 <div class="text-sm text-slate-400">{alliance.description}</div>
               </div>
               <div class="rounded-lg bg-slate-800 p-4">
-                <div class="mb-2 text-sm font-medium">
-                  Требования для вступления
-                </div>
+                <div class="mb-2 text-sm font-medium">Требования для вступления</div>
                 <div class="space-y-2 text-sm text-slate-400">
                   <div>• Минимальная мощь: 50,000</div>
                   <div>• Ежедневная активность</div>
@@ -139,11 +131,7 @@ export function AlliancePage() {
                   <div class="flex items-center gap-3 p-4">
                     <div class="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-slate-700">
                       {member.avatar ? (
-                        <img
-                          src={member.avatar}
-                          alt={member.name}
-                          class="h-full w-full object-cover"
-                        />
+                        <img src={member.avatar} alt={member.name} class="h-full w-full object-cover" />
                       ) : (
                         <div class="flex h-full w-full items-center justify-center text-xl font-medium">
                           {member.name[0]}
@@ -159,9 +147,7 @@ export function AlliancePage() {
                       </div>
                       <div class="flex items-center justify-between">
                         <div class="text-sm text-slate-400">{member.rank}</div>
-                        <div class="text-sm text-slate-400">
-                          {member.lastOnline}
-                        </div>
+                        <div class="text-sm text-slate-400">{member.lastOnline}</div>
                       </div>
                     </div>
                   </div>
@@ -173,21 +159,15 @@ export function AlliancePage() {
           {activeTab() === "diplomacy" && (
             <div class="p-4">
               <div class="rounded-lg bg-slate-800 p-4">
-                <div class="mb-4 text-sm font-medium">
-                  Дипломатические отношения
-                </div>
+                <div class="mb-4 text-sm font-medium">Дипломатические отношения</div>
                 <div class="space-y-4">
                   <div>
                     <div class="mb-2 text-sm text-green-400">Союзники</div>
-                    <div class="text-sm text-slate-400">
-                      Нет активных союзов
-                    </div>
+                    <div class="text-sm text-slate-400">Нет активных союзов</div>
                   </div>
                   <div>
                     <div class="mb-2 text-sm text-red-400">Враги</div>
-                    <div class="text-sm text-slate-400">
-                      Нет объявленных войн
-                    </div>
+                    <div class="text-sm text-slate-400">Нет объявленных войн</div>
                   </div>
                 </div>
               </div>
@@ -196,5 +176,5 @@ export function AlliancePage() {
         </div>
       </div>
     </BackLayout>
-  );
+  )
 }

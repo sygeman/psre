@@ -1,25 +1,23 @@
-import { JSX } from "solid-js";
+import { JSX } from "solid-js"
 
-import { ResourcesPanel } from "@/modules/resources";
-import { MiniChat } from "@/modules/chat";
+import { ResourcesPanel } from "@/modules/resources"
+import { MiniChat } from "@/modules/chat"
 
-import { BottomMenu } from "@/modules/bottom-menu";
-import { PersonPanel } from "@/modules/person-panel";
-import { PowerPanel } from "@/modules/power-panel";
+import { BottomMenu } from "@/modules/bottom-menu"
+import { PersonPanel } from "@/modules/person-panel"
+import { PowerPanel } from "@/modules/power-panel"
 
-import { ToastNotifications } from "@/components/toast-notifications";
-import { MiniGamesButton } from "@/components/mini-games-button";
+import { ToastNotifications } from "@/components/toast-notifications"
+import { MiniGamesButton } from "@/components/mini-games-button"
 
 type GameLayoutProps = {
-  children: JSX.Element;
-};
+  children: JSX.Element
+}
 
 export function GameLayout(props: GameLayoutProps) {
   return (
     <div class="relative flex h-screen flex-col">
-      <div class="absolute top-8 z-0 h-[calc(100%-64px-32px)] w-full overflow-hidden">
-        {props.children}
-      </div>
+      <div class="absolute top-8 z-0 h-[calc(100%-64px-32px)] w-full overflow-hidden">{props.children}</div>
       <ToastNotifications />
       <div class="absolute top-0 z-10 flex w-full shrink-0">
         <ResourcesPanel />
@@ -40,5 +38,5 @@ export function GameLayout(props: GameLayoutProps) {
         <BottomMenu />
       </div>
     </div>
-  );
+  )
 }

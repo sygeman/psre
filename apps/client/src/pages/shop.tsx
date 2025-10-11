@@ -1,35 +1,35 @@
-import { BackLayout } from "@/layouts/back-layout";
-import { createSignal, For } from "solid-js";
-import { accountState } from "@/stores/state";
-import { ResourceDisplay } from "@/components/resource-display";
-import { RESOURCES } from "@/constants";
+import { BackLayout } from "@/layouts/back-layout"
+import { createSignal, For } from "solid-js"
+import { accountState } from "@/stores/state"
+import { ResourceDisplay } from "@/components/resource-display"
+import { RESOURCES } from "@/constants"
 
 type ShopCategory = {
-  id: string;
-  label: string;
-};
+  id: string
+  label: string
+}
 
 type ShopItem = {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  amount: number;
-  category: string;
-};
+  id: string
+  name: string
+  description: string
+  price: number
+  amount: number
+  category: string
+}
 
 const SHOP_CATEGORIES: ShopCategory[] = [
   { id: "diamonds", label: "Алмазы" },
   { id: "resources", label: "Ресурсы" },
   { id: "items", label: "Предметы" },
   { id: "special", label: "Особое" },
-];
+]
 
 const formatter = new Intl.NumberFormat("ru-RU", {
   style: "currency",
   currency: "RUB",
   maximumFractionDigits: 0,
-});
+})
 
 const SHOP_ITEMS: ShopItem[] = [
   // Алмазы
@@ -135,15 +135,15 @@ const SHOP_ITEMS: ShopItem[] = [
     amount: 1,
     category: "special",
   },
-];
+]
 
 export function ShopPage() {
-  const [activeCategory, setActiveCategory] = createSignal("diamonds");
+  const [activeCategory, setActiveCategory] = createSignal("diamonds")
 
   const handleBuy = (item: ShopItem) => {
     // TODO: Implement purchase logic
-    console.log("Buying item:", item);
-  };
+    console.log("Buying item:", item)
+  }
 
   return (
     <BackLayout
@@ -176,11 +176,7 @@ export function ShopPage() {
         {/* Список товаров */}
         <div class="hide-scrollbar flex-1 overflow-y-auto">
           <div class="grid gap-4 p-4">
-            <For
-              each={SHOP_ITEMS.filter(
-                (item) => item.category === activeCategory(),
-              )}
-            >
+            <For each={SHOP_ITEMS.filter((item) => item.category === activeCategory())}>
               {(item) => (
                 <div class="flex items-center justify-between rounded-lg bg-slate-800 p-4">
                   <div class="flex flex-col gap-1">
@@ -203,5 +199,5 @@ export function ShopPage() {
         </div>
       </div>
     </BackLayout>
-  );
+  )
 }

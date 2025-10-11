@@ -1,4 +1,4 @@
-import { gql } from "@/apollo";
+import { gql } from "@/apollo"
 
 export const MAIN_RESOURCES_FRAGMENT = gql`
   fragment MainResourcesFragment on MainResources {
@@ -9,7 +9,7 @@ export const MAIN_RESOURCES_FRAGMENT = gql`
     fuel
     diamond
   }
-`;
+`
 
 export const MAIN_RESOURCES_QUERY = gql`
   query ResourcesMain {
@@ -19,7 +19,7 @@ export const MAIN_RESOURCES_QUERY = gql`
   }
 
   ${MAIN_RESOURCES_FRAGMENT}
-`;
+`
 
 export const MAIN_RESOURCES_CHANGED_SUBSCRIPTION = gql`
   subscription ResourcesMainChanged {
@@ -29,4 +29,4 @@ export const MAIN_RESOURCES_CHANGED_SUBSCRIPTION = gql`
   }
 
   ${MAIN_RESOURCES_FRAGMENT}
-`;
+`

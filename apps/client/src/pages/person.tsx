@@ -1,11 +1,11 @@
-import { BackLayout } from "@/layouts/back-layout";
-import { accountState } from "@/stores/state";
-import { createSignal, Match, Switch } from "solid-js";
-import { Tab, Tabs } from "@/components/tabs";
-import { EquipmentPage } from "@/modules/equipment-page";
-import { PointsProgressBar } from "@/components/points-progress-bar";
-import { CharacterAvatar } from "@/components/character-avatar";
-import { AnimatedNumber } from "@/components/animated-number";
+import { BackLayout } from "@/layouts/back-layout"
+import { accountState } from "@/stores/state"
+import { createSignal, Match, Switch } from "solid-js"
+import { Tab, Tabs } from "@/components/tabs"
+import { EquipmentPage } from "@/modules/equipment-page"
+import { PointsProgressBar } from "@/components/points-progress-bar"
+import { CharacterAvatar } from "@/components/character-avatar"
+import { AnimatedNumber } from "@/components/animated-number"
 
 const PERSON_TABS: Tab[] = [
   { id: "equipment", label: "Снаряжение" },
@@ -13,19 +13,15 @@ const PERSON_TABS: Tab[] = [
   { id: "module", label: "Модуль" },
   { id: "cube", label: "Куб" },
   { id: "biomod", label: "Биомод" },
-];
+]
 
 export function PersonPage() {
-  const [activeTab, setActiveTab] = createSignal("equipment");
+  const [activeTab, setActiveTab] = createSignal("equipment")
 
   return (
     <BackLayout title="Персонаж">
       <div class="flex flex-shrink-0 flex-col">
-        <Tabs
-          tabs={PERSON_TABS}
-          activeTab={activeTab()}
-          onTabChange={setActiveTab}
-        />
+        <Tabs tabs={PERSON_TABS} activeTab={activeTab()} onTabChange={setActiveTab} />
       </div>
 
       {/* Контент вкладок */}
@@ -87,40 +83,25 @@ export function PersonPage() {
               {/* Опыт */}
               <div class="flex items-center gap-2">
                 <div class="w-full h-2 rounded-sm bg-slate-800">
-                  <div
-                    class="h-full rounded-sm bg-blue-500"
-                    style={{ width: "60%" }}
-                  />
+                  <div class="h-full rounded-sm bg-blue-500" style={{ width: "60%" }} />
                 </div>
-                <span class="text-xs text-slate-400 w-12 text-right">
-                  60/100
-                </span>
+                <span class="text-xs text-slate-400 w-12 text-right">60/100</span>
               </div>
 
               {/* Энергия */}
               <div class="flex items-center gap-2">
                 <div class="w-full h-2 rounded-sm bg-slate-800">
-                  <div
-                    class="h-full rounded-sm bg-yellow-500"
-                    style={{ width: "80%" }}
-                  />
+                  <div class="h-full rounded-sm bg-yellow-500" style={{ width: "80%" }} />
                 </div>
-                <span class="text-xs text-slate-400 w-12 text-right">
-                  80/100
-                </span>
+                <span class="text-xs text-slate-400 w-12 text-right">80/100</span>
               </div>
 
               {/* Здоровье */}
               <div class="flex items-center gap-2">
                 <div class="w-full h-2 rounded-sm bg-slate-800">
-                  <div
-                    class="h-full rounded-sm bg-red-500"
-                    style={{ width: "45%" }}
-                  />
+                  <div class="h-full rounded-sm bg-red-500" style={{ width: "45%" }} />
                 </div>
-                <span class="text-xs text-slate-400 w-12 text-right">
-                  45/100
-                </span>
+                <span class="text-xs text-slate-400 w-12 text-right">45/100</span>
               </div>
             </div>
           </div>
@@ -143,5 +124,5 @@ export function PersonPage() {
         </div>
       </div>
     </BackLayout>
-  );
+  )
 }

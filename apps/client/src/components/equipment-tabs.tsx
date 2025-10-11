@@ -1,10 +1,10 @@
-import { For } from 'solid-js';
-import { Tab } from './tabs';
+import { For } from "solid-js"
+import { Tab } from "./tabs"
 
 interface EquipmentTabsProps {
-  tabs: Tab[];
-  activeTab: Tab['id'];
-  onTabChange: (id: Tab['id']) => void;
+  tabs: Tab[]
+  activeTab: Tab["id"]
+  onTabChange: (id: Tab["id"]) => void
 }
 
 export function EquipmentTabs(props: EquipmentTabsProps) {
@@ -14,9 +14,7 @@ export function EquipmentTabs(props: EquipmentTabsProps) {
         {(tab) => (
           <div
             class={`cursor-pointer rounded-lg px-3 py-1.5 text-sm whitespace-nowrap transition-colors ${
-              tab.id === props.activeTab
-                ? 'bg-slate-700 text-white'
-                : 'text-slate-400 hover:text-slate-200'
+              tab.id === props.activeTab ? "bg-slate-700 text-white" : "text-slate-400 hover:text-slate-200"
             }`}
             onClick={() => props.onTabChange(tab.id)}
           >
@@ -25,5 +23,5 @@ export function EquipmentTabs(props: EquipmentTabsProps) {
         )}
       </For>
     </div>
-  );
+  )
 }

@@ -1,7 +1,4 @@
-import { chatCleanupEventHandler } from "./events/chat-cleanup";
-import { chatMessageCreatedEventHandler } from "./events/chat-message-created";
+import { chatCleanupEventHandler } from "./events/chat-cleanup"
+import { chatMessageCreatedEventHandler } from "./events/chat-message-created"
 
-export const inngestChatFunctions = [
-  chatMessageCreatedEventHandler,
-  chatCleanupEventHandler,
-];
+export const inngestChatFunctions = [chatMessageCreatedEventHandler, chatCleanupEventHandler]

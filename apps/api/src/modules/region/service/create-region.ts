@@ -1,5 +1,5 @@
-import { inngest } from "@/lib/inngest";
-import { createChat } from '@/modules/chat/events/create-chat';
+import { inngest } from "@/lib/inngest"
+import { createChat } from "@/modules/chat/events/create-chat"
 
 export const createRegion = inngest.createFunction(
   { id: "create-region" },
@@ -7,13 +7,13 @@ export const createRegion = inngest.createFunction(
   async ({ step, db, dbSchema }) => {
     const { chat } = await step.invoke("create-chat-for-region", {
       function: createChat,
-    });
+    })
 
-    const regions = await db.insert(dbSchema.regions).values({ chatId: chat.id }).returning();
-    const region = regions[0];
+    const regions = await db.insert(dbSchema.regions).values({ chatId: chat.id }).returning()
+    const region = regions[0]
 
-    if (!region) throw 'Region not found';
+    if (!region) throw "Region not found"
 
-    return { region };
-  }
-);
+    return { region }
+  },
+)

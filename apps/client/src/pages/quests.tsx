@@ -1,23 +1,23 @@
-import { BackLayout } from "@/layouts/back-layout";
-import { For, createSignal } from "solid-js";
-import { AnimatedNumber } from "@/components/animated-number";
+import { BackLayout } from "@/layouts/back-layout"
+import { For, createSignal } from "solid-js"
+import { AnimatedNumber } from "@/components/animated-number"
 
 type Quest = {
-  id: number;
-  title: string;
-  description: string;
-  progress: number;
-  total: number;
+  id: number
+  title: string
+  description: string
+  progress: number
+  total: number
   reward: {
-    type: "food" | "wood" | "steel" | "fuel" | "diamond" | "exp";
-    amount: number;
-  };
-};
+    type: "food" | "wood" | "steel" | "fuel" | "diamond" | "exp"
+    amount: number
+  }
+}
 
-type TabType = "main" | "daily" | "alliance";
+type TabType = "main" | "daily" | "alliance"
 
 export function QuestsPage() {
-  const [activeTab, setActiveTab] = createSignal<TabType>("main");
+  const [activeTab, setActiveTab] = createSignal<TabType>("main")
 
   const quests: Record<TabType, Quest[]> = {
     main: [
@@ -58,24 +58,24 @@ export function QuestsPage() {
         reward: { type: "diamond", amount: 20 },
       },
     ],
-  };
+  }
 
   const getRewardIcon = (type: Quest["reward"]["type"]) => {
     switch (type) {
       case "food":
-        return "🌾";
+        return "🌾"
       case "wood":
-        return "🪵";
+        return "🪵"
       case "steel":
-        return "🔩";
+        return "🔩"
       case "fuel":
-        return "🛢️";
+        return "🛢️"
       case "diamond":
-        return "💎";
+        return "💎"
       case "exp":
-        return "✨";
+        return "✨"
     }
-  };
+  }
 
   return (
     <BackLayout title="Квесты">
@@ -83,9 +83,7 @@ export function QuestsPage() {
         <div class="grid grid-cols-3 border-b border-slate-700/25">
           <button
             class={`p-4 text-sm ${
-              activeTab() === "main"
-                ? "border-b-2 border-blue-500 font-medium"
-                : "text-slate-400"
+              activeTab() === "main" ? "border-b-2 border-blue-500 font-medium" : "text-slate-400"
             }`}
             onClick={() => setActiveTab("main")}
           >
@@ -93,9 +91,7 @@ export function QuestsPage() {
           </button>
           <button
             class={`p-4 text-sm ${
-              activeTab() === "daily"
-                ? "border-b-2 border-blue-500 font-medium"
-                : "text-slate-400"
+              activeTab() === "daily" ? "border-b-2 border-blue-500 font-medium" : "text-slate-400"
             }`}
             onClick={() => setActiveTab("daily")}
           >
@@ -103,9 +99,7 @@ export function QuestsPage() {
           </button>
           <button
             class={`p-4 text-sm ${
-              activeTab() === "alliance"
-                ? "border-b-2 border-blue-500 font-medium"
-                : "text-slate-400"
+              activeTab() === "alliance" ? "border-b-2 border-blue-500 font-medium" : "text-slate-400"
             }`}
             onClick={() => setActiveTab("alliance")}
           >
@@ -148,5 +142,5 @@ export function QuestsPage() {
         </div>
       </div>
     </BackLayout>
-  );
+  )
 }

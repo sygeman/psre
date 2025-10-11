@@ -1,9 +1,9 @@
-import { Component } from "solid-js";
-import { BackLayout } from "@/layouts/back-layout";
-import { useNavigate } from "@solidjs/router";
+import { Component } from "solid-js"
+import { BackLayout } from "@/layouts/back-layout"
+import { useNavigate } from "@solidjs/router"
 
 export const MiniGames: Component = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <BackLayout title="Мини-игры">
@@ -19,12 +19,9 @@ export const MiniGames: Component = () => {
                   💎
                 </div>
                 <div>
-                  <h2 class="text-lg font-bold text-slate-100">
-                    Испытай удачу
-                  </h2>
+                  <h2 class="text-lg font-bold text-slate-100">Испытай удачу</h2>
                   <p class="text-sm text-slate-400">
-                    Крутите барабаны и выигрывайте до 50,000 ресурсов или 1000
-                    алмазов!
+                    Крутите барабаны и выигрывайте до 50,000 ресурсов или 1000 алмазов!
                   </p>
                 </div>
               </div>
@@ -33,5 +30,5 @@ export const MiniGames: Component = () => {
         </div>
       </div>
     </BackLayout>
-  );
-};
+  )
+}

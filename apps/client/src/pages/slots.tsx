@@ -1,8 +1,8 @@
-import { Component } from "solid-js";
-import { BackLayout } from "@/layouts/back-layout";
-import { SlotMachinePage } from "@/components/slot-machine-page";
-import { accountState } from "@/stores/state";
-import { ResourceDisplay } from "@/components/resource-display";
+import { Component } from "solid-js"
+import { BackLayout } from "@/layouts/back-layout"
+import { SlotMachinePage } from "@/components/slot-machine-page"
+import { accountState } from "@/stores/state"
+import { ResourceDisplay } from "@/components/resource-display"
 
 export const SlotsPage: Component = () => {
   return (
@@ -16,5 +16,5 @@ export const SlotsPage: Component = () => {
     >
       <SlotMachinePage />
     </BackLayout>
-  );
-};
+  )
+}

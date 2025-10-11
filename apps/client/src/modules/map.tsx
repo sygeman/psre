@@ -1,95 +1,94 @@
-import { BuildingButton } from "@/components/building-button";
-import { createSignal, onCleanup, For } from "solid-js";
-import { RESOURCES } from '@/constants';
-import { Icon } from 'solid-heroicons';
-import { arrowUp } from 'solid-heroicons/outline';
-import { useNavigate } from '@solidjs/router';
+import { BuildingButton } from "@/components/building-button"
+import { createSignal, onCleanup, For } from "solid-js"
+import { RESOURCES } from "@/constants"
+import { Icon } from "solid-heroicons"
+import { arrowUp } from "solid-heroicons/outline"
+import { useNavigate } from "@solidjs/router"
 
 const ARMORY_CONFIG = {
-  icon: '🗡️',
-  actionName: 'Создать'
-} as const;
+  icon: "🗡️",
+  actionName: "Создать",
+} as const
 
 type Building = {
-  color: string;
-  name: string;
-  resourceName: string;
-  level: number;
-  collectionTime: number;
-  upgradeDuration: number;
-  icon: string;
-  initialProgress?: number;
-  initialUpgradeProgress?: number;
-  onLevelUp: () => void;
+  color: string
+  name: string
+  resourceName: string
+  level: number
+  collectionTime: number
+  upgradeDuration: number
+  icon: string
+  initialProgress?: number
+  initialUpgradeProgress?: number
+  onLevelUp: () => void
 }
 
 function BuildingCard(props: Building) {
-  const navigate = useNavigate();
-  const [progress, setProgress] = createSignal(props.initialProgress || 0);
-  const [timeLeft, setTimeLeft] = createSignal(
-    props.initialProgress === 100 ? 0 : props.collectionTime
-  );
+  const navigate = useNavigate()
+  const [progress, setProgress] = createSignal(props.initialProgress || 0)
+  const [timeLeft, setTimeLeft] = createSignal(props.initialProgress === 100 ? 0 : props.collectionTime)
 
-  const [upgradeProgress, setUpgradeProgress] = createSignal(props.initialUpgradeProgress || 0);
+  const [upgradeProgress, setUpgradeProgress] = createSignal(props.initialUpgradeProgress || 0)
   const [upgradeTimeLeft, setUpgradeTimeLeft] = createSignal(
-    props.initialUpgradeProgress === 100 ? 0 : props.upgradeDuration
-  );
+    props.initialUpgradeProgress === 100 ? 0 : props.upgradeDuration,
+  )
 
   // Таймер для сбора ресурсов
   const resourceTimer = setInterval(() => {
-    const newProgress = Math.min(progress() + (100 / props.collectionTime), 100);
-    setProgress(newProgress);
-    setTimeLeft(Math.max(0, props.collectionTime - (props.collectionTime * (newProgress / 100))));
-  }, 1000);
+    const newProgress = Math.min(progress() + 100 / props.collectionTime, 100)
+    setProgress(newProgress)
+    setTimeLeft(Math.max(0, props.collectionTime - props.collectionTime * (newProgress / 100)))
+  }, 1000)
 
   // Таймер для улучшения
   const upgradeTimer = setInterval(() => {
-    const newProgress = Math.min(upgradeProgress() + (100 / props.upgradeDuration), 100);
-    setUpgradeProgress(newProgress);
-    setUpgradeTimeLeft(Math.max(0, props.upgradeDuration - (props.upgradeDuration * (newProgress / 100))));
-  }, 1000);
+    const newProgress = Math.min(upgradeProgress() + 100 / props.upgradeDuration, 100)
+    setUpgradeProgress(newProgress)
+    setUpgradeTimeLeft(Math.max(0, props.upgradeDuration - props.upgradeDuration * (newProgress / 100)))
+  }, 1000)
 
   onCleanup(() => {
-    clearInterval(resourceTimer);
-    clearInterval(upgradeTimer);
-  });
+    clearInterval(resourceTimer)
+    clearInterval(upgradeTimer)
+  })
 
   const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs.toString().padStart(2, "0")}`
+  }
 
   const handleCollect = () => {
     if (isArmory) {
-      navigate('/armory');
-      return;
+      navigate("/armory")
+      return
     }
     if (progress() === 100) {
-      setProgress(0);
-      setTimeLeft(props.collectionTime);
+      setProgress(0)
+      setTimeLeft(props.collectionTime)
     }
-  };
+  }
 
   const handleUpgrade = () => {
     if (upgradeProgress() === 100) {
-      setUpgradeProgress(0);
-      setUpgradeTimeLeft(props.upgradeDuration);
-      props.onLevelUp();
+      setUpgradeProgress(0)
+      setUpgradeTimeLeft(props.upgradeDuration)
+      props.onLevelUp()
     }
-  };
+  }
 
   // Получаем базовый цвет из пропса и создаем вариации для градиента
-  const baseColor = props.color.replace('bg-', '');
-  const gradientClass = {
-    'cyan': 'from-cyan-900/50 via-cyan-800/30 to-cyan-900/50',
-    'emerald': 'from-emerald-900/50 via-emerald-800/30 to-emerald-900/50',
-    'yellow': 'from-yellow-900/50 via-yellow-800/30 to-yellow-900/50',
-    'orange': 'from-orange-900/50 via-orange-800/30 to-orange-900/50',
-    'slate': 'from-slate-800/50 via-slate-700/30 to-slate-800/50',
-  }[baseColor.split('-')[0]] || 'from-slate-900/50 via-slate-800/30 to-slate-900/50';
+  const baseColor = props.color.replace("bg-", "")
+  const gradientClass =
+    {
+      cyan: "from-cyan-900/50 via-cyan-800/30 to-cyan-900/50",
+      emerald: "from-emerald-900/50 via-emerald-800/30 to-emerald-900/50",
+      yellow: "from-yellow-900/50 via-yellow-800/30 to-yellow-900/50",
+      orange: "from-orange-900/50 via-orange-800/30 to-orange-900/50",
+      slate: "from-slate-800/50 via-slate-700/30 to-slate-800/50",
+    }[baseColor.split("-")[0]] || "from-slate-900/50 via-slate-800/30 to-slate-900/50"
 
-  const isArmory = props.name === 'Арсенал';
+  const isArmory = props.name === "Арсенал"
 
   return (
     <div class="w-full h-32 select-none flex-shrink-0">
@@ -141,7 +140,7 @@ function BuildingCard(props: Building) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export const Map = () => {
@@ -160,20 +159,20 @@ export const Map = () => {
     //   }
     // },
     {
-      color: 'bg-emerald-900',
-      name: 'Лесопилка',
+      color: "bg-emerald-900",
+      name: "Лесопилка",
       resourceName: RESOURCES.WOOD.name,
       level: 5,
       collectionTime: 180,
       upgradeDuration: 360,
       icon: RESOURCES.WOOD.icon,
       onLevelUp: () => {
-        console.log('Повышение уровня лесопилки');
-      }
+        console.log("Повышение уровня лесопилки")
+      },
     },
     {
-      color: 'bg-yellow-900',
-      name: 'Ферма',
+      color: "bg-yellow-900",
+      name: "Ферма",
       resourceName: RESOURCES.FOOD.name,
       level: 4,
       collectionTime: 120,
@@ -182,32 +181,32 @@ export const Map = () => {
       initialProgress: 100,
       initialUpgradeProgress: 100,
       onLevelUp: () => {
-        console.log('Повышение уровня фермы');
-      }
+        console.log("Повышение уровня фермы")
+      },
     },
     {
-      color: 'bg-orange-900',
-      name: 'Заправка',
+      color: "bg-orange-900",
+      name: "Заправка",
       resourceName: RESOURCES.FUEL.name,
       level: 2,
       collectionTime: 240,
       upgradeDuration: 480,
       icon: RESOURCES.FUEL.icon,
       onLevelUp: () => {
-        console.log('Повышение уровня заправки');
-      }
+        console.log("Повышение уровня заправки")
+      },
     },
     {
-      color: 'bg-slate-700',
-      name: 'Плавильня',
+      color: "bg-slate-700",
+      name: "Плавильня",
       resourceName: RESOURCES.STEEL.name,
       level: 1,
       collectionTime: 360,
       upgradeDuration: 720,
       icon: RESOURCES.STEEL.icon,
       onLevelUp: () => {
-        console.log('Повышение уровня плавильни');
-      }
+        console.log("Повышение уровня плавильни")
+      },
     },
     // {
     //   color: 'bg-red-900',
@@ -221,7 +220,7 @@ export const Map = () => {
     //     console.log('Повышение уровня арсенала');
     //   }
     // },
-  ];
+  ]
 
   return (
     <div
@@ -240,7 +239,7 @@ export const Map = () => {
         `,
         "background-size": "cover, 400% 400%, 60px 60px",
         "background-position": "center",
-        "animation": "background-pan 30s linear infinite"
+        animation: "background-pan 30s linear infinite",
       }}
     >
       {/* Основной слой с частицами */}
@@ -255,7 +254,7 @@ export const Map = () => {
             radial-gradient(circle at 85% 85%, rgba(234, 88, 12, 0.4) 0%, transparent 35%)
           `,
           "background-size": "cover",
-          "animation": "pulse 3s ease-in-out infinite"
+          animation: "pulse 3s ease-in-out infinite",
         }}
       />
       {/* Дополнительный слой с движущимися частицами */}
@@ -268,7 +267,7 @@ export const Map = () => {
             radial-gradient(circle at 50% 50%, rgba(234, 88, 12, 0.3) 0%, transparent 35%)
           `,
           "background-size": "100% 100%",
-          "animation": "particles-move 15s ease-in-out infinite alternate"
+          animation: "particles-move 15s ease-in-out infinite alternate",
         }}
       />
       {/* Дополнительный слой с подсветкой */}
@@ -284,14 +283,12 @@ export const Map = () => {
             )
           `,
           "background-size": "200% 200%",
-          "animation": "background-pan 20s linear infinite"
+          animation: "background-pan 20s linear infinite",
         }}
       />
       <div class="hide-scrollbar grid grid-cols-2 gap-3 overflow-y-auto h-full py-48 px-4 relative z-10">
-        <For each={buildings}>{building => (
-          <BuildingCard {...building} />
-        )}</For>
+        <For each={buildings}>{(building) => <BuildingCard {...building} />}</For>
       </div>
     </div>
-  );
-};
+  )
+}

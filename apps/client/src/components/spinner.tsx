@@ -1,19 +1,13 @@
-import { Component } from 'solid-js';
+import { Component } from "solid-js"
 
 type SpinnerProps = {
-  class?: string;
-};
+  class?: string
+}
 
 export const Spinner: Component<SpinnerProps> = (props) => {
   return (
-    <div class={`animate-spin ${props.class || ''}`}>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-      >
+    <div class={`animate-spin ${props.class || ""}`}>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -21,5 +15,5 @@ export const Spinner: Component<SpinnerProps> = (props) => {
         />
       </svg>
     </div>
-  );
-};
+  )
+}

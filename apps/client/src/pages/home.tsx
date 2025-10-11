@@ -1,5 +1,5 @@
-import { GameLayout } from '@/layouts/game-layout';
-import { Map } from '@/modules/map';
+import { GameLayout } from "@/layouts/game-layout"
+import { Map } from "@/modules/map"
 
 export function HomePage() {
   return (
@@ -8,5 +8,5 @@ export function HomePage() {
         <Map />
       </div>
     </GameLayout>
-  );
+  )
 }

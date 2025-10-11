@@ -1,12 +1,12 @@
-import { inngest } from "@/lib/inngest";
-import { CHAT_EVENTS } from "./chat.events";
+import { inngest } from "@/lib/inngest"
+import { CHAT_EVENTS } from "./chat.events"
 
-const sendCd = 500;
-const cleanupCd = 10000;
+const sendCd = 500
+const cleanupCd = 10000
 
 export const testChat = ({ regionChatId, allianceChatId, testAccountId }) => {
-  let ali = 0;
-  let regi = 0;
+  let ali = 0
+  let regi = 0
 
   setInterval(() => {
     inngest.send({
@@ -16,7 +16,7 @@ export const testChat = ({ regionChatId, allianceChatId, testAccountId }) => {
         currentAccountId: testAccountId,
         chatId: regionChatId,
       },
-    });
+    })
 
     inngest.send({
       name: CHAT_EVENTS.MESSAGE_CREATED,
@@ -25,20 +25,20 @@ export const testChat = ({ regionChatId, allianceChatId, testAccountId }) => {
         currentAccountId: testAccountId,
         chatId: allianceChatId,
       },
-    });
-  }, sendCd);
+    })
+  }, sendCd)
 
   setInterval(() => {
-    regi = 0;
-    ali = 0;
+    regi = 0
+    ali = 0
     inngest.send({
       name: CHAT_EVENTS.CHAT_CLEANUP,
       data: { chatId: regionChatId },
-    });
+    })
 
     inngest.send({
       name: CHAT_EVENTS.CHAT_CLEANUP,
       data: { chatId: allianceChatId },
-    });
-  }, cleanupCd);
-};
+    })
+  }, cleanupCd)
+}

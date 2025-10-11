@@ -1,15 +1,15 @@
-import { createStore } from "solid-js/store";
+import { createStore } from "solid-js/store"
 
-export type ChatChannel = "region" | "alliance";
+export type ChatChannel = "region" | "alliance"
 
 export interface Message {
-  id: string;
-  text: string;
-  sender: "user" | "other";
-  timestamp: Date;
-  author: string;
-  avatar: string;
-  channel: ChatChannel;
+  id: string
+  text: string
+  sender: "user" | "other"
+  timestamp: Date
+  author: string
+  avatar: string
+  channel: ChatChannel
 }
 
 export const [chatStore, setChatStore] = createStore({
@@ -19,6 +19,6 @@ export const [chatStore, setChatStore] = createStore({
   allianceChatId: undefined as string | undefined,
 
   setActiveChannel(channel: ChatChannel) {
-    setChatStore("activeChannel", channel);
+    setChatStore("activeChannel", channel)
   },
-});
+})

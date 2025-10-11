@@ -1,4 +1,4 @@
-import { builder } from "@/lib/pothos";
+import { builder } from "@/lib/pothos"
 
 builder.subscriptionType({
   fields: (t) => ({
@@ -7,9 +7,9 @@ builder.subscriptionType({
         chatId: t.arg.string(),
       },
       subscribe: (_parent, { chatId }, { pubsub }) => {
-        return pubsub.subscribe("chatCleanup", chatId);
+        return pubsub.subscribe("chatCleanup", chatId)
       },
       resolve: (message) => message,
     }),
   }),
-});
+})

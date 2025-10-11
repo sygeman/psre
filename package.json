@@ -10,7 +10,8 @@
   "packageManager": "bun@1.2.21",
   "type": "module",
   "scripts": {
-    "dev": "bun --elide-lines=0 --filter './apps/*' dev"
+    "dev": "bun --elide-lines=0 --filter './apps/*' dev",
+    "lint": "biome format --write"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.5"

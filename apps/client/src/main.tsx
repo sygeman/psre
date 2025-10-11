@@ -1,22 +1,22 @@
-import { Router, Route } from "@solidjs/router";
-import "virtual:uno.css";
-import "@unocss/reset/tailwind.css";
-import "./index.css";
+import { Router, Route } from "@solidjs/router"
+import "virtual:uno.css"
+import "@unocss/reset/tailwind.css"
+import "./index.css"
 
-import { HomePage } from "@/pages/home";
-import { RegionPage } from "@/pages/region";
-import { HeroesPage } from "@/pages/heroes";
-import { VipPage } from "@/pages/vip";
-import { ShopPage } from "@/pages/shop";
-import { PersonPage } from "@/pages/person";
-import { ChatPage } from "@/modules/chat";
-import { RankPage } from "@/pages/rank";
-import { QuestsPage } from "@/pages/quests";
-import { AlliancePage } from "@/pages/alliance";
-import { MailPage } from "@/pages/mail";
-import { ArmoryPage } from "@/pages/armory";
-import { MiniGames } from "@/pages/mini-games";
-import { SlotsPage } from "@/pages/slots";
+import { HomePage } from "@/pages/home"
+import { RegionPage } from "@/pages/region"
+import { HeroesPage } from "@/pages/heroes"
+import { VipPage } from "@/pages/vip"
+import { ShopPage } from "@/pages/shop"
+import { PersonPage } from "@/pages/person"
+import { ChatPage } from "@/modules/chat"
+import { RankPage } from "@/pages/rank"
+import { QuestsPage } from "@/pages/quests"
+import { AlliancePage } from "@/pages/alliance"
+import { MailPage } from "@/pages/mail"
+import { ArmoryPage } from "@/pages/armory"
+import { MiniGames } from "@/pages/mini-games"
+import { SlotsPage } from "@/pages/slots"
 
 export const Main = () => {
   return (
@@ -38,5 +38,5 @@ export const Main = () => {
         <Route path="/slots" component={SlotsPage} />
       </Route>
     </Router>
-  );
-};
+  )
+}
