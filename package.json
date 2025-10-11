@@ -11,5 +11,8 @@
   "type": "module",
   "scripts": {
     "dev": "bun --elide-lines=0 --filter './apps/*' dev"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.5"
   }
 }
