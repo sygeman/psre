@@ -5,9 +5,7 @@ import { eq } from "drizzle-orm";
 export const chatMessageCreatedEventHandler = inngest.createFunction(
   { id: CHAT_FUNCTION_IDS.MESSAGE_HANDLER },
   { event: CHAT_EVENTS.MESSAGE_CREATED },
-  async ({ event, step, db, dbSchema, pubsub }) => {
-    const data = event.data;
-
+  async ({ event: { data }, step, db, dbSchema, pubsub }) => {
     const message = await step.run("create-message-event", async () => {
       const chatMessages = await db
         .insert(dbSchema.chatMessages)

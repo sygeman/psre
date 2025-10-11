@@ -4,6 +4,7 @@ import { createAlliance } from '@/modules/alliance/service/create-alliance';
 import { GLOABAL_EVENTS, GLOABAL_FUNCTION_IDS } from "../global.events";
 import { createUser } from "@/modules/user/events/create-user";
 import { reset } from "drizzle-seed";
+import { chatMessageCreatedEventHandler } from "@/modules/chat/events/chat-message-created";
 
 export const seedEventHandler = inngest.createFunction(
   { id: GLOABAL_FUNCTION_IDS.SEED_HANDLER },
@@ -24,9 +25,28 @@ export const seedEventHandler = inngest.createFunction(
 
     if (!user.currentAccountId) throw 'currentAccountId is null';
 
-    await step.invoke("create-first-alliance", {
+    const { alliance } = await step.invoke("create-first-alliance", {
       function: createAlliance,
       data: { regionId: region.id, ownerId: user.currentAccountId }
     });
+
+    await Promise.all([
+      step.invoke('send-message-to-region-chat', {
+        function: chatMessageCreatedEventHandler,
+        data: {
+          content: 'Всем привет в регионе',
+          currentAccountId: user.currentAccountId,
+          chatId: region.chatId,
+        }
+      }),
+      step.invoke('send-message-to-alliance-chat', {
+        function: chatMessageCreatedEventHandler,
+        data: {
+          content: 'Всем привет в альянсе',
+          currentAccountId: user.currentAccountId,
+          chatId: alliance.chatId,
+        }
+      })
+    ]);
   },
 );
