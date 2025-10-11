@@ -1,6 +1,6 @@
 import { For, createSignal } from "solid-js"
 import { EquipmentSlot } from "@/components/equipment-slot"
-import { Tab } from "@/components/tabs"
+import type { Tab } from "@/components/tabs"
 import { EquipmentTabs } from "@/components/equipment-tabs"
 
 const LEFT_EQUIPMENT_SLOTS = [

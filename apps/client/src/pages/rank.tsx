@@ -8,7 +8,7 @@ export function RankPage() {
     id: index + 1,
     name: `Игрок ${index + 1}`,
     alliance: index % 5 === 0 ? null : `Альянс ${Math.floor(index / 5) + 1}`,
-    power: Math.floor(1000000 * Math.pow(0.99, index)), // Экспоненциальное уменьшение мощи
+    power: Math.floor(1000000 * 0.99 ** index), // Экспоненциальное уменьшение мощи
   }))
 
   // Изменяем данные текущего игрока на первое место

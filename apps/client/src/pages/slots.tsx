@@ -1,4 +1,4 @@
-import { Component } from "solid-js"
+import type { Component } from "solid-js"
 import { BackLayout } from "@/layouts/back-layout"
 import { SlotMachinePage } from "@/components/slot-machine-page"
 import { accountState } from "@/stores/state"

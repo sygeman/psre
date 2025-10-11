@@ -1,6 +1,6 @@
 import { createEffect, createSignal, onCleanup } from "solid-js"
 import { createMutation, useApollo } from "@/apollo"
-import {
+import type {
   ChatCleanupSubscription,
   ChatCleanupSubscriptionVariables,
   CreateMessageMutation,
@@ -10,7 +10,7 @@ import {
   GetNewChatMessagesSubscription,
   GetNewChatMessagesSubscriptionVariables,
 } from "./create-chat.gql.types"
-import { ChatMessage } from "@/types"
+import type { ChatMessage } from "@/types"
 import { chatStore } from "../store"
 import { CHAT_CLEANUP_SUBSCRIPTION, CHAT_NEW_MESSAGE_SUBSCRIPTION, CHATS_QUERY, CREATE_MESSAGE_MUTATION } from "./gql"
 

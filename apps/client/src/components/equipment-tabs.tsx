@@ -1,5 +1,5 @@
 import { For } from "solid-js"
-import { Tab } from "./tabs"
+import type { Tab } from "./tabs"
 
 interface EquipmentTabsProps {
   tabs: Tab[]

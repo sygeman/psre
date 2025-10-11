@@ -30,7 +30,7 @@ export function AnimatedNumber(props: Props) {
       const progress = Math.min(elapsed / duration, 1)
 
       // Функция плавности (ease-out)
-      const easeProgress = 1 - Math.pow(1 - progress, 3)
+      const easeProgress = 1 - (1 - progress) ** 3
 
       const current = start + (end - start) * easeProgress
       setDisplayValue(Math.round(current))

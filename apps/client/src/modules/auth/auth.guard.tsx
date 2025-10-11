@@ -1,4 +1,4 @@
-import { Match, Switch, JSX } from "solid-js"
+import { Match, Switch, type JSX } from "solid-js"
 import { useQuery } from "@tanstack/solid-query"
 import { AuthTelegram } from "./auth-screen"
 import { authService } from "./auth.service"

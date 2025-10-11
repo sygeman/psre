@@ -1,4 +1,4 @@
-import { apiClient, ApiResponse } from "@/services/api"
+import { apiClient, type ApiResponse } from "@/services/api"
 import { AUTH_STORAGE_KEY } from "./auth.constants"
 
 export interface TelegramUser {

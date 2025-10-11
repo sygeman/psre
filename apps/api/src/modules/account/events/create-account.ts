@@ -10,7 +10,7 @@ export const createAccount = inngest.createFunction(
 
     if (!regionId) {
       regionId = await step.run("get-latest-region-id", async () => {
-        let region = await db.query.regions.findFirst({
+        const region = await db.query.regions.findFirst({
           orderBy: [desc(dbSchema.regions.id)],
         })
 

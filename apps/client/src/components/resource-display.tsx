@@ -1,4 +1,4 @@
-import { Component } from "solid-js"
+import type { Component } from "solid-js"
 import { RESOURCES } from "@/constants"
 import { AnimatedNumber } from "./animated-number"
 

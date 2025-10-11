@@ -1,7 +1,7 @@
 import { createSignal, onCleanup } from "solid-js"
 import { useApollo } from "@/apollo"
 import { MAIN_RESOURCES_CHANGED_SUBSCRIPTION, MAIN_RESOURCES_QUERY } from "./gql"
-import {
+import type {
   ResourcesMainChangedSubscription,
   ResourcesMainChangedSubscriptionVariables,
   ResourcesMainQuery,

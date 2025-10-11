@@ -123,7 +123,7 @@ export function SlotMachine() {
 
       if (elapsed < duration) {
         const progress = elapsed / duration
-        const easeOut = 1 - Math.pow(1 - progress, 3)
+        const easeOut = 1 - (1 - progress) ** 3
         const currentPosition = easeOut * finalPosition
 
         setPositions((prev) => {
