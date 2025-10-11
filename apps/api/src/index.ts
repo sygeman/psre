@@ -1,7 +1,7 @@
+import { createServer } from "node:http"
 import { AuthDataValidator } from "@telegram-auth/server"
 import { useServer } from "graphql-ws/use/ws"
 import { createYoga } from "graphql-yoga"
-import { createServer } from "http"
 import { serve } from "inngest/bun"
 import { WebSocketServer } from "ws"
 import { db } from "@/lib/drizzle"
