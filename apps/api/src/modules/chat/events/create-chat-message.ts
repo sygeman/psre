@@ -1,8 +1,8 @@
+import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 import { CHAT_EVENTS, CHAT_FUNCTION_IDS } from "../chat.events"
-import { eq } from "drizzle-orm"
 
-export const chatMessageCreatedEventHandler = inngest.createFunction(
+export const createChatMessage = inngest.createFunction(
   { id: CHAT_FUNCTION_IDS.MESSAGE_HANDLER },
   { event: CHAT_EVENTS.MESSAGE_CREATED },
   async ({ event: { data }, step, db, dbSchema, pubsub }) => {

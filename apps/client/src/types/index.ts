@@ -88,12 +88,12 @@ export type SendMessageInput = {
 
 export type Subscription = {
   __typename?: "Subscription"
-  chatCleanup?: Maybe<Scalars["Boolean"]["output"]>
+  cleanupChat?: Maybe<Scalars["Boolean"]["output"]>
   createdChatMessage?: Maybe<ChatMessage>
   resourcesMainChanged?: Maybe<MainResources>
 }
 
-export type SubscriptionChatCleanupArgs = {
+export type SubscriptioncleanupChatArgs = {
   chatId?: InputMaybe<Scalars["String"]["input"]>
 }
 

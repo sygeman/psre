@@ -43,7 +43,7 @@ export const CHAT_NEW_MESSAGE_SUBSCRIPTION = gql`
 `
 
 export const CHAT_CLEANUP_SUBSCRIPTION = gql`
-  subscription ChatCleanup($chatId: String!) {
-    chatCleanup(chatId: $chatId)
+  subscription cleanupChat($chatId: String!) {
+    cleanupChat(chatId: $chatId)
   }
 `

@@ -1,8 +1,8 @@
+import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 import { CHAT_EVENTS, CHAT_FUNCTION_IDS } from "../chat.events"
-import { eq } from "drizzle-orm"
 
-export const chatCleanupEventHandler = inngest.createFunction(
+export const cleanupChat = inngest.createFunction(
   { id: CHAT_FUNCTION_IDS.CHAT_CLEANUP_HANDLER },
   { event: CHAT_EVENTS.CHAT_CLEANUP },
   async ({ event: { data }, step, db, dbSchema, pubsub }) => {
@@ -11,7 +11,7 @@ export const chatCleanupEventHandler = inngest.createFunction(
     })
 
     await step.run("publish-cleanup-event", async () => {
-      pubsub.publish("chatCleanup", data.chatId, true)
+      pubsub.publish("cleanupChat", data.chatId, true)
     })
 
     return { success: true }

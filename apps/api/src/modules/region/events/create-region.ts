@@ -1,5 +1,5 @@
 import { inngest } from "@/lib/inngest"
-import { createChat } from "@/modules/chat/events/create-chat"
+import { createChat } from "@/schema/events"
 
 export const createRegion = inngest.createFunction(
   { id: "create-region" },

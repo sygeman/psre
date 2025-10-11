@@ -1,7 +1,7 @@
-import { builder } from "@/lib/pothos"
 import { inngest } from "@/lib/inngest"
-import { SendMessageInput } from "../types/send-message.input"
+import { builder } from "@/lib/pothos"
 import { CHAT_EVENTS } from "../chat.events"
+import { SendMessageInput } from "../types/send-message.input"
 
 builder.mutationType({
   fields: (t) => ({

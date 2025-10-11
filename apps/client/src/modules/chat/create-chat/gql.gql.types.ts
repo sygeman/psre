@@ -62,11 +62,11 @@ export type GetNewChatMessagesSubscription = {
   } | null
 }
 
-export type ChatCleanupSubscriptionVariables = Types.Exact<{
+export type cleanupChatSubscriptionVariables = Types.Exact<{
   chatId: Types.Scalars["String"]["input"]
 }>
 
-export type ChatCleanupSubscription = {
+export type cleanupChatSubscription = {
   __typename?: "Subscription"
-  chatCleanup?: boolean | null
+  cleanupChat?: boolean | null
 }

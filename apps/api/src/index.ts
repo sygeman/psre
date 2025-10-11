@@ -7,11 +7,10 @@ import { WebSocketServer } from "ws"
 import { db } from "@/lib/drizzle"
 import { inngest } from "@/lib/inngest"
 import { pubsub } from "@/lib/pubsub"
-import { inngestChatFunctions } from "./modules/chat"
-import { inngestGlobalFunctions } from "./modules/global"
 import { GLOABAL_EVENTS } from "./modules/global/global.events"
 import { generateToken } from "./modules/user/service/generate-token"
 import { USER_EVENTS } from "./modules/user/user.events"
+import * as inngestFunctions from "./schema/events"
 import { schema } from "./schema/gql"
 
 type ConnectionParams = {
@@ -139,7 +138,7 @@ Bun.serve({
     if (url.pathname === "/api/inngest") {
       return serve({
         client: inngest,
-        functions: [...inngestChatFunctions, ...inngestGlobalFunctions],
+        functions: Object.values(inngestFunctions),
       })(request)
     }
 

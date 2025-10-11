@@ -56,7 +56,7 @@ input SendMessageInput {
 }
 
 type Subscription {
-  chatCleanup(chatId: String): Boolean
+  cleanupChat(chatId: String): Boolean
   createdChatMessage(chatId: String): ChatMessage
   resourcesMainChanged: MainResources
 }

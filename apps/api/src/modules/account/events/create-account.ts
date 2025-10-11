@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm"
-import { ACCOUNT_EVENTS, ACCOUNT_FUNCTION_IDS } from "../account.events"
 import { inngest } from "@/lib/inngest"
+import { ACCOUNT_EVENTS, ACCOUNT_FUNCTION_IDS } from "../account.events"
 
 export const createAccount = inngest.createFunction(
   { id: ACCOUNT_FUNCTION_IDS.CREATE_HANDLER },
@@ -19,9 +19,7 @@ export const createAccount = inngest.createFunction(
       })
     }
 
-    if (!regionId) {
-      throw "Region not found"
-    }
+    if (!regionId) throw "Region not found"
 
     const account = await step.run("create-account-in-db", async () => {
       const accounts = await db

@@ -1,8 +1,8 @@
-import { createAccount } from "@/modules/account/events/create-account"
-import { USER_EVENTS, USER_FUNCTION_IDS } from "../user.events"
-import { inngest } from "@/lib/inngest"
-import { generateToken } from "../service/generate-token"
 import { eq } from "drizzle-orm"
+import { inngest } from "@/lib/inngest"
+import { createAccount } from "@/schema/events"
+import { generateToken } from "../service/generate-token"
+import { USER_EVENTS, USER_FUNCTION_IDS } from "../user.events"
 
 export const createUser = inngest.createFunction(
   { id: USER_FUNCTION_IDS.CREATE_HANDLER },

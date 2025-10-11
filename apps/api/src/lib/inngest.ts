@@ -1,7 +1,7 @@
 import { Inngest, InngestMiddleware } from "inngest"
+import * as dbSchema from "@/schema/db"
 import { db } from "./drizzle"
 import { pubsub } from "./pubsub"
-import * as dbSchema from "@/schema/db"
 
 const dbMiddleware = new InngestMiddleware({
   name: "lib-context",

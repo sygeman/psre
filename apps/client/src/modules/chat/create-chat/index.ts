@@ -1,17 +1,17 @@
 import { createEffect, createSignal, onCleanup } from "solid-js"
 import { createMutation, useApollo } from "@/apollo"
+import type { ChatMessage } from "@/types"
+import { chatStore } from "../store"
 import type {
-  ChatCleanupSubscription,
-  ChatCleanupSubscriptionVariables,
   CreateMessageMutation,
   CreateMessageMutationVariables,
+  cleanupChatSubscription,
+  cleanupChatSubscriptionVariables,
   GetChatsQuery,
   GetChatsQueryVariables,
   GetNewChatMessagesSubscription,
   GetNewChatMessagesSubscriptionVariables,
 } from "./create-chat.gql.types"
-import type { ChatMessage } from "@/types"
-import { chatStore } from "../store"
 import { CHAT_CLEANUP_SUBSCRIPTION, CHAT_NEW_MESSAGE_SUBSCRIPTION, CHATS_QUERY, CREATE_MESSAGE_MUTATION } from "./gql"
 
 export const createChat = () => {
@@ -57,7 +57,7 @@ export const createChat = () => {
       })
 
     const cleanupSubscription = apolloClient
-      .subscribe<ChatCleanupSubscription, ChatCleanupSubscriptionVariables>({
+      .subscribe<cleanupChatSubscription, cleanupChatSubscriptionVariables>({
         query: CHAT_CLEANUP_SUBSCRIPTION,
         variables: { chatId: chatId() },
       })
