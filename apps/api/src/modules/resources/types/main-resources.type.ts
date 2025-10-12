@@ -1,4 +1,4 @@
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 
 export type MainResourcesType = {
   id: string
@@ -9,7 +9,7 @@ export type MainResourcesType = {
   diamond: number
 }
 
-export const MainResources = builder.objectRef<MainResourcesType>("MainResources").implement({
+export const MainResources = gqlBuilder.objectRef<MainResourcesType>("MainResources").implement({
   fields: (t) => ({
     id: t.exposeID("id"),
     food: t.exposeInt("food"),

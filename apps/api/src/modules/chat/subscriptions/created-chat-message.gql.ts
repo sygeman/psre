@@ -1,7 +1,7 @@
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 import { ChatMessage } from "../types/chat-message.type"
 
-builder.subscriptionType({
+gqlBuilder.subscriptionType({
   fields: (t) => ({
     createdChatMessage: t.field({
       type: ChatMessage,

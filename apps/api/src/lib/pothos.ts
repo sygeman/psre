@@ -3,7 +3,7 @@ import { DateResolver, DateTimeResolver, JSONResolver } from "graphql-scalars"
 import type { db } from "./drizzle"
 import type { pubsub } from "./pubsub"
 
-export const builder = new SchemaBuilder<{
+export const gqlBuilder = new SchemaBuilder<{
   Context: { pubsub: typeof pubsub; currentAccountId: string; db: typeof db }
   Scalars: {
     ID: {
@@ -25,6 +25,6 @@ export const builder = new SchemaBuilder<{
   }
 }>({})
 
-builder.addScalarType("JSON", JSONResolver)
-builder.addScalarType("Date", DateResolver)
-builder.addScalarType("DateTime", DateTimeResolver)
+gqlBuilder.addScalarType("JSON", JSONResolver)
+gqlBuilder.addScalarType("Date", DateResolver)
+gqlBuilder.addScalarType("DateTime", DateTimeResolver)

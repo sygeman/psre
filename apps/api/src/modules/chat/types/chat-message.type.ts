@@ -1,4 +1,4 @@
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 import { ChatMessageAuthor, type ChatMessageAuthorType } from "./chat-message-author.type"
 
 export type ChatMessageType = {
@@ -8,7 +8,7 @@ export type ChatMessageType = {
   createdAt: Date
 }
 
-export const ChatMessage = builder.objectRef<ChatMessageType>("ChatMessage").implement({
+export const ChatMessage = gqlBuilder.objectRef<ChatMessageType>("ChatMessage").implement({
   fields: (t) => ({
     id: t.exposeID("id"),
     content: t.exposeString("content"),

@@ -1,6 +1,6 @@
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 
-builder.subscriptionType({
+gqlBuilder.subscriptionType({
   fields: (t) => ({
     cleanupChat: t.boolean({
       args: {

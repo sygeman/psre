@@ -1,6 +1,6 @@
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 
-export const SendMessageInput = builder.inputType("SendMessageInput", {
+export const SendMessageInput = gqlBuilder.inputType("SendMessageInput", {
   fields: (t) => ({
     chatId: t.string({ required: true }),
     content: t.string({ required: true }),

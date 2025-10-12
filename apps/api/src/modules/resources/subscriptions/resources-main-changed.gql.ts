@@ -1,7 +1,7 @@
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 import { MainResources } from "../types/main-resources.type"
 
-builder.subscriptionType({
+gqlBuilder.subscriptionType({
   fields: (t) => ({
     resourcesMainChanged: t.field({
       type: MainResources,

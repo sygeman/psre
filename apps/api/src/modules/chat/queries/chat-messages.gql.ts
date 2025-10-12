@@ -1,7 +1,7 @@
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 import { ChatMessage } from "../types/chat-message.type"
 
-builder.queryType({
+gqlBuilder.queryType({
   fields: (t) => ({
     chatMessages: t.field({
       type: [ChatMessage],

@@ -1,9 +1,9 @@
 import { inngest } from "@/lib/inngest"
-import { builder } from "@/lib/pothos"
+import { gqlBuilder } from "@/lib/pothos"
 import { CHAT_EVENTS } from "../chat.events"
 import { SendMessageInput } from "../types/send-message.input"
 
-builder.mutationType({
+gqlBuilder.mutationType({
   fields: (t) => ({
     createChatMessage: t.boolean({
       args: {
