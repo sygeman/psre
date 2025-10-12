@@ -1,10 +1,16 @@
 import SchemaBuilder from "@pothos/core"
 import { DateResolver, DateTimeResolver, JSONResolver } from "graphql-scalars"
 import type { db } from "./drizzle"
+import type { inngest } from "./inngest"
 import type { pubsub } from "./pubsub"
 
 export const gqlBuilder = new SchemaBuilder<{
-  Context: { pubsub: typeof pubsub; currentAccountId: string; db: typeof db }
+  Context: {
+    pubsub: typeof pubsub
+    currentAccountId: string
+    db: typeof db
+    inngest: typeof inngest
+  }
   Scalars: {
     ID: {
       Output: number | string

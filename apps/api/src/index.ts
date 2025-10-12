@@ -7,9 +7,7 @@ import { WebSocketServer } from "ws"
 import { db } from "@/lib/drizzle"
 import { inngest } from "@/lib/inngest"
 import { pubsub } from "@/lib/pubsub"
-import { GLOABAL_EVENTS } from "./modules/global/global.events"
 import { generateToken } from "./modules/user/service/generate-token"
-import { USER_EVENTS } from "./modules/user/user.events"
 import * as inngestFunctions from "./schema/events"
 import { schema } from "./schema/gql"
 
@@ -38,7 +36,7 @@ const currentAccountIdByToken = async (token?: string) => {
 const yogaApp = createYoga<{ extra: Extra }>({
   schema,
   context: (ctx) => {
-    return { db, pubsub, currentAccountId: ctx.extra.accountId }
+    return { db, pubsub, inngest, currentAccountId: ctx.extra.accountId }
   },
   graphiql: { subscriptionsProtocol: "WS" },
 })
@@ -59,7 +57,9 @@ useServer<ConnectionParams, Extra>(
     subscribe: (args: any) => args.rootValue.subscribe(args),
     onConnect: async (ctx) => {
       // do your auth check on every connect (recommended)
-      const accountId = await currentAccountIdByToken(ctx.connectionParams?.token)
+      const accountId = await currentAccountIdByToken(
+        ctx.connectionParams?.token,
+      )
 
       console.log("accountId", accountId)
 
@@ -70,12 +70,13 @@ useServer<ConnectionParams, Extra>(
       ctx.extra.accountId = accountId
     },
     onSubscribe: async (ctx, _id, params) => {
-      const { schema, execute, subscribe, contextFactory, parse, validate } = yogaApp.getEnveloped({
-        ...ctx,
-        req: ctx.extra.request,
-        socket: ctx.extra.socket,
-        params,
-      })
+      const { schema, execute, subscribe, contextFactory, parse, validate } =
+        yogaApp.getEnveloped({
+          ...ctx,
+          req: ctx.extra.request,
+          socket: ctx.extra.socket,
+          params,
+        })
 
       const args = {
         schema,
@@ -112,13 +113,15 @@ Bun.serve({
         // Validate telegram data
         const botToken = process.env.TELEGRAM_BOT_TOKEN!
         const validator = new AuthDataValidator({ botToken })
-        const userTgData = await validator.validate(new Map(Object.entries(data)))
-        const telegramId = userTgData.id
+        const userTgData = await validator.validate(
+          new Map(Object.entries(data)),
+        )
+        const telegramId = userTgData.id.toString()
 
         const token = generateToken()
 
         await inngest.send({
-          name: USER_EVENTS.CREATE,
+          name: "user/create",
           data: { telegramId, token },
         })
 
@@ -147,6 +150,6 @@ Bun.serve({
 })
 
 await inngest.send({
-  name: GLOABAL_EVENTS.SEED,
-  data: { telegramId: 57902065, name: "Sygeman" },
+  name: "global/seed",
+  data: { telegramId: "57902065", name: "Sygeman" },
 })

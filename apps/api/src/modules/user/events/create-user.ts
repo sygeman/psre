@@ -2,15 +2,12 @@ import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 import { createAccount } from "@/schema/events"
 import { generateToken } from "../service/generate-token"
-import { USER_EVENTS, USER_FUNCTION_IDS } from "../user.events"
 
 export const createUser = inngest.createFunction(
-  { id: USER_FUNCTION_IDS.CREATE_HANDLER },
-  { event: USER_EVENTS.CREATE },
+  { id: "user-create" },
+  { event: "user/create" },
   async ({ event, step, db, dbSchema }) => {
     let { telegramId, token, name } = event.data
-
-    telegramId = telegramId.toString()
 
     let user = await step.run("find-user-in-db", () => {
       return db.query.users.findFirst({
@@ -23,7 +20,10 @@ export const createUser = inngest.createFunction(
         token = await step.run("regenerate-token", async () => {
           const token = generateToken()
 
-          await db.update(dbSchema.users).set({ token }).where(eq(dbSchema.users.id, user.id))
+          await db
+            .update(dbSchema.users)
+            .set({ token })
+            .where(eq(dbSchema.users.id, user.id))
 
           return token
         })
@@ -39,10 +39,7 @@ export const createUser = inngest.createFunction(
     user = await step.run("create-user-in-db", async () => {
       const users = await db
         .insert(dbSchema.users)
-        .values({
-          telegramId,
-          token,
-        })
+        .values({ telegramId, token })
         .returning()
 
       return users[0]
@@ -52,7 +49,7 @@ export const createUser = inngest.createFunction(
 
     const { account } = await step.invoke("create-account", {
       function: createAccount,
-      data: { telegramId, name, userId: user.id },
+      data: { name, userId: user.id },
     })
 
     user.currentAccountId = account.id

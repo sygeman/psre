@@ -9,7 +9,10 @@ export const createRegion = inngest.createFunction(
       function: createChat,
     })
 
-    const regions = await db.insert(dbSchema.regions).values({ chatId: chat.id }).returning()
+    const regions = await db
+      .insert(dbSchema.regions)
+      .values({ chatId: chat.id })
+      .returning()
     const region = regions[0]
 
     if (!region) throw "Region not found"

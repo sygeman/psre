@@ -1,10 +1,9 @@
 import { desc, eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
-import { ACCOUNT_EVENTS, ACCOUNT_FUNCTION_IDS } from "../account.events"
 
 export const createAccount = inngest.createFunction(
-  { id: ACCOUNT_FUNCTION_IDS.CREATE_HANDLER },
-  { event: ACCOUNT_EVENTS.CREATE },
+  { id: "account-create" },
+  { event: "account/create" },
   async ({ event, step, db, dbSchema }) => {
     let { userId, regionId, name } = event.data
 
@@ -37,7 +36,10 @@ export const createAccount = inngest.createFunction(
     if (!account) throw "Account not found"
 
     await step.run("update-current-account-id", async () => {
-      return db.update(dbSchema.users).set({ currentAccountId: account.id }).where(eq(dbSchema.users.id, userId))
+      return db
+        .update(dbSchema.users)
+        .set({ currentAccountId: account.id })
+        .where(eq(dbSchema.users.id, userId))
     })
 
     return { account }

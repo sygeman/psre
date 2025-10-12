@@ -1,9 +1,10 @@
-import { Inngest, InngestMiddleware } from "inngest"
+import { EventSchemas, Inngest, InngestMiddleware } from "inngest"
 import * as dbSchema from "@/schema/db"
+import type { Events } from "@/schema/events"
 import { db } from "./drizzle"
 import { pubsub } from "./pubsub"
 
-const dbMiddleware = new InngestMiddleware({
+const libContextMiddleware = new InngestMiddleware({
   name: "lib-context",
   init() {
     return {
@@ -26,5 +27,6 @@ const dbMiddleware = new InngestMiddleware({
 
 export const inngest = new Inngest({
   id: "psre",
-  middleware: [dbMiddleware],
+  schemas: new EventSchemas().fromRecord<Events>(),
+  middleware: [libContextMiddleware],
 })

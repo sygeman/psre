@@ -29,7 +29,10 @@ export const createAlliance = inngest.createFunction(
 
     if (!alliance) throw "Alliance not found"
 
-    await db.update(dbSchema.accounts).set({ allianceId: alliance.id }).where(eq(dbSchema.accounts.id, ownerId))
+    await db
+      .update(dbSchema.accounts)
+      .set({ allianceId: alliance.id })
+      .where(eq(dbSchema.accounts.id, ownerId))
 
     return { alliance }
   },

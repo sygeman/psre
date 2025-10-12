@@ -1,11 +1,15 @@
 import { reset } from "drizzle-seed"
 import { inngest } from "@/lib/inngest"
-import { createAlliance, createChatMessage, createRegion, createUser } from "@/schema/events"
-import { GLOABAL_EVENTS, GLOABAL_FUNCTION_IDS } from "../global.events"
+import {
+  createAlliance,
+  createChatMessage,
+  createRegion,
+  createUser,
+} from "@/schema/events"
 
 export const seed = inngest.createFunction(
-  { id: GLOABAL_FUNCTION_IDS.SEED_HANDLER },
-  { event: GLOABAL_EVENTS.SEED },
+  { id: "global-seed" },
+  { event: "global/seed" },
   async ({ event: { data }, step, db, dbSchema }) => {
     await step.run("reset-db", async () => {
       return await reset(db, dbSchema)
@@ -26,6 +30,8 @@ export const seed = inngest.createFunction(
       function: createAlliance,
       data: { regionId: region.id, ownerId: user.currentAccountId },
     })
+
+    if (!region.chatId || !alliance.chatId) throw "chatId is null"
 
     await Promise.all([
       step.invoke("send-message-to-region-chat", {

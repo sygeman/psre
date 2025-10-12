@@ -10,11 +10,14 @@
     "db-migrate": "drizzle-kit migrate",
     "db-studio": "drizzle-kit studio"
   },
+  "devDependencies": {
+    "@types/bun": "1.2.23",
+    "@types/ws": "8.18.1"
+  },
   "dependencies": {
     "@pothos/core": "4.10.0",
     "@pothos/plugin-drizzle": "0.13.0",
     "@telegram-auth/server": "1.0.4",
-    "@types/bun": "1.2.23",
     "dotenv": "17.2.3",
     "drizzle-kit": "0.31.5",
     "drizzle-orm": "0.44.6",
