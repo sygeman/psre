@@ -1,6 +1,7 @@
 import { reset } from "drizzle-seed"
 import { inngest } from "@/lib/inngest"
 import {
+  collectBuilding,
   createAlliance,
   createChatMessage,
   createRegion,
@@ -51,5 +52,13 @@ export const seed = inngest.createFunction(
         },
       }),
     ])
+
+    await step.invoke("collect-building", {
+      function: collectBuilding,
+      data: {
+        accountId: user.currentAccountId,
+        type: "farm",
+      },
+    })
   },
 )

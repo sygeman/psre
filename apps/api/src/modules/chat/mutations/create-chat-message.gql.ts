@@ -1,4 +1,3 @@
-import { inngest } from "@/lib/inngest"
 import { gqlBuilder } from "@/lib/pothos"
 import { SendMessageInput } from "../types/send-message.input"
 
@@ -8,7 +7,7 @@ gqlBuilder.mutationType({
       args: {
         input: t.arg({ type: SendMessageInput, required: true }),
       },
-      resolve: async (_parent, { input }, { currentAccountId }) => {
+      resolve: async (_parent, { input }, { currentAccountId, inngest }) => {
         await inngest.send({
           name: "chat/create-message",
           data: { ...input, currentAccountId },

@@ -1,3 +1,8 @@
+type Building {
+  id: ID
+  type: String
+}
+
 type Chat {
   id: ID
   messages: [ChatMessage!]
@@ -41,10 +46,12 @@ type MainResources {
 }
 
 type Mutation {
+  collectBuilding(type: String!): Boolean
   createChatMessage(input: SendMessageInput!): Boolean
 }
 
 type Query {
+  buildings: [Building!]
   chatMessages(chatId: String!): [ChatMessage!]
   chats: [Chat!]
   resourcesMain: MainResources

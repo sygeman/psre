@@ -1,16 +1,19 @@
 import { relations } from "drizzle-orm"
 import { pgTable } from "drizzle-orm/pg-core"
-import { alliances, chatMessages, regions } from "@/schema/db"
+import { accounts } from "@/schema/db"
 
-export const chats = pgTable("chats", (t) => ({
+export const buildings = pgTable("buildings", (t) => ({
   id: t.uuid().notNull().primaryKey().defaultRandom(),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),
+  ownerId: t.uuid(),
+  type: t.varchar().notNull(),
 }))
 
-export const chatsRelations = relations(chats, ({ many }) => ({
-  messages: many(chatMessages),
-  region: many(regions),
-  alliance: many(alliances),
+export const buildingsRelations = relations(buildings, ({ one }) => ({
+  owner: one(accounts, {
+    fields: [buildings.ownerId],
+    references: [accounts.id],
+  }),
 }))
