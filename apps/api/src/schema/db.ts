@@ -1,5 +1,6 @@
 export * from "@/modules/account/db/accounts.db"
 export * from "@/modules/alliance/db/alliances.db"
+export * from "@/modules/buildings/db/buildings.db"
 export * from "@/modules/chat/db/chat-messages.db"
 export * from "@/modules/chat/db/chats.db"
 export * from "@/modules/region/db/regions.db"
