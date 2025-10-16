@@ -1,9 +1,21 @@
 import { desc, eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 
+const HandlerName = "account/create" as const
+
+export type CreateAccountHandler = {
+  [K in typeof HandlerName]: {
+    data: {
+      userId: string
+      regionId?: string
+      name?: string
+    }
+  }
+}
+
 export const createAccount = inngest.createFunction(
-  { id: "account-create" },
-  { event: "account/create" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({ event, step, db, dbSchema }) => {
     let { userId, regionId, name } = event.data
 

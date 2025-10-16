@@ -3,9 +3,21 @@ import { inngest } from "@/lib/inngest"
 import { createAccount } from "@/schema/events"
 import { generateToken } from "../service/generate-token"
 
+const HandlerName = "user/create" as const
+
+export type CreateUserHandler = {
+  [K in typeof HandlerName]: {
+    data: {
+      telegramId: string
+      token?: string
+      name?: string
+    }
+  }
+}
+
 export const createUser = inngest.createFunction(
-  { id: "user-create" },
-  { event: "user/create" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({ event, step, db, dbSchema }) => {
     let { telegramId, token, name } = event.data
 

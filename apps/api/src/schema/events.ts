@@ -9,28 +9,17 @@ export { seed } from "@/modules/global/events/seed"
 export { createRegion } from "@/modules/region/events/create-region"
 export { createUser } from "@/modules/user/events/create-user"
 
+import type { CreateAccountHandler } from "@/modules/account/events/create-account"
+import type { CreateUserHandler } from "@/modules/user/events/create-user"
+
 export type Events = {
-  "chat/create-message": {
-    data: {
-      currentAccountId: string
-      chatId: string
-      content: string
-    }
-  }
   "chat/cleanup": {
     data: {
       chatId: string
     }
   }
   "chat/create": {
-    data?: unknown
-  }
-  "account/create": {
-    data: {
-      userId: string
-      regionId?: string
-      name?: string
-    }
+    data?: undefined
   }
   "account/rename": {
     data: {
@@ -42,7 +31,7 @@ export type Events = {
     data: { regionId: string; ownerId: string }
   }
   "region/create": {
-    data?: unknown
+    data?: undefined
   }
   "user/create": {
     data: {
@@ -63,4 +52,5 @@ export type Events = {
       type: string
     }
   }
-}
+} & CreateUserHandler &
+  CreateAccountHandler
