@@ -1,6 +1,9 @@
 import { createSignal, onCleanup } from "solid-js"
 import { useApollo } from "@/apollo"
-import { MAIN_RESOURCES_CHANGED_SUBSCRIPTION, MAIN_RESOURCES_QUERY } from "./gql"
+import {
+  MAIN_RESOURCES_CHANGED_SUBSCRIPTION,
+  MAIN_RESOURCES_QUERY,
+} from "./gql"
 import type {
   ResourcesMainChangedSubscription,
   ResourcesMainChangedSubscriptionVariables,
@@ -25,20 +28,29 @@ export const createResources = () => {
       if (!resourcesMain) return
 
       const { food, wood, steel, fuel, diamond } = resourcesMain
-      setFood(parseInt(food))
-      setWood(parseInt(wood))
-      setSteel(parseInt(steel))
-      setFuel(parseInt(fuel))
-      setDiamond(parseInt(diamond))
+      setFood(food)
+      setWood(wood)
+      setSteel(steel)
+      setFuel(fuel)
+      setDiamond(diamond)
     })
 
   const subscription = apolloClient
-    .subscribe<ResourcesMainChangedSubscription, ResourcesMainChangedSubscriptionVariables>({
+    .subscribe<
+      ResourcesMainChangedSubscription,
+      ResourcesMainChangedSubscriptionVariables
+    >({
       query: MAIN_RESOURCES_CHANGED_SUBSCRIPTION,
     })
     .subscribe({
       next: (data) => {
-        console.log(data)
+        const { food, wood, steel, fuel, diamond } =
+          data.data.resourcesMainChanged
+        setFood(food)
+        setWood(wood)
+        setSteel(steel)
+        setFuel(fuel)
+        setDiamond(diamond)
       },
     })
 

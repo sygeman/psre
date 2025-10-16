@@ -3,6 +3,7 @@ import { inngest } from "@/lib/inngest"
 import {
   collectBuilding,
   createAlliance,
+  createBuilding,
   createChatMessage,
   createRegion,
   createUser,
@@ -64,11 +65,59 @@ export const seed = inngest.createFunction(
       }),
     ])
 
+    await Promise.all([
+      step.invoke("create-building", {
+        function: createBuilding,
+        data: {
+          accountId: user.currentAccountId,
+          type: "farm",
+        },
+      }),
+      step.invoke("create-building", {
+        function: createBuilding,
+        data: {
+          accountId: user.currentAccountId,
+          type: "farm",
+        },
+      }),
+      step.invoke("create-building", {
+        function: createBuilding,
+        data: {
+          accountId: user.currentAccountId,
+          type: "lumber-mill",
+        },
+      }),
+      step.invoke("create-building", {
+        function: createBuilding,
+        data: {
+          accountId: user.currentAccountId,
+          type: "steel-plant",
+        },
+      }),
+      step.invoke("create-building", {
+        function: createBuilding,
+        data: {
+          accountId: user.currentAccountId,
+          type: "gas-field",
+        },
+      }),
+    ])
+
     await step.invoke("collect-building", {
       function: collectBuilding,
       data: {
         accountId: user.currentAccountId,
         type: "farm",
+      },
+    })
+
+    await step.sleep("wait-5s", 5000)
+
+    await step.invoke("collect-building", {
+      function: collectBuilding,
+      data: {
+        accountId: user.currentAccountId,
+        type: "lumber-mill",
       },
     })
   },
