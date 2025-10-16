@@ -2,9 +2,20 @@ import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 import { createChat } from "@/schema/events"
 
+const HandlerName = "alliance/create" as const
+
+export type AllianceCreateHandler = {
+  [K in typeof HandlerName]: {
+    data: {
+      regionId: string
+      ownerId: string
+    }
+  }
+}
+
 export const createAlliance = inngest.createFunction(
-  { id: "create-alliance" },
-  { event: "alliance/create" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({
     event: {
       data: { regionId, ownerId },

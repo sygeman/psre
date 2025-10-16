@@ -8,9 +8,20 @@ import {
   createUser,
 } from "@/schema/events"
 
+const HandlerName = "global/seed" as const
+
+export type GlobalSeedHandler = {
+  [K in typeof HandlerName]: {
+    data: {
+      telegramId: string
+      name: string
+    }
+  }
+}
+
 export const seed = inngest.createFunction(
-  { id: "global-seed" },
-  { event: "global/seed" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({ event: { data }, step, db, dbSchema }) => {
     await step.run("reset-db", async () => {
       return await reset(db, dbSchema)

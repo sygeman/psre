@@ -1,9 +1,20 @@
 import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 
+const HandlerName = "building/collect" as const
+
+export type BuildingCollectHandler = {
+  [K in typeof HandlerName]: {
+    data: {
+      accountId: string
+      type: string
+    }
+  }
+}
+
 export const collectBuilding = inngest.createFunction(
-  { id: "collect-building" },
-  { event: "building/collect" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({ event: { data }, step, db, dbSchema, pubsub }) => {
     // await step.run("cleanup-messages-in-db", () => {
     //   return db

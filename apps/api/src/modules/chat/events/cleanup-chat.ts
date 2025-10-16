@@ -1,9 +1,19 @@
 import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 
+const HandlerName = "chat/cleanup" as const
+
+export type ChatCleanupHandler = {
+  [K in typeof HandlerName]: {
+    data: {
+      chatId: string
+    }
+  }
+}
+
 export const cleanupChat = inngest.createFunction(
-  { id: "chat-cleanup" },
-  { event: "chat/cleanup" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({ event: { data }, step, db, dbSchema, pubsub }) => {
     await step.run("cleanup-messages-in-db", () => {
       return db

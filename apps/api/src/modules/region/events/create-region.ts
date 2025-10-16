@@ -1,9 +1,17 @@
 import { inngest } from "@/lib/inngest"
 import { createChat } from "@/schema/events"
 
+const HandlerName = "region/create" as const
+
+export type RegionCreateHandler = {
+  [K in typeof HandlerName]: {
+    data?: undefined
+  }
+}
+
 export const createRegion = inngest.createFunction(
-  { id: "create-region" },
-  { event: "region/create" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({ step, db, dbSchema }) => {
     const { chat } = await step.invoke("create-chat-for-region", {
       function: createChat,

@@ -3,7 +3,7 @@ import { inngest } from "@/lib/inngest"
 
 const HandlerName = "account/create" as const
 
-export type CreateAccountHandler = {
+export type AccountCreateHandler = {
   [K in typeof HandlerName]: {
     data: {
       userId: string

@@ -9,48 +9,24 @@ export { seed } from "@/modules/global/events/seed"
 export { createRegion } from "@/modules/region/events/create-region"
 export { createUser } from "@/modules/user/events/create-user"
 
-import type { CreateAccountHandler } from "@/modules/account/events/create-account"
-import type { CreateUserHandler } from "@/modules/user/events/create-user"
+import type { AccountCreateHandler } from "@/modules/account/events/create-account"
+import type { AccountRenameHandler } from "@/modules/account/events/rename-account"
+import type { AllianceCreateHandler } from "@/modules/alliance/events/create-alliance"
+import type { BuildingCollectHandler } from "@/modules/buildings/events/collect"
+import type { ChatCleanupHandler } from "@/modules/chat/events/cleanup-chat"
+import type { ChatCreateHandler } from "@/modules/chat/events/create-chat"
+import type { ChatCreateMessageHandler } from "@/modules/chat/events/create-chat-message"
+import type { GlobalSeedHandler } from "@/modules/global/events/seed"
+import type { RegionCreateHandler } from "@/modules/region/events/create-region"
+import type { UserCreateHandler } from "@/modules/user/events/create-user"
 
-export type Events = {
-  "chat/cleanup": {
-    data: {
-      chatId: string
-    }
-  }
-  "chat/create": {
-    data?: undefined
-  }
-  "account/rename": {
-    data: {
-      accountId: string
-      name: string
-    }
-  }
-  "alliance/create": {
-    data: { regionId: string; ownerId: string }
-  }
-  "region/create": {
-    data?: undefined
-  }
-  "user/create": {
-    data: {
-      telegramId: string
-      token?: string
-      name?: string
-    }
-  }
-  "global/seed": {
-    data: {
-      telegramId: string
-      name: string
-    }
-  }
-  "building/collect": {
-    data: {
-      accountId: string
-      type: string
-    }
-  }
-} & CreateUserHandler &
-  CreateAccountHandler
+export type Events = AllianceCreateHandler &
+  UserCreateHandler &
+  AccountCreateHandler &
+  GlobalSeedHandler &
+  RegionCreateHandler &
+  ChatCleanupHandler &
+  ChatCreateHandler &
+  ChatCreateMessageHandler &
+  BuildingCollectHandler &
+  AccountRenameHandler

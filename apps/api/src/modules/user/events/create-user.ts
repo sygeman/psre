@@ -5,7 +5,7 @@ import { generateToken } from "../service/generate-token"
 
 const HandlerName = "user/create" as const
 
-export type CreateUserHandler = {
+export type UserCreateHandler = {
   [K in typeof HandlerName]: {
     data: {
       telegramId: string

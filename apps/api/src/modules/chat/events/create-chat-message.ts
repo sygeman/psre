@@ -1,9 +1,21 @@
 import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 
+const HandlerName = "chat/create-message" as const
+
+export type ChatCreateMessageHandler = {
+  [K in typeof HandlerName]: {
+    data: {
+      content: string
+      currentAccountId: string
+      chatId: string
+    }
+  }
+}
+
 export const createChatMessage = inngest.createFunction(
-  { id: "create-chat-message" },
-  { event: "chat/create-message" },
+  { id: HandlerName.replace("/", "-") },
+  { event: HandlerName },
   async ({ event: { data }, step, db, dbSchema, pubsub }) => {
     const message = await step.run("create-message-event", async () => {
       const chatMessages = await db
