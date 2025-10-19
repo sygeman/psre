@@ -1,6 +1,11 @@
 import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 import { resourcesMainChange } from "@/schema/events"
+import {
+  BUILDINGS_META,
+  CAP_MULTIPLIER,
+  RESOURCES_OUTPUT,
+} from "./resources-output"
 
 type BuildingType = "farm" | "lumber-mill" | "steel-plant" | "gas-field"
 type ResourceType = "food" | "wood" | "steel" | "fuel"
@@ -10,6 +15,16 @@ const resourceByBuildingType: Record<BuildingType, ResourceType> = {
   "lumber-mill": "wood",
   "steel-plant": "steel",
   "gas-field": "fuel",
+}
+
+function getOutputAndCap(type: BuildingType, level: number) {
+  const meta = BUILDINGS_META[type]
+  const resourceOutput = RESOURCES_OUTPUT[level - 1]
+  if (!resourceOutput) throw "resourceOutput not found"
+  const outputPerHour = resourceOutput[meta.outputIndex]
+  if (!outputPerHour) throw "outputPerHour invalid"
+
+  return { outputPerHour, cap: outputPerHour * CAP_MULTIPLIER }
 }
 
 const HandlerName = "building/collect" as const
@@ -35,7 +50,7 @@ export const collectBuilding = inngest.createFunction(
       return buildings
     })
 
-    const resources = await step.run("calc-resources", () => {
+    const { resources, resourcesSum } = await step.run("calc-resources", () => {
       const resources: Record<ResourceType, number> = {
         food: 0,
         wood: 0,
@@ -44,12 +59,34 @@ export const collectBuilding = inngest.createFunction(
       }
 
       for (const building of buildings) {
+        const buildingData = getOutputAndCap(
+          building.type as BuildingType,
+          building.level,
+        )
+
+        if (building.collectedAt === null) continue
+
+        const collectedAt = new Date(building.collectedAt).getTime()
+        const diffInMs = Date.now() - collectedAt
+        const fullHours = Math.floor(Math.abs(diffInMs) / (1000 * 60 * 60))
+
+        const timeMultiplier = fullHours
+        const resourceCount =
+          timeMultiplier *
+          Math.min(buildingData.outputPerHour, buildingData.cap)
+
         resources[resourceByBuildingType[building.type as BuildingType]] +=
-          10000 + 10 * building.level
+          resourceCount
       }
 
-      return resources
+      const resourcesSum = Object.values(resources).reduce(
+        (sum, el) => sum + el,
+      )
+
+      return { resources, resourcesSum }
     })
+
+    if (resourcesSum <= 0) return { success: true }
 
     await Promise.all([
       step.invoke("change-resources", {

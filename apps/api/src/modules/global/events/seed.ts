@@ -103,6 +103,7 @@ export const seed = inngest.createFunction(
       }),
     ])
 
+    // Collect
     await step.invoke("collect-building", {
       function: collectBuilding,
       data: {
