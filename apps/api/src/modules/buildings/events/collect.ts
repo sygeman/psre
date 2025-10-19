@@ -68,15 +68,18 @@ export const collectBuilding = inngest.createFunction(
 
         const collectedAt = new Date(building.collectedAt).getTime()
         const diffInMs = Date.now() - collectedAt
-        const fullHours = Math.floor(Math.abs(diffInMs) / (1000 * 60 * 60))
-
+        const HOUR_MS = 1000 * 60 * 60
+        const fullHours = Math.floor(Math.abs(diffInMs) / HOUR_MS)
         const timeMultiplier = fullHours
-        const resourceCount =
-          timeMultiplier *
-          Math.min(buildingData.outputPerHour, buildingData.cap)
+
+        const resourceRawCount = timeMultiplier * buildingData.outputPerHour
+        const resourceCountWithCap = Math.min(
+          resourceRawCount,
+          buildingData.cap,
+        )
 
         resources[resourceByBuildingType[building.type as BuildingType]] +=
-          resourceCount
+          resourceCountWithCap
       }
 
       const resourcesSum = Object.values(resources).reduce(
