@@ -50,6 +50,7 @@ type MainResources {
 type Mutation {
   collectBuilding(type: String!): Boolean
   createChatMessage(input: SendMessageInput!): Boolean
+  upgradeBuilding(id: String!): Boolean
 }
 
 type Query {

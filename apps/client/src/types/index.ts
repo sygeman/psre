@@ -22,7 +22,9 @@ export type Scalars = {
 
 export type Building = {
   __typename?: 'Building';
+  collectedAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  level?: Maybe<Scalars['Int']['output']>;
   type?: Maybe<Scalars['String']['output']>;
 };
 
@@ -61,6 +63,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   collectBuilding?: Maybe<Scalars['Boolean']['output']>;
   createChatMessage?: Maybe<Scalars['Boolean']['output']>;
+  upgradeBuilding?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
@@ -71,6 +74,11 @@ export type MutationCollectBuildingArgs = {
 
 export type MutationCreateChatMessageArgs = {
   input: SendMessageInput;
+};
+
+
+export type MutationUpgradeBuildingArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type Query = {

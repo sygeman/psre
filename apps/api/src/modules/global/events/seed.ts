@@ -78,6 +78,7 @@ export const seed = inngest.createFunction(
         data: {
           accountId: user.currentAccountId,
           type: "farm",
+          level: 5,
         },
       }),
       step.invoke("create-building", {

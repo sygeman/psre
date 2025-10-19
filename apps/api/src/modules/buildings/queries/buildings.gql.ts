@@ -8,6 +8,7 @@ gqlBuilder.queryType({
       resolve: async (_parent, _, { currentAccountId, db }) => {
         const buildings = await db.query.buildings.findMany({
           where: (buildings, { eq }) => eq(buildings.ownerId, currentAccountId),
+          orderBy: (buildings, { desc }) => [desc(buildings.createdAt)],
         })
 
         return buildings
