@@ -103,12 +103,13 @@ export const seed = inngest.createFunction(
       }),
     ])
 
-    // Collect
+    await step.sleep("wait-5s", 5000)
+
     await step.invoke("collect-building", {
       function: collectBuilding,
       data: {
         accountId: user.currentAccountId,
-        type: "farm",
+        type: "lumber-mill",
       },
     })
 
@@ -118,7 +119,7 @@ export const seed = inngest.createFunction(
       function: collectBuilding,
       data: {
         accountId: user.currentAccountId,
-        type: "lumber-mill",
+        type: "farm",
       },
     })
   },

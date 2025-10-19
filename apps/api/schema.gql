@@ -1,5 +1,7 @@
 type Building {
+  collectedAt: DateTime
   id: ID
+  level: Int
   type: String
 }
 

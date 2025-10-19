@@ -63,6 +63,6 @@ export const BUILDINGS_META = {
     resourceType: "fuel",
     outputIndex: 3,
   },
-}
+} as const
 
 export const CAP_MULTIPLIER = 10

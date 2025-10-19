@@ -1,31 +1,8 @@
 import { eq } from "drizzle-orm"
 import { inngest } from "@/lib/inngest"
 import { resourcesMainChange } from "@/schema/events"
-import {
-  BUILDINGS_META,
-  CAP_MULTIPLIER,
-  RESOURCES_OUTPUT,
-} from "./resources-output"
-
-type BuildingType = "farm" | "lumber-mill" | "steel-plant" | "gas-field"
-type ResourceType = "food" | "wood" | "steel" | "fuel"
-
-const resourceByBuildingType: Record<BuildingType, ResourceType> = {
-  farm: "food",
-  "lumber-mill": "wood",
-  "steel-plant": "steel",
-  "gas-field": "fuel",
-}
-
-function getOutputAndCap(type: BuildingType, level: number) {
-  const meta = BUILDINGS_META[type]
-  const resourceOutput = RESOURCES_OUTPUT[level - 1]
-  if (!resourceOutput) throw "resourceOutput not found"
-  const outputPerHour = resourceOutput[meta.outputIndex]
-  if (!outputPerHour) throw "outputPerHour invalid"
-
-  return { outputPerHour, cap: outputPerHour * CAP_MULTIPLIER }
-}
+import { getBuildingMeta } from "../helpers/building-meta"
+import type { BuildingType, ResourceType } from "../types"
 
 const HandlerName = "building/collect" as const
 
@@ -59,27 +36,24 @@ export const collectBuilding = inngest.createFunction(
       }
 
       for (const building of buildings) {
-        const buildingData = getOutputAndCap(
-          building.type as BuildingType,
-          building.level,
-        )
+        const buildingType = building.type
+        const buildingMeta = getBuildingMeta(buildingType, building.level)
 
         if (building.collectedAt === null) continue
 
         const collectedAt = new Date(building.collectedAt).getTime()
         const diffInMs = Date.now() - collectedAt
-        const HOUR_MS = 1000 * 60 * 60
-        const fullHours = Math.floor(Math.abs(diffInMs) / HOUR_MS)
-        const timeMultiplier = fullHours
+        // const HOUR_MS = 1000 * 60 * 60
+        // const fullHours = Math.floor(Math.abs(diffInMs) / HOUR_MS)
+        const timeMultiplier = Math.floor(Math.abs(diffInMs) / 1000)
 
-        const resourceRawCount = timeMultiplier * buildingData.outputPerHour
+        const resourceRawCount = timeMultiplier * buildingMeta.outputPerHour
         const resourceCountWithCap = Math.min(
           resourceRawCount,
-          buildingData.cap,
+          buildingMeta.cap,
         )
 
-        resources[resourceByBuildingType[building.type as BuildingType]] +=
-          resourceCountWithCap
+        resources[buildingMeta.resourceType] += resourceCountWithCap
       }
 
       const resourcesSum = Object.values(resources).reduce(

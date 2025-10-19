@@ -5,8 +5,12 @@ gqlBuilder.queryType({
   fields: (t) => ({
     buildings: t.field({
       type: [Building],
-      resolve: (_parent, _, { currentAccountId }) => {
-        return []
+      resolve: async (_parent, _, { currentAccountId, db }) => {
+        const buildings = await db.query.buildings.findMany({
+          where: (buildings, { eq }) => eq(buildings.ownerId, currentAccountId),
+        })
+
+        return buildings
       },
     }),
   }),

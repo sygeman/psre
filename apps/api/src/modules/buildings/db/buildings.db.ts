@@ -10,7 +10,9 @@ export const buildings = pgTable("buildings", (t) => ({
   collectedAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   level: t.integer().default(1).notNull(),
   ownerId: t.uuid(),
-  type: t.varchar().notNull(),
+  type: t
+    .varchar({ enum: ["farm", "lumber-mill", "steel-plant", "gas-field"] })
+    .notNull(),
 }))
 
 export const buildingsRelations = relations(buildings, ({ one }) => ({
