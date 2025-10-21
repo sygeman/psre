@@ -7,10 +7,10 @@ gqlBuilder.mutationType({
         id: t.arg({ type: "String", required: true }),
       },
       resolve: async (_parent, { id }, { currentAccountId, inngest }) => {
-        // await inngest.send({
-        //   name: "building/collect",
-        //   data: { type, accountId: currentAccountId },
-        // })
+        await inngest.send({
+          name: "building/upgrade",
+          data: { buildingId: id, accountId: currentAccountId },
+        })
 
         return true
       },

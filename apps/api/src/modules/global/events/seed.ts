@@ -7,6 +7,7 @@ import {
   createChatMessage,
   createRegion,
   createUser,
+  upgradeBuilding,
 } from "@/schema/events"
 
 const HandlerName = "global/seed" as const
@@ -46,7 +47,19 @@ export const seed = inngest.createFunction(
 
     if (!region.chatId || !alliance.chatId) throw "chatId is null"
 
-    await Promise.all([
+    const [createdBuildings] = await Promise.all([
+      step.invoke("create-building", {
+        function: createBuilding,
+        data: {
+          accountId: user.currentAccountId,
+          buildings: [
+            { type: "farm" },
+            { type: "lumber-mill" },
+            { type: "steel-plant" },
+            { type: "gas-field" },
+          ],
+        },
+      }),
       step.invoke("send-message-to-region-chat", {
         function: createChatMessage,
         data: {
@@ -63,20 +76,11 @@ export const seed = inngest.createFunction(
           chatId: alliance.chatId,
         },
       }),
-      step.invoke("create-building", {
-        function: createBuilding,
-        data: {
-          accountId: user.currentAccountId,
-          buildings: [
-            { type: "farm" },
-            { type: "farm", level: 5 },
-            { type: "lumber-mill" },
-            { type: "steel-plant" },
-            { type: "gas-field" },
-          ],
-        },
-      }),
     ])
+
+    const firstCreatedBuilding = createdBuildings[0]
+
+    if (!firstCreatedBuilding) throw "firstCreatedBuilding not found"
 
     await step.sleep("wait-5s", 5000)
 
@@ -95,6 +99,14 @@ export const seed = inngest.createFunction(
       data: {
         accountId: user.currentAccountId,
         type: "farm",
+      },
+    })
+
+    await step.invoke("upgrade-building", {
+      function: upgradeBuilding,
+      data: {
+        accountId: user.currentAccountId,
+        buildingId: firstCreatedBuilding.id,
       },
     })
   },
