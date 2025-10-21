@@ -1,7 +1,8 @@
-import { and } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import parse from "parse-duration"
+import { increment } from "@/lib/drizzle"
 import { inngest } from "@/lib/inngest"
-import { boostBuilding, resourcesMainChange } from "@/schema/events"
+import { changedBuilding, resourcesMainChange } from "@/schema/events"
 import { FARM_UPGARDE_COST } from "../data/buildings-meta"
 import type { ResourceType } from "../types"
 
@@ -67,12 +68,31 @@ export const upgradeBuilding = inngest.createFunction(
 
     if (!changeResourcesResult) return { success: false }
 
-    await inngest.send({
-      name: "building/boost",
-      data: {
-        accountId: data.accountId,
-        buildingId: data.buildingId,
-      },
+    const waitBoost = async (timeout: string) => {
+      const boost = await step.waitForEvent("wait-for-boost", {
+        event: "building/boost",
+        timeout,
+        if: "async.data.buildingId == event.data.buildingId",
+      })
+
+      if (boost) {
+        await waitBoost("5s")
+      }
+    }
+
+    await waitBoost("3d")
+
+    await step.run("update-building-level", async () => {
+      return await db
+        .update(dbSchema.buildings)
+        .set({ level: increment(dbSchema.buildings.level, 1) })
+        .where(eq(dbSchema.buildings.id, data.buildingId))
+        .returning()
+    })
+
+    await step.invoke("publish-building-changed", {
+      function: changedBuilding,
+      data: { accountId: data.accountId },
     })
 
     return { success: true }
