@@ -1,6 +1,7 @@
 import { reset } from "drizzle-seed"
 import { inngest } from "@/lib/inngest"
 import {
+  boostBuilding,
   collectBuilding,
   createAlliance,
   createBuilding,
@@ -92,18 +93,18 @@ export const seed = inngest.createFunction(
       },
     })
 
-    await step.sleep("wait-5s", 5000)
-
-    await step.invoke("collect-building", {
-      function: collectBuilding,
+    step.invoke("upgrade-building", {
+      function: upgradeBuilding,
       data: {
         accountId: user.currentAccountId,
-        type: "farm",
+        buildingId: firstCreatedBuilding.id,
       },
     })
 
-    await step.invoke("upgrade-building", {
-      function: upgradeBuilding,
+    await step.sleep("wait-5s", 5000)
+
+    await inngest.send({
+      name: "building/boost",
       data: {
         accountId: user.currentAccountId,
         buildingId: firstCreatedBuilding.id,

@@ -1,6 +1,7 @@
 export { createAccount } from "@/modules/account/events/create-account"
 export { renameAccount } from "@/modules/account/events/rename-account"
 export { createAlliance } from "@/modules/alliance/events/create-alliance"
+export { boostBuilding } from "@/modules/buildings/events/boost"
 export { changedBuilding } from "@/modules/buildings/events/changed"
 export { collectBuilding } from "@/modules/buildings/events/collect"
 export { createBuilding } from "@/modules/buildings/events/create"
@@ -16,6 +17,7 @@ export { createUser } from "@/modules/user/events/create-user"
 import type { AccountCreateHandler } from "@/modules/account/events/create-account"
 import type { AccountRenameHandler } from "@/modules/account/events/rename-account"
 import type { AllianceCreateHandler } from "@/modules/alliance/events/create-alliance"
+import type { BuildingBoostHandler } from "@/modules/buildings/events/boost"
 import type { BuildingChangedHandler } from "@/modules/buildings/events/changed"
 import type { BuildingCollectHandler } from "@/modules/buildings/events/collect"
 import type { BuildingCreateHandler } from "@/modules/buildings/events/create"
@@ -41,4 +43,5 @@ export type Events = AllianceCreateHandler &
   BuildingCreateHandler &
   ResourcesMainChangeHandler &
   BuildingUpgradeHandler &
-  BuildingChangedHandler
+  BuildingChangedHandler &
+  BuildingBoostHandler

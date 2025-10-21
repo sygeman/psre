@@ -1,7 +1,8 @@
-import { and, eq } from "drizzle-orm"
-import { increment } from "@/lib/drizzle"
+import { and } from "drizzle-orm"
+import parse from "parse-duration"
 import { inngest } from "@/lib/inngest"
-import { changedBuilding, resourcesMainChange } from "@/schema/events"
+import { boostBuilding, resourcesMainChange } from "@/schema/events"
+import { FARM_UPGARDE_COST } from "../data/buildings-meta"
 import type { ResourceType } from "../types"
 
 const HandlerName = "building/upgrade" as const
@@ -41,39 +42,37 @@ export const upgradeBuilding = inngest.createFunction(
 
     if (!depedsOn) return { status: "depedsOn" }
 
-    const resourcesCost = await step.run("calc-upgrade", async () => {
+    const cost = await step.run("calc-upgrade", async () => {
+      const cost = FARM_UPGARDE_COST[4]
+      if (!cost) throw "Cost not found"
+      const [food, wood, steel, fuel, time] = cost
       // TODO: Calc real cost
       const resources: Record<ResourceType, number> = {
-        food: 1,
-        wood: 1,
-        steel: 1,
-        fuel: 1,
+        food,
+        wood,
+        steel,
+        fuel,
       }
 
-      return resources
+      return { resources, time, timeMs: parse(time) }
     })
 
     const changeResourcesResult = await step.invoke("change-resources", {
       function: resourcesMainChange,
       data: {
         accountId: data.accountId,
-        ...resourcesCost,
+        ...cost.resources,
       },
     })
 
     if (!changeResourcesResult) return { success: false }
 
-    await step.run("update-building-level", async () => {
-      return await db
-        .update(dbSchema.buildings)
-        .set({ level: increment(dbSchema.buildings.level, 1) })
-        .where(eq(dbSchema.buildings.id, building.id))
-        .returning()
-    })
-
-    await step.invoke("publish-building-changed", {
-      function: changedBuilding,
-      data: { accountId: data.accountId },
+    await inngest.send({
+      name: "building/boost",
+      data: {
+        accountId: data.accountId,
+        buildingId: data.buildingId,
+      },
     })
 
     return { success: true }

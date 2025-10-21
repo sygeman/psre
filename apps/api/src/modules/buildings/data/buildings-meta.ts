@@ -66,3 +66,12 @@ export const BUILDINGS_META = {
 } as const
 
 export const CAP_MULTIPLIER = 10
+
+export const FARM_UPGARDE_COST = [
+  // [food, wood, steel, fuel, time]
+  [0, 95, 0, 0, "3s"], // (10 power)
+  [0, 95, 0, 0, "6s"], // (19 power)
+  [0, 143, 0, 0, "2m"], // (45 power)
+  [0, 228, 0, 0, "5m28s"], // (82 power)
+  [0, 388, 0, 0, "8m22s"], // (130 power)
+] as const

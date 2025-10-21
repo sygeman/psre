@@ -20,6 +20,10 @@ export const createBuilding = inngest.createFunction(
   { id: HandlerName.replace("/", "-") },
   { event: HandlerName },
   async ({ event: { data }, step, db, dbSchema }) => {
+    // TODO: Check depedsOn
+    // TODO: Calc real cost
+    // TODO: Remove resources
+
     const buildings = await step.run("create-building-in-db", async () => {
       const buildings = await db
         .insert(dbSchema.buildings)
