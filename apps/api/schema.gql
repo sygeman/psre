@@ -66,6 +66,7 @@ input SendMessageInput {
 }
 
 type Subscription {
+  buildingsChanged: [Building!]
   cleanupChat(chatId: String): Boolean
   createdChatMessage(chatId: String): ChatMessage
   resourcesMainChanged: MainResources

@@ -20,3 +20,8 @@ export type UpgradeBuildingMutationVariables = Types.Exact<{
 
 
 export type UpgradeBuildingMutation = { __typename?: 'Mutation', upgradeBuilding?: boolean | null };
+
+export type BuildingsChangedSubscriptionVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type BuildingsChangedSubscription = { __typename?: 'Subscription', buildingsChanged?: Array<{ __typename?: 'Building', id?: string | null, level?: number | null, type?: string | null, collectedAt?: any | null }> | null };

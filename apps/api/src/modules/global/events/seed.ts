@@ -63,43 +63,17 @@ export const seed = inngest.createFunction(
           chatId: alliance.chatId,
         },
       }),
-    ])
-
-    await Promise.all([
       step.invoke("create-building", {
         function: createBuilding,
         data: {
           accountId: user.currentAccountId,
-          type: "farm",
-        },
-      }),
-      step.invoke("create-building", {
-        function: createBuilding,
-        data: {
-          accountId: user.currentAccountId,
-          type: "farm",
-          level: 5,
-        },
-      }),
-      step.invoke("create-building", {
-        function: createBuilding,
-        data: {
-          accountId: user.currentAccountId,
-          type: "lumber-mill",
-        },
-      }),
-      step.invoke("create-building", {
-        function: createBuilding,
-        data: {
-          accountId: user.currentAccountId,
-          type: "steel-plant",
-        },
-      }),
-      step.invoke("create-building", {
-        function: createBuilding,
-        data: {
-          accountId: user.currentAccountId,
-          type: "gas-field",
+          buildings: [
+            { type: "farm" },
+            { type: "farm", level: 5 },
+            { type: "lumber-mill" },
+            { type: "steel-plant" },
+            { type: "gas-field" },
+          ],
         },
       }),
     ])

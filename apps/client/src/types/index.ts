@@ -101,6 +101,7 @@ export type SendMessageInput = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  buildingsChanged?: Maybe<Array<Building>>;
   cleanupChat?: Maybe<Scalars['Boolean']['output']>;
   createdChatMessage?: Maybe<ChatMessage>;
   resourcesMainChanged?: Maybe<MainResources>;

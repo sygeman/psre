@@ -30,3 +30,12 @@ export const UPGRADE_BUILDING_MUTATION = gql`
       upgradeBuilding(id: $id)
   }
 `
+export const BUILDINGS_CHANGED_SUBSCRIPTION = gql`
+  subscription BuildingsChanged {
+    buildingsChanged {
+      ...BuildingFragment
+    }
+  }
+
+  ${BUILDING_FRAGMENT}
+`

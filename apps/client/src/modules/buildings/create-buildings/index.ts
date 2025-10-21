@@ -1,12 +1,15 @@
-import { createMemo, createSignal } from "solid-js"
+import { createMemo, createSignal, onCleanup } from "solid-js"
 import { createMutation, useApollo } from "@/apollo"
 import { buildingsMetaData } from "../data"
 import {
+  BUILDINGS_CHANGED_SUBSCRIPTION,
   BUILDINGS_QUERY,
   COLLECT_BUILDING_MUTATION,
   UPGRADE_BUILDING_MUTATION,
 } from "./gql"
 import type {
+  BuildingsChangedSubscription,
+  BuildingsChangedSubscriptionVariables,
   CollectBuildingMutation,
   CollectBuildingMutationVariables,
   GetBuildingsQuery,
@@ -20,7 +23,6 @@ export const createBuildings = () => {
   const apolloClient = useApollo()
 
   const buildings = createMemo(() => {
-    console.log(buildingsRaw())
     return buildingsRaw().map((building) => ({
       ...buildingsMetaData[building.type],
       id: building.id,
@@ -60,6 +62,26 @@ export const createBuildings = () => {
   const upgradeBuilding = (id: string) => {
     upgradeBuildingMutation({ variables: { id } })
   }
+
+  const subscription = apolloClient
+    .subscribe<
+      BuildingsChangedSubscription,
+      BuildingsChangedSubscriptionVariables
+    >({
+      query: BUILDINGS_CHANGED_SUBSCRIPTION,
+    })
+    .subscribe({
+      next: (data) => {
+        const buildings = data.data.buildingsChanged
+        if (!buildings) return
+
+        setBuildingsRaw(buildings)
+      },
+    })
+
+  onCleanup(() => {
+    subscription.unsubscribe()
+  })
 
   return { buildings }
 }

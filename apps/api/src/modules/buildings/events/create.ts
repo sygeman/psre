@@ -7,8 +7,10 @@ export type BuildingCreateHandler = {
   [K in typeof HandlerName]: {
     data: {
       accountId: string
-      type: BuildingType
-      level?: number
+      buildings: {
+        type: BuildingType
+        level?: number
+      }[]
     }
   }
 }
@@ -20,15 +22,28 @@ export const createBuilding = inngest.createFunction(
     await step.run("create-building-in-db", async () => {
       const buildings = await db
         .insert(dbSchema.buildings)
-        .values({
-          ownerId: data.accountId,
-          type: data.type,
-          level: data.level || 1,
-        })
+        .values(
+          data.buildings.map((building) => ({
+            ownerId: data.accountId,
+            type: building.type,
+            level: building.level || 1,
+          })),
+        )
         .returning()
       const building = buildings[0]
 
       return building
+    })
+
+    await step.run("publish-building-changed", async () => {
+      const buildings = await db.query.buildings.findMany({
+        where: (buildings, { eq }) => eq(buildings.ownerId, data.accountId),
+        orderBy: (buildings, { desc }) => [desc(buildings.createdAt)],
+      })
+
+      pubsub.publish("buildingsChanged", data.accountId, buildings)
+
+      return buildings
     })
 
     return { success: true }
