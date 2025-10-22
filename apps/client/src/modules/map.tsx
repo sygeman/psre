@@ -65,7 +65,7 @@ export const Map = () => {
           animation: "background-pan 20s linear infinite",
         }}
       />
-      <div class="hide-scrollbar grid grid-cols-2 gap-3 overflow-y-auto h-full py-48 px-4 relative z-10">
+      <div class="hide-scrollbar grid grid-cols-1 gap-3 overflow-y-auto h-full py-48 px-4 relative z-10">
         <Buildings />
       </div>
     </div>
