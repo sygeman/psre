@@ -5,6 +5,7 @@ export { boostBuilding } from "@/modules/buildings/events/boost"
 export { changedBuilding } from "@/modules/buildings/events/changed"
 export { collectBuilding } from "@/modules/buildings/events/collect"
 export { createBuilding } from "@/modules/buildings/events/create"
+export { buildingSetUpgradeFinishedAt } from "@/modules/buildings/events/set-upgrade-finished-at"
 export { upgradeBuilding } from "@/modules/buildings/events/upgrade"
 export { cleanupChat } from "@/modules/chat/events/cleanup-chat"
 export { createChat } from "@/modules/chat/events/create-chat"
@@ -21,6 +22,7 @@ import type { BuildingBoostHandler } from "@/modules/buildings/events/boost"
 import type { BuildingChangedHandler } from "@/modules/buildings/events/changed"
 import type { BuildingCollectHandler } from "@/modules/buildings/events/collect"
 import type { BuildingCreateHandler } from "@/modules/buildings/events/create"
+import type { BuildingSetUpgradeFinishedAtHandler } from "@/modules/buildings/events/set-upgrade-finished-at"
 import type { BuildingUpgradeHandler } from "@/modules/buildings/events/upgrade"
 import type { ChatCleanupHandler } from "@/modules/chat/events/cleanup-chat"
 import type { ChatCreateHandler } from "@/modules/chat/events/create-chat"
@@ -44,4 +46,5 @@ export type Events = AllianceCreateHandler &
   ResourcesMainChangeHandler &
   BuildingUpgradeHandler &
   BuildingChangedHandler &
-  BuildingBoostHandler
+  BuildingBoostHandler &
+  BuildingSetUpgradeFinishedAtHandler

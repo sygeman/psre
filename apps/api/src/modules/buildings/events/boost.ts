@@ -1,7 +1,4 @@
-import { eq } from "drizzle-orm"
-import { increment } from "@/lib/drizzle"
 import { inngest } from "@/lib/inngest"
-import { changedBuilding } from "@/schema/events"
 
 const HandlerName = "building/boost" as const
 
@@ -10,6 +7,7 @@ export type BuildingBoostHandler = {
     data: {
       accountId: string
       buildingId: string
+      timeMs: number
     }
   }
 }
@@ -17,7 +15,7 @@ export type BuildingBoostHandler = {
 export const boostBuilding = inngest.createFunction(
   { id: HandlerName.replace("/", "-") },
   { event: HandlerName },
-  async ({ event: { data }, step, db, dbSchema }) => {
+  async () => {
     return { success: true }
   },
 )

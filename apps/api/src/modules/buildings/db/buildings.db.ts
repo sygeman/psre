@@ -7,6 +7,7 @@ export const buildings = pgTable("buildings", (t) => ({
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),
+  upgradeFinishedAt: t.timestamp({ withTimezone: true }),
   collectedAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   level: t.integer().default(1).notNull(),
   ownerId: t.uuid(),
