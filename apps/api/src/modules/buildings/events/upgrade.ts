@@ -75,7 +75,7 @@ export const upgradeBuilding = inngest.createFunction(
 
     const waitBoost = async (timeout: number) => {
       const boost = await step.waitForEvent("wait-for-boost", {
-        event: "building/boost",
+        event: "building/boost", // building/boost-batch
         timeout,
         if: "async.data.buildingId == event.data.buildingId",
       })

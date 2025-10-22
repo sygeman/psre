@@ -113,8 +113,6 @@ export const seed = inngest.createFunction(
       })
     })
 
-    await step.sleep("wait-5s", 5000)
-
     await step.run("boost-30s", async () => {
       await inngest.send({
         name: "building/boost",

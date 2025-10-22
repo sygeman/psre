@@ -13,9 +13,18 @@ export type BuildingBoostHandler = {
 }
 
 export const boostBuilding = inngest.createFunction(
-  { id: HandlerName.replace("/", "-") },
+  {
+    id: HandlerName.replace("/", "-"),
+    batchEvents: {
+      maxSize: 100,
+      timeout: "2s",
+      key: "event.data.buildingId",
+    },
+  },
   { event: HandlerName },
-  async () => {
+  async ({ step }) => {
+    // trigger building/boost-batch
     return { success: true }
   },
 )
+
