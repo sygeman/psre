@@ -6,6 +6,7 @@ export const BUILDING_FRAGMENT = gql`
       level
       type
       collectedAt
+      upgradeFinishedAt
   }
 `
 
@@ -30,6 +31,13 @@ export const UPGRADE_BUILDING_MUTATION = gql`
       upgradeBuilding(id: $id)
   }
 `
+
+export const BOOST_BUILDING_MUTATION = gql`
+  mutation BoostBuilding($id: String!) {
+      boostBuilding(id: $id)
+  }
+`
+
 export const BUILDINGS_CHANGED_SUBSCRIPTION = gql`
   subscription BuildingsChanged {
     buildingsChanged {

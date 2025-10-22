@@ -26,6 +26,7 @@ export type Building = {
   id?: Maybe<Scalars['ID']['output']>;
   level?: Maybe<Scalars['Int']['output']>;
   type?: Maybe<Scalars['String']['output']>;
+  upgradeFinishedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type Chat = {
@@ -61,9 +62,15 @@ export type MainResources = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  boostBuilding?: Maybe<Scalars['Boolean']['output']>;
   collectBuilding?: Maybe<Scalars['Boolean']['output']>;
   createChatMessage?: Maybe<Scalars['Boolean']['output']>;
   upgradeBuilding?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type MutationBoostBuildingArgs = {
+  id: Scalars['String']['input'];
 };
 
 

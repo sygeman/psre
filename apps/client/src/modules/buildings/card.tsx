@@ -1,6 +1,6 @@
 import { useNavigate } from "@solidjs/router"
 import { Icon } from "solid-heroicons"
-import { arrowUp } from "solid-heroicons/outline"
+import { arrowUp, rocketLaunch } from "solid-heroicons/outline"
 import { createSignal, onCleanup } from "solid-js"
 import { BuildingButton } from "@/components/building-button"
 
@@ -21,6 +21,7 @@ export type BuildingProps = {
   initialUpgradeProgress?: number
   upgrade: () => void
   collect: () => void
+  boost: () => void
 }
 
 export function BuildingCard(props: BuildingProps) {
@@ -169,6 +170,14 @@ export function BuildingCard(props: BuildingProps) {
                 : undefined
             }
             pulseAnimation={upgradeProgress() === 100}
+          />
+
+          <BuildingButton
+            onClick={props.boost}
+            disabled={upgradeProgress() === 100}
+            color={props.color}
+            icon={<Icon path={rocketLaunch} class="w-5 h-5" />}
+            label="Ускорить"
           />
         </div>
       </div>

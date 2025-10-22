@@ -1,11 +1,11 @@
 import * as Types from '@/types';
 
-export type BuildingFragmentFragment = { __typename?: 'Building', id?: string | null, level?: number | null, type?: string | null, collectedAt?: any | null };
+export type BuildingFragmentFragment = { __typename?: 'Building', id?: string | null, level?: number | null, type?: string | null, collectedAt?: any | null, upgradeFinishedAt?: any | null };
 
 export type GetBuildingsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetBuildingsQuery = { __typename?: 'Query', buildings?: Array<{ __typename?: 'Building', id?: string | null, level?: number | null, type?: string | null, collectedAt?: any | null }> | null };
+export type GetBuildingsQuery = { __typename?: 'Query', buildings?: Array<{ __typename?: 'Building', id?: string | null, level?: number | null, type?: string | null, collectedAt?: any | null, upgradeFinishedAt?: any | null }> | null };
 
 export type CollectBuildingMutationVariables = Types.Exact<{
   type: Types.Scalars['String']['input'];
@@ -21,7 +21,14 @@ export type UpgradeBuildingMutationVariables = Types.Exact<{
 
 export type UpgradeBuildingMutation = { __typename?: 'Mutation', upgradeBuilding?: boolean | null };
 
+export type BoostBuildingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type BoostBuildingMutation = { __typename?: 'Mutation', boostBuilding?: boolean | null };
+
 export type BuildingsChangedSubscriptionVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type BuildingsChangedSubscription = { __typename?: 'Subscription', buildingsChanged?: Array<{ __typename?: 'Building', id?: string | null, level?: number | null, type?: string | null, collectedAt?: any | null }> | null };
+export type BuildingsChangedSubscription = { __typename?: 'Subscription', buildingsChanged?: Array<{ __typename?: 'Building', id?: string | null, level?: number | null, type?: string | null, collectedAt?: any | null, upgradeFinishedAt?: any | null }> | null };

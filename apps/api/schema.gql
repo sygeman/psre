@@ -3,6 +3,7 @@ type Building {
   id: ID
   level: Int
   type: String
+  upgradeFinishedAt: DateTime
 }
 
 type Chat {
@@ -48,6 +49,7 @@ type MainResources {
 }
 
 type Mutation {
+  boostBuilding(id: String!): Boolean
   collectBuilding(type: String!): Boolean
   createChatMessage(input: SendMessageInput!): Boolean
   upgradeBuilding(id: String!): Boolean

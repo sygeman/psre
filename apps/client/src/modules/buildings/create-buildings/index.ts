@@ -2,12 +2,15 @@ import { createMemo, createSignal, onCleanup } from "solid-js"
 import { createMutation, useApollo } from "@/apollo"
 import { buildingsMetaData } from "../data"
 import {
+  BOOST_BUILDING_MUTATION,
   BUILDINGS_CHANGED_SUBSCRIPTION,
   BUILDINGS_QUERY,
   COLLECT_BUILDING_MUTATION,
   UPGRADE_BUILDING_MUTATION,
 } from "./gql"
 import type {
+  BoostBuildingMutation,
+  BoostBuildingMutationVariables,
   BuildingsChangedSubscription,
   BuildingsChangedSubscriptionVariables,
   CollectBuildingMutation,
@@ -18,19 +21,27 @@ import type {
   UpgradeBuildingMutationVariables,
 } from "./gql.gql.types"
 
+const diffMs = (endAt: Date | null) => {
+  if (!endAt) return 0
+  return new Date(endAt).getTime() - Date.now()
+}
+
 export const createBuildings = () => {
   const [buildingsRaw, setBuildingsRaw] = createSignal([])
   const apolloClient = useApollo()
 
   const buildings = createMemo(() => {
+    console.log(buildingsRaw())
+
     return buildingsRaw().map((building) => ({
       ...buildingsMetaData[building.type],
       id: building.id,
       level: building.level,
       collectionTime: 0,
-      upgradeDuration: 0,
+      upgradeDuration: diffMs(building.upgradeFinishedAt) / 1000,
       upgrade: () => upgradeBuilding(building.id),
       collect: () => collectBuilding(building.type),
+      boost: () => boostBuilding(building.id),
     }))
   })
 
@@ -61,6 +72,15 @@ export const createBuildings = () => {
 
   const upgradeBuilding = (id: string) => {
     upgradeBuildingMutation({ variables: { id } })
+  }
+
+  const [boostBuildingMutation] = createMutation<
+    BoostBuildingMutation,
+    BoostBuildingMutationVariables
+  >(BOOST_BUILDING_MUTATION)
+
+  const boostBuilding = (id: string) => {
+    boostBuildingMutation({ variables: { id } })
   }
 
   const subscription = apolloClient
