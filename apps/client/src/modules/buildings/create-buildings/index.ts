@@ -31,8 +31,6 @@ export const createBuildings = () => {
   const apolloClient = useApollo()
 
   const buildings = createMemo(() => {
-    console.log(buildingsRaw())
-
     return buildingsRaw().map((building) => ({
       ...buildingsMetaData[building.type],
       id: building.id,
