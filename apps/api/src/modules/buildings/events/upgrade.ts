@@ -47,7 +47,7 @@ export const upgradeBuilding = inngest.createFunction(
     if (!depedsOn) return { status: "depedsOn" }
 
     const cost = await step.run("calc-upgrade", async () => {
-      const cost = FARM_UPGARDE_COST[2]
+      const cost = FARM_UPGARDE_COST[4]
       if (!cost) throw "Cost not found"
       const [food, wood, steel, fuel, time] = cost
       // TODO: Calc real cost
@@ -75,7 +75,7 @@ export const upgradeBuilding = inngest.createFunction(
 
     const waitBoost = async (timeout: number) => {
       const boost = await step.waitForEvent("wait-for-boost", {
-        event: "building/boost", // building/boost-batch
+        event: "building/boost-batch",
         timeout,
         if: "async.data.buildingId == event.data.buildingId",
       })
@@ -91,7 +91,10 @@ export const upgradeBuilding = inngest.createFunction(
 
         const upgradeFinishedAt = new Date(building.upgradeFinishedAt).getTime()
 
-        return Math.max(upgradeFinishedAt - Date.now() - boost.data.timeMs, 0)
+        return Math.max(
+          upgradeFinishedAt - Date.now() - boost.data.durationMs,
+          0,
+        )
       })
 
       if (newTimeout <= 0) return

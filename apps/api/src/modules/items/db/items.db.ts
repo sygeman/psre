@@ -8,8 +8,9 @@ export const items = pgTable("items", (t) => ({
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: t.timestamp({ withTimezone: true }),
   deletedAt: t.timestamp({ withTimezone: true }),
-  ownerId: t.uuid(),
+  ownerId: t.uuid().notNull(),
   type: t.varchar({ enum: ITEMS }).notNull(),
+  count: t.integer().default(0).notNull(),
 }))
 
 export const itemsRelations = relations(items, ({ one }) => ({

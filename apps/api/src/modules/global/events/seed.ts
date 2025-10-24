@@ -1,4 +1,6 @@
+import { and, eq } from "drizzle-orm"
 import { reset } from "drizzle-seed"
+import { increment } from "@/lib/drizzle"
 import { inngest } from "@/lib/inngest"
 import {
   collectBuilding,
@@ -38,11 +40,12 @@ export const seed = inngest.createFunction(
       data: { telegramId: data.telegramId, name: data.name },
     })
 
-    if (!user.currentAccountId) throw "currentAccountId is null"
+    const currentAccountId = user.currentAccountId
+    if (currentAccountId === null) throw "currentAccountId is null"
 
     const { alliance } = await step.invoke("create-first-alliance", {
       function: createAlliance,
-      data: { regionId: region.id, ownerId: user.currentAccountId },
+      data: { regionId: region.id, ownerId: currentAccountId },
     })
 
     if (!region.chatId || !alliance.chatId) throw "chatId is null"
@@ -51,7 +54,7 @@ export const seed = inngest.createFunction(
       step.invoke("create-building", {
         function: createBuilding,
         data: {
-          accountId: user.currentAccountId,
+          accountId: currentAccountId,
           buildings: [
             { type: "farm" },
             { type: "lumber-mill" },
@@ -64,7 +67,7 @@ export const seed = inngest.createFunction(
         function: createChatMessage,
         data: {
           content: "Всем привет в регионе",
-          currentAccountId: user.currentAccountId,
+          currentAccountId: currentAccountId,
           chatId: region.chatId,
         },
       }),
@@ -72,7 +75,7 @@ export const seed = inngest.createFunction(
         function: createChatMessage,
         data: {
           content: "Всем привет в альянсе",
-          currentAccountId: user.currentAccountId,
+          currentAccountId: currentAccountId,
           chatId: alliance.chatId,
         },
       }),
@@ -82,12 +85,12 @@ export const seed = inngest.createFunction(
 
     if (!firstCreatedBuilding) throw "firstCreatedBuilding not found"
 
-    await step.sleep("wait-5s", 5000)
+    await step.sleep("wait-2s", 200)
 
     await step.invoke("collect-building", {
       function: collectBuilding,
       data: {
-        accountId: user.currentAccountId,
+        accountId: currentAccountId,
         type: "lumber-mill",
       },
     })
@@ -95,31 +98,55 @@ export const seed = inngest.createFunction(
     step.invoke("upgrade-building", {
       function: upgradeBuilding,
       data: {
-        accountId: user.currentAccountId,
+        accountId: currentAccountId,
         buildingId: firstCreatedBuilding.id,
       },
     })
 
-    await step.sleep("wait-5s", 5000)
+    await step.run("add-2-speedups", async () => {
+      const result = await db
+        .update(dbSchema.items)
+        .set({
+          count: increment(dbSchema.items.count, 2),
+        })
+        .where(
+          and(
+            eq(dbSchema.items.ownerId, currentAccountId),
+            eq(dbSchema.items.type, "speedup-build-1m"),
+          ),
+        )
+        .returning()
+
+      if (result.length > 0) return result
+
+      return await db
+        .insert(dbSchema.items)
+        .values({
+          ownerId: currentAccountId,
+          type: "speedup-build-1m",
+          count: 2,
+        })
+        .returning()
+    })
 
     await step.run("boost-1m", async () => {
       await inngest.send({
         name: "building/boost",
         data: {
-          accountId: user.currentAccountId,
+          accountId: currentAccountId,
           buildingId: firstCreatedBuilding.id,
-          timeMs: 60 * 1000,
+          speedup: "speedup-build-1m",
         },
       })
     })
 
-    await step.run("boost-30s", async () => {
+    await step.run("boost-1m", async () => {
       await inngest.send({
         name: "building/boost",
         data: {
-          accountId: user.currentAccountId,
+          accountId: currentAccountId,
           buildingId: firstCreatedBuilding.id,
-          timeMs: 30 * 1000,
+          speedup: "speedup-build-1m",
         },
       })
     })

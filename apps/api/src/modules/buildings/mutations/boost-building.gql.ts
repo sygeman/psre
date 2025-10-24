@@ -9,7 +9,11 @@ gqlBuilder.mutationType({
       resolve: async (_parent, { id }, { currentAccountId, inngest }) => {
         await inngest.send({
           name: "building/boost",
-          data: { buildingId: id, accountId: currentAccountId, timeMs: 10000 },
+          data: {
+            buildingId: id,
+            accountId: currentAccountId,
+            speedup: "speedup-build-1m",
+          },
         })
 
         return true
