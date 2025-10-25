@@ -9,7 +9,6 @@ import {
   createChatMessage,
   createRegion,
   createUser,
-  upgradeBuilding,
 } from "@/schema/events"
 
 const HandlerName = "global/seed" as const
@@ -24,7 +23,7 @@ export type GlobalSeedHandler = {
 }
 
 export const seed = inngest.createFunction(
-  { id: HandlerName.replace("/", "-") },
+  { id: HandlerName.replace("/", "-"), concurrency: 1 },
   { event: HandlerName },
   async ({ event: { data }, step, db, dbSchema }) => {
     await step.run("reset-db", async () => {
@@ -95,14 +94,6 @@ export const seed = inngest.createFunction(
       },
     })
 
-    step.invoke("upgrade-building", {
-      function: upgradeBuilding,
-      data: {
-        accountId: currentAccountId,
-        buildingId: firstCreatedBuilding.id,
-      },
-    })
-
     await step.run("add-2-speedups", async () => {
       const result = await db
         .update(dbSchema.items)
@@ -129,7 +120,15 @@ export const seed = inngest.createFunction(
         .returning()
     })
 
-    await step.run("boost-1m", async () => {
+    await step.run("update-with-boost", async () => {
+      await inngest.send({
+        name: "building/upgrade",
+        data: {
+          accountId: currentAccountId,
+          buildingId: firstCreatedBuilding.id,
+        },
+      })
+
       await inngest.send({
         name: "building/boost",
         data: {
@@ -138,9 +137,7 @@ export const seed = inngest.createFunction(
           speedup: "speedup-build-1m",
         },
       })
-    })
 
-    await step.run("boost-1m", async () => {
       await inngest.send({
         name: "building/boost",
         data: {

@@ -2,14 +2,14 @@ import { createServer } from "node:http"
 import { AuthDataValidator } from "@telegram-auth/server"
 import { useServer } from "graphql-ws/use/ws"
 import { createYoga } from "graphql-yoga"
-import { serve } from "inngest/bun"
 import { WebSocketServer } from "ws"
 import { db } from "@/lib/drizzle"
 import { inngest } from "@/lib/inngest"
 import { pubsub } from "@/lib/pubsub"
-import { generateToken } from "./modules/user/service/generate-token"
-import * as inngestFunctions from "./schema/events"
+import { generateToken } from "@/modules/user/service/generate-token"
 import { schema } from "./schema/gql"
+import "./inngest"
+import { currentAccountIdByToken } from "@/modules/user/service/current-account-id-by-token"
 
 type ConnectionParams = {
   token?: string
@@ -17,20 +17,6 @@ type ConnectionParams = {
 
 type Extra = {
   accountId?: string
-}
-
-const currentAccountIdByToken = async (token?: string) => {
-  if (!token) return false
-
-  try {
-    const user = await db.query.users.findFirst({
-      // where: (users, { eq }) => (eq(users.token, token))
-    })
-
-    return user?.currentAccountId || false
-  } catch {
-    return false
-  }
 }
 
 const yogaApp = createYoga<{ extra: Extra }>({
@@ -42,7 +28,39 @@ const yogaApp = createYoga<{ extra: Extra }>({
 })
 
 // Get NodeJS Server from Yoga
-const httpServer = createServer(yogaApp)
+const httpServer = createServer(async (req, res) => {
+  if (req.url === "/api/login" && req.method === "POST") {
+    try {
+      let body = ""
+      req.on("data", (chunk) => {
+        body += chunk
+      })
+      req.on("end", async () => {
+        const data = JSON.parse(body)
+        const botToken = process.env.TELEGRAM_BOT_TOKEN!
+        const validator = new AuthDataValidator({ botToken })
+        const userTgData = await validator.validate(
+          new Map(Object.entries(data)),
+        )
+        const telegramId = userTgData.id.toString()
+        const token = generateToken()
+        await inngest.send({ name: "user/create", data: { telegramId, token } })
+
+        res.writeHead(200, {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS, POST",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        })
+        res.end(token)
+      })
+    } catch {
+      res.writeHead(400, { "Content-Type": "application/json" })
+      res.end(JSON.stringify({ error: "Invalid request" }))
+    }
+  } else {
+    yogaApp(req, res)
+  }
+})
 
 // Create WebSocket server instance from our Node server
 const wsServer = new WebSocketServer({
@@ -101,55 +119,17 @@ httpServer.listen(PORT, () => {
   console.log(`Server is now running on http://localhost:${PORT}/graphql`)
 })
 
-Bun.serve({
-  port: 4500,
-  async fetch(request: Request) {
-    const url = new URL(request.url)
-
-    if (url.pathname === "/api/login") {
-      try {
-        const { data } = await request.json()
-
-        // Validate telegram data
-        const botToken = process.env.TELEGRAM_BOT_TOKEN!
-        const validator = new AuthDataValidator({ botToken })
-        const userTgData = await validator.validate(
-          new Map(Object.entries(data)),
-        )
-        const telegramId = userTgData.id.toString()
-
-        const token = generateToken()
-
-        await inngest.send({
-          name: "user/create",
-          data: { telegramId, token },
-        })
-
-        return new Response(token, {
-          status: 200,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS, POST",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-          },
-        })
-      } catch {
-        return new Response("Error", { status: 500 })
-      }
-    }
-
-    if (url.pathname === "/api/inngest") {
-      return serve({
-        client: inngest,
-        functions: Object.values(inngestFunctions),
-      })(request)
-    }
-
-    return new Response("Not found", { status: 404 })
-  },
-})
-
 await inngest.send({
   name: "global/seed",
   data: { telegramId: "57902065", name: "Sygeman" },
 })
+
+process
+  .on("SIGTERM", () => {
+    console.log("SIGTERM")
+    httpServer.close()
+  })
+  .on("SIGINT", () => {
+    console.log("SIGINT")
+    httpServer.close()
+  })

@@ -47,7 +47,7 @@ export const upgradeBuilding = inngest.createFunction(
     if (!depedsOn) return { status: "depedsOn" }
 
     const cost = await step.run("calc-upgrade", async () => {
-      const cost = FARM_UPGARDE_COST[4]
+      const cost = FARM_UPGARDE_COST[2]
       if (!cost) throw "Cost not found"
       const [food, wood, steel, fuel, time] = cost
       // TODO: Calc real cost
