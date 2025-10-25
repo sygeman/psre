@@ -119,11 +119,6 @@ httpServer.listen(PORT, () => {
   console.log(`Server is now running on http://localhost:${PORT}/graphql`)
 })
 
-await inngest.send({
-  name: "global/seed",
-  data: { telegramId: "57902065", name: "Sygeman" },
-})
-
 process
   .on("SIGTERM", () => {
     console.log("SIGTERM")

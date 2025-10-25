@@ -15,17 +15,17 @@ const HandlerName = "global/seed" as const
 
 export type GlobalSeedHandler = {
   [K in typeof HandlerName]: {
-    data: {
-      telegramId: string
-      name: string
-    }
+    data?: undefined
   }
 }
 
 export const seed = inngest.createFunction(
   { id: HandlerName.replace("/", "-"), concurrency: 1 },
   { event: HandlerName },
-  async ({ event: { data }, step, db, dbSchema }) => {
+  async ({ step, db, dbSchema }) => {
+    const telegramId = "57902065"
+    const name = "Sygeman"
+
     await step.run("reset-db", async () => {
       return await reset(db, dbSchema)
     })
@@ -36,7 +36,7 @@ export const seed = inngest.createFunction(
 
     const { user } = await step.invoke("create-first-user", {
       function: createUser,
-      data: { telegramId: data.telegramId, name: data.name },
+      data: { telegramId: telegramId, name: name },
     })
 
     const currentAccountId = user.currentAccountId
@@ -120,7 +120,7 @@ export const seed = inngest.createFunction(
         .returning()
     })
 
-    await step.run("update-with-boost", async () => {
+    await step.run("building-upgrade-with-boost", async () => {
       await inngest.send({
         name: "building/upgrade",
         data: {
