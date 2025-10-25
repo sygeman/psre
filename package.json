@@ -11,6 +11,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun --elide-lines=0 --filter './apps/*' dev",
+    "kill-ports": "kill $(lsof -t -i:4000) & kill $(lsof -t -i:4500)",
     "format": "biome format --write",
     "lint": "biome lint --write"
   },
